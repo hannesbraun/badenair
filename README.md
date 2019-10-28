@@ -1,3 +1,3 @@
-# BADENAir Flight Management-System
+# BadenAir Flight Management-System
 
 This is the initial README-file. More information coming soon.
