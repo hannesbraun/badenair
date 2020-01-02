@@ -24,6 +24,7 @@ import {FormsModule} from "@angular/forms";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {FlexModule} from "@angular/flex-layout/typings/flex";
 import {FlexLayoutModule} from "@angular/flex-layout";
+import { FlightOverviewComponent } from './flight-overview/flight-overview.component';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import {FlexLayoutModule} from "@angular/flex-layout";
     AppComponent,
     NavigationComponent,
     AccountComponent,
-    FlightSearchComponent
+    FlightSearchComponent,
+    FlightOverviewComponent
   ],
   imports: [
     BrowserModule,
