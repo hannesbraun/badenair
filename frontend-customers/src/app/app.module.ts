@@ -13,12 +13,22 @@ import { MatListModule } from '@angular/material/list';
 import {RouterModule} from "@angular/router";
 import {appRoutes} from "./routes";
 import { AccountComponent } from './account/account.component';
+import { FlightSearchComponent } from './flight-search/flight-search.component';
+import {MatRadioModule} from '@angular/material/radio';
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatNativeDateModule} from "@angular/material/core";
+import {FormsModule} from "@angular/forms";
+
 
 @NgModule({
   declarations: [
     AppComponent,
     NavigationComponent,
-    AccountComponent
+    AccountComponent,
+    FlightSearchComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +39,14 @@ import { AccountComponent } from './account/account.component';
     MatSidenavModule,
     MatIconModule,
     MatListModule,
-    RouterModule.forRoot(appRoutes)
+    MatRadioModule,
+    RouterModule.forRoot(appRoutes),
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

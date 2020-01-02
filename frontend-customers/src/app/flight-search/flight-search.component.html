@@ -1,0 +1,52 @@
+<h1>Flugsuche</h1>
+<form>
+
+  <mat-radio-group>
+    <mat-radio-button value="1">Hin- und Rückflug</mat-radio-button>
+    <mat-radio-button value="2">nur Hinflug</mat-radio-button>
+  </mat-radio-group>
+  <br>
+
+  <mat-form-field>
+    <input type="text" placeholder="Von" aria-label="Number" matInput [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option *ngFor="let option of options" [value]="option">
+        {{option}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <br>
+
+  <mat-form-field>
+    <input type="text" placeholder="Nach" aria-label="Number" matInput [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option *ngFor="let option of options" [value]="option">
+        {{option}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <br>
+
+  <mat-form-field>
+    <input matInput [matDatepicker]="pickerStart" placeholder="Hinreise Datum">
+    <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+    <mat-datepicker #pickerStart></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput [matDatepicker]="pickerDestination" placeholder="Rückreise Datum">
+    <mat-datepicker-toggle matSuffix [for]="pickerDestination"></mat-datepicker-toggle>
+    <mat-datepicker #pickerDestination></mat-datepicker>
+  </mat-form-field>
+  <br>
+
+  <mat-form-field>
+    <input name="personNumber" type="number" matInput required placeholder="Anzahl Passagiere" #personInput="ngModel" ngModel>
+    <mat-error *ngIf="personInput.hasError('required')">
+      Email is <strong>required</strong>
+    </mat-error>
+  </mat-form-field><br>
+
+  <button type="submit" mat-raised-button>Suchen</button>
+
+</form>
