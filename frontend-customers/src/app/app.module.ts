@@ -13,12 +13,27 @@ import { MatListModule } from '@angular/material/list';
 import {RouterModule} from "@angular/router";
 import {appRoutes} from "./routes";
 import { AccountComponent } from './account/account.component';
+import { FlightSearchComponent } from './flight-search/flight-search.component';
+import {MatRadioModule} from '@angular/material/radio';
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatNativeDateModule} from "@angular/material/core";
+import {FormsModule} from "@angular/forms";
+import {MatGridListModule} from "@angular/material/grid-list";
+import {FlexModule} from "@angular/flex-layout/typings/flex";
+import {FlexLayoutModule} from "@angular/flex-layout";
+import { FlightOverviewComponent } from './flight-overview/flight-overview.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     NavigationComponent,
-    AccountComponent
+    AccountComponent,
+    FlightSearchComponent,
+    FlightOverviewComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +44,15 @@ import { AccountComponent } from './account/account.component';
     MatSidenavModule,
     MatIconModule,
     MatListModule,
-    RouterModule.forRoot(appRoutes)
+    MatRadioModule,
+    RouterModule.forRoot(appRoutes),
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    FormsModule,
+    FlexLayoutModule
   ],
   providers: [],
   bootstrap: [AppComponent]
