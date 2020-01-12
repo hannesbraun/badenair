@@ -36,7 +36,14 @@
         </g>
 
         <!-- Schedule data -->
-        <text class="medium" x="5" [attr.y]="32 + lineHeight * i">-</text>
+        <g class="conflictButton" *ngIf="schedule.hasConflict" (click)="onClickConflict(schedule.id)">
+            <rect x="2" [attr.y]="22 + lineHeight * i" width="45" height="15" fill="#F44336"></rect>
+            <text class="medium" x="14" [attr.y]="32 + lineHeight * i">Konflikt</text>
+        </g>
+        <g *ngIf="!schedule.hasConflict">
+            <rect x="2" [attr.y]="22 + lineHeight * i" width="45" height="15" fill="#00C853"></rect>
+            <text class="medium" x="19" [attr.y]="32 + lineHeight * i">OK</text>
+        </g>
         <text class="medium" x="55" [attr.y]="32 + lineHeight * i">{{schedule.plane}}</text>
         <text class="medium" x="125" [attr.y]="32 + lineHeight * i">{{schedule.status}}</text>
     </g>

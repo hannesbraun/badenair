@@ -1,0 +1,16 @@
+<h1 mat-dialog-title>Konflikt bei Flug von {{data.conflict.flight.start}} nach {{data.conflict.flight.destination}}</h1>
+<mat-dialog-content>
+    <p>{{data.conflict.cause}}</p>
+    <form [formGroup]="conflictForm" (ngSubmit)="onSubmit()">
+        <label><b>Lösung:</b></label>
+        <mat-select formControlName="conflictOptionSelect" placeholder="Lösung auswählen...">
+            <mat-option value="{{scheduleConfigSolutionOptions.CANCEL_FLIGHT}}">Flug ausfallen lassen</mat-option>
+            <mat-option value="{{scheduleConfigSolutionOptions.DO_NOTHING}}">Verspätung akzeptieren</mat-option>
+            <mat-option value="{{scheduleConfigSolutionOptions.USE_BACKUP_PLANE}}">
+                Flug mit einem Reserveflugzeug durchführen
+            </mat-option>
+        </mat-select>
+        <button type="submit" mat-raised-button color="primary" [disabled]="!conflictForm.valid">Ok</button>
+        <button mat-raised-button (click)="onClickClose($event)">Abbrechen</button>
+    </form>
+</mat-dialog-content>

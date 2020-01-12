@@ -16,6 +16,11 @@ import {
     FlightInfoDialogComponent,
     FlightInfoDialogInput
 } from './dialogs/flight-info-dialog/flight-info-dialog.component';
+import {
+    ScheduleConflictDialogComponent,
+    ScheduleConflictDialogInput
+} from './dialogs/schedule-conflict-dialog/schedule-conflict-dialog.component';
+import {ScheduleConflictServiceService} from '../../services/conflicts/schedule-conflict-service.service';
 
 interface LengthData {
     start: number;
@@ -35,7 +40,7 @@ export class FlightOverviewComponent implements OnInit {
 
     calculatedLengths: LengthData[][] = [];
 
-    constructor(private dialog: MatDialog) {
+    constructor(private dialog: MatDialog, private scheduleConflictServiceService: ScheduleConflictServiceService) {
     }
 
     ngOnInit() {
@@ -68,6 +73,32 @@ export class FlightOverviewComponent implements OnInit {
         return timeString;
     }
 
+    onClickFlight(flight: FlightDto, plane: string) {
+        const config: MatDialogConfig = {
+            data: {
+                plane,
+                flight
+            } as FlightInfoDialogInput
+        };
+        this.dialog.open(FlightInfoDialogComponent, config);
+    }
+
+    onClickConflict(id: number) {
+        this.scheduleConflictServiceService.getConflictForSchedule(id).subscribe(scheduleConflict => {
+            const config: MatDialogConfig = {
+                data: {
+                    conflict: scheduleConflict
+                } as ScheduleConflictDialogInput
+            };
+            this.dialog.open(ScheduleConflictDialogComponent, config).afterClosed().subscribe(output => {
+                if (output) {
+                    // TODO: Handle selected solution and refresh overview
+                    console.log(output);
+                }
+            });
+        });
+    }
+
     get displayableHours(): number[] {
         return displayableHours;
     }
@@ -90,15 +121,5 @@ export class FlightOverviewComponent implements OnInit {
 
     get viewBoxConfig(): string {
         return getViewBoxConfig(this.totalHeight);
-    }
-
-    onClickFlight(flight: FlightDto, plane: string) {
-        const config: MatDialogConfig = {
-            data: {
-                plane,
-                flight
-            } as FlightInfoDialogInput
-        };
-        this.dialog.open(FlightInfoDialogComponent, config);
     }
 }

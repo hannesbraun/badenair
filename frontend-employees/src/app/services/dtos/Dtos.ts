@@ -17,3 +17,9 @@ export interface ScheduleConflictDto {
     flight: FlightDto;
     cause: string;
 }
+
+export enum ScheduleConfigSolution {
+    CANCEL_FLIGHT,
+    DO_NOTHING,
+    USE_BACKUP_PLANE
+}
