@@ -12,3 +12,8 @@ export interface PlaneScheduleDto {
     hasConflict: boolean;
     flights: FlightDto[];
 }
+
+export interface ScheduleConflictDto {
+    flight: FlightDto;
+    cause: string;
+}
