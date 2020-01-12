@@ -25,16 +25,15 @@
               stroke="black" stroke-width="0.5"/>
 
         <!-- Flights -->
-        <ng-container *ngFor="let lengths of calculatedLengths[i]">
-            <g class="flight">
-                <rect [attr.x]="lengths.start" [attr.y]="26 + lineHeight * i"
-                      [attr.width]="lengths.duration"
-                      height="8" fill="#00B0FF"></rect>
-                <rect [attr.x]="lengths.start" [attr.y]="26 + lineHeight * i"
-                      [attr.width]="lengths.remaining"
-                      height="8" fill="#01579B"></rect>
-            </g>
-        </ng-container>
+        <g class="flight" *ngFor="let j = index; let lengths of calculatedLengths[i]"
+           (click)="onClickFlight(schedule.flights[j], schedule.plane)">
+            <rect [attr.x]="lengths.start" [attr.y]="26 + lineHeight * i"
+                  [attr.width]="lengths.duration"
+                  height="8" fill="#00B0FF"></rect>
+            <rect [attr.x]="lengths.start" [attr.y]="26 + lineHeight * i"
+                  [attr.width]="lengths.remaining"
+                  height="8" fill="#01579B"></rect>
+        </g>
 
         <!-- Schedule data -->
         <text class="medium" x="5" [attr.y]="32 + lineHeight * i">-</text>
