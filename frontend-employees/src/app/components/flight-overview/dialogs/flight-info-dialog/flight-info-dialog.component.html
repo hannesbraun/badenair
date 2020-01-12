@@ -1,0 +1,11 @@
+<h1 mat-dialog-title>Flug von {{data.flight.start}} nach {{data.flight.destination}}</h1>
+<h3 mat-card-subtitle>Flugzeug {{data.plane}}</h3>
+<mat-dialog-content>
+    <mat-list>
+        <mat-list-item> Start: {{data.flight.startTime | date:'HH:mm:ss dd.MM.yyyy'}} </mat-list-item>
+        <mat-list-item> Ankunft: {{data.flight.arrivalTime | date:'HH:mm:ss dd.MM.yyyy'}} </mat-list-item>
+    </mat-list>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-raised-button (click)="onClickClose()">Schließen</button>
+</mat-dialog-actions>

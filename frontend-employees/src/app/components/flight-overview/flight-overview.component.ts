@@ -11,6 +11,11 @@ import {
     totalWidth
 } from '../../services/util/SVGUtil';
 import {FlightDto, PlaneScheduleDto} from '../../services/dtos/Dtos';
+import {MatDialog, MatDialogConfig} from '@angular/material';
+import {
+    FlightInfoDialogComponent,
+    FlightInfoDialogInput
+} from './dialogs/flight-info-dialog/flight-info-dialog.component';
 
 interface LengthData {
     start: number;
@@ -30,7 +35,7 @@ export class FlightOverviewComponent implements OnInit {
 
     calculatedLengths: LengthData[][] = [];
 
-    constructor() {
+    constructor(private dialog: MatDialog) {
     }
 
     ngOnInit() {
@@ -85,5 +90,15 @@ export class FlightOverviewComponent implements OnInit {
 
     get viewBoxConfig(): string {
         return getViewBoxConfig(this.totalHeight);
+    }
+
+    onClickFlight(flight: FlightDto, plane: string) {
+        const config: MatDialogConfig = {
+            data: {
+                plane,
+                flight
+            } as FlightInfoDialogInput
+        };
+        this.dialog.open(FlightInfoDialogComponent, config);
     }
 }
