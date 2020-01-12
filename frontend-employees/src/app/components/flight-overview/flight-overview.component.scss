@@ -1,0 +1,18 @@
+text {
+  font-size: 7px;
+  font-family: Arial, serif;
+}
+
+text.small {
+  font-size: 5px;
+}
+
+text.medium {
+  font-size: 6px;
+}
+
+.flight:hover {
+  stroke: black;
+  stroke-width: 0.5;
+  cursor: pointer;
+}
