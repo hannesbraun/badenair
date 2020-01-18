@@ -1,6 +1,6 @@
 import {AccountComponent} from './components/account/account.component';
 import {AppComponent} from './app.component';
-import {appRoutes} from './routes';
+import {AppRoutingModule} from './app-routing.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {BrowserModule} from '@angular/platform-browser';
 import {FlexLayoutModule} from '@angular/flex-layout';
@@ -11,7 +11,6 @@ import {LayoutModule} from '@angular/cdk/layout';
 import {MaterialModule} from './material.module';
 import {NavigationComponent} from './components/navigation/navigation.component';
 import {NgModule} from '@angular/core';
-import {RouterModule} from '@angular/router';
 
 
 @NgModule({
@@ -23,13 +22,13 @@ import {RouterModule} from '@angular/router';
         NavigationComponent
     ],
     imports: [
+        AppRoutingModule,
         BrowserAnimationsModule,
         BrowserModule,
         FlexLayoutModule,
         FormsModule,
         LayoutModule,
         MaterialModule,
-        RouterModule.forRoot(appRoutes)
     ],
     providers: [],
     bootstrap: [AppComponent]
