@@ -10,9 +10,11 @@ import {SignUpDto} from '../../services/dtos/Dtos';
 })
 export class SignUpComponent implements OnInit {
 
+    private static readonly DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
+
     @Output() signUpSubmit: EventEmitter<SignUpDto> = new EventEmitter();
 
-    signUpForm: FormGroup = this.fb.group({
+    signUpForm: FormGroup = this.formBuilder.group({
         lastname: ['', Validators.required],
         name: ['', Validators.required],
         birthDate: ['', Validators.required],
@@ -32,7 +34,7 @@ export class SignUpComponent implements OnInit {
     minDateBirthDate: Date | undefined;
     minDateInvalidationDate: Date | undefined;
 
-    constructor(private fb: FormBuilder) {
+    constructor(private formBuilder: FormBuilder) {
     }
 
     ngOnInit() {
@@ -64,10 +66,13 @@ export class SignUpComponent implements OnInit {
     }
 
     private initDateBoundaries() {
+        const now = new Date();
+        const yearOfMinimumAge = now.getFullYear() - 18;
+
         this.minDateBirthDate = new Date(1900, 0, 1);
-        this.maxDateBirthDate = new Date();
-        this.maxDateBirthDate.setFullYear(new Date().getFullYear() - 18);
-        this.minDateInvalidationDate = new Date();
-        this.minDateInvalidationDate.setTime(new Date().getTime() + 24 * 60 * 60 * 1000);
+        this.maxDateBirthDate = now;
+        this.maxDateBirthDate.setFullYear(yearOfMinimumAge);
+        this.minDateInvalidationDate = now;
+        this.minDateInvalidationDate.setTime(now.getTime() + SignUpComponent.DAY_IN_MILLISECONDS);
     }
 }
