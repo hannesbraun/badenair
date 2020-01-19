@@ -1,6 +1,7 @@
 import {NgModule} from '@angular/core';
 
 import {
+    MAT_DATE_LOCALE,
     MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,
@@ -52,6 +53,9 @@ import {
         MatSelectModule,
         MatSidenavModule,
         MatToolbarModule
+    ],
+    providers: [
+        {provide: MAT_DATE_LOCALE, useValue: 'de-DE'}
     ]
 })
 export class MaterialModule {
