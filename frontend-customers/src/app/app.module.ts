@@ -11,6 +11,7 @@ import {LayoutModule} from '@angular/cdk/layout';
 import {MaterialModule} from './material.module';
 import {NavigationComponent} from './components/navigation/navigation.component';
 import {NgModule} from '@angular/core';
+import { SignUpComponent } from './components/signup/sign-up.component';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import {NgModule} from '@angular/core';
         AppComponent,
         FlightOverviewComponent,
         FlightSearchComponent,
-        NavigationComponent
+        NavigationComponent,
+        SignUpComponent
     ],
     imports: [
         AppRoutingModule,
