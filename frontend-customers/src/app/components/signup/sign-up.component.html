@@ -1,0 +1,71 @@
+<form>
+    <h3>Persönliche Daten</h3>
+    <div>
+        <mat-form-field>
+            <input matInput placeholder="Nachname">
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput placeholder="Vorname">
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput name="fromDate" [matDatepicker]="pickerBirthDate" placeholder="Geburtsdatum">
+            <mat-datepicker-toggle matSuffix [for]="pickerBirthDate"></mat-datepicker-toggle>
+            <mat-datepicker #pickerBirthDate></mat-datepicker>
+        </mat-form-field>
+    </div>
+
+    <h3>Anschrift</h3>
+    <div class="test">
+        <mat-form-field>
+            <input matInput placeholder="Straße">
+        </mat-form-field>
+
+        <mat-form-field class="small">
+            <input matInput placeholder="PLZ">
+        </mat-form-field>
+
+        <mat-form-field class="large">
+            <input matInput placeholder="Wohnort">
+        </mat-form-field>
+    </div>
+
+    <h3>Zahlungsinformationen</h3>
+    <div class="test">
+        <mat-form-field>
+            <input matInput placeholder="Karteninhaber">
+        </mat-form-field>
+
+        <mat-form-field class="large">
+            <input matInput placeholder="Kartennummer">
+        </mat-form-field>
+
+        <mat-form-field class="small">
+            <input matInput placeholder="Prüfziffer">
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput name="fromDate" [matDatepicker]="pickerInvalidationDate" placeholder="Auslaufdatum">
+            <mat-datepicker-toggle matSuffix [for]="pickerInvalidationDate"></mat-datepicker-toggle>
+            <mat-datepicker #pickerInvalidationDate></mat-datepicker>
+        </mat-form-field>
+    </div>
+
+    <h3>Anmeldedaten</h3>
+    <div>
+        <mat-form-field>
+            <input type="email" matInput placeholder="E-Mail">
+        </mat-form-field>
+
+        <mat-form-field>
+            <input type="password" matInput placeholder="Passwort">
+        </mat-form-field>
+
+        <mat-form-field>
+            <input type="password" matInput placeholder="Passwort bestätigen">
+        </mat-form-field>
+    </div>
+
+    <button mat-raised-button type="submit" color="primary">Registrieren</button>
+</form>

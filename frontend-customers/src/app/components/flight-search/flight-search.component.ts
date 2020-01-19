@@ -10,7 +10,7 @@ import {Router} from '@angular/router';
 export class FlightSearchComponent implements OnInit {
     options = ['Baden Baden', 'Offenburg'];
 
-    @ViewChild('searchForm', {static: true}) searchForm: NgForm;
+    @ViewChild('searchForm', {static: true}) searchForm !: NgForm;
 
     constructor(private router: Router) {
     }
