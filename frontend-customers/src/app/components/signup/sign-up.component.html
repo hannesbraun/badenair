@@ -1,71 +1,124 @@
-<form>
+<form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
     <h3>Persönliche Daten</h3>
     <div>
         <mat-form-field>
-            <input matInput placeholder="Nachname">
+            <input matInput placeholder="Nachname" formControlName="lastname">
+            <mat-error *ngIf="signUpForm?.get('lastname')?.errors?.required">
+                Dieses Feld muss ausgefüllt sein.
+            </mat-error>
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput placeholder="Vorname">
+            <input matInput placeholder="Vorname" formControlName="name">
+            <mat-error *ngIf="signUpForm?.get('name')?.errors?.required">
+                Dieses Feld muss ausgefüllt sein.
+            </mat-error>
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput name="fromDate" [matDatepicker]="pickerBirthDate" placeholder="Geburtsdatum">
+            <input matInput placeholder="Geburtsdatum" [min]="minDateBirthDate" [max]="maxDateBirthDate"
+                   [matDatepicker]="pickerBirthDate" formControlName="birthDate">
             <mat-datepicker-toggle matSuffix [for]="pickerBirthDate"></mat-datepicker-toggle>
             <mat-datepicker #pickerBirthDate></mat-datepicker>
+            <mat-error *ngIf="signUpForm?.get('birthDate')?.errors?.required">
+                Dieses Feld muss ausgefüllt sein.
+            </mat-error>
         </mat-form-field>
     </div>
 
     <h3>Anschrift</h3>
     <div class="test">
         <mat-form-field>
-            <input matInput placeholder="Straße">
+            <input matInput placeholder="Straße" formControlName="street">
+            <mat-error *ngIf="signUpForm?.get('street')?.errors?.required">
+                Dieses Feld muss ausgefüllt sein.
+            </mat-error>
         </mat-form-field>
 
         <mat-form-field class="small">
-            <input matInput placeholder="PLZ">
+            <input matInput placeholder="PLZ" formControlName="zipCode">
+            <mat-error>
+                <span *ngIf="signUpForm?.get('zipCode')?.errors?.required">
+                    Dieses Feld muss ausgefüllt sein.
+                </span>
+                <span *ngIf="signUpForm?.get('zipCode')?.errors?.pattern">
+                    Dieses Feld muss eine gültige PLZ enthalten.
+                </span>
+            </mat-error>
         </mat-form-field>
 
         <mat-form-field class="large">
-            <input matInput placeholder="Wohnort">
+            <input matInput placeholder="Wohnort" formControlName="placeOfResidence">
+            <mat-error *ngIf="signUpForm?.get('placeOfResidence')?.errors?.required">
+                Dieses Feld muss ausgefüllt sein.
+            </mat-error>
         </mat-form-field>
     </div>
 
     <h3>Zahlungsinformationen</h3>
     <div class="test">
         <mat-form-field>
-            <input matInput placeholder="Karteninhaber">
+            <input matInput placeholder="Karteninhaber" formControlName="cardOwner">
+            <mat-error *ngIf="signUpForm?.get('cardOwner')?.errors?.required">
+                Dieses Feld muss ausgefüllt sein.
+            </mat-error>
         </mat-form-field>
 
         <mat-form-field class="large">
-            <input matInput placeholder="Kartennummer">
+            <input matInput placeholder="Kartennummer" formControlName="cardNumber">
+            <mat-error *ngIf="signUpForm?.get('cardNumber')?.errors?.required">
+                Dieses Feld muss ausgefüllt sein.
+            </mat-error>
         </mat-form-field>
 
         <mat-form-field class="small">
-            <input matInput placeholder="Prüfziffer">
+            <input matInput placeholder="Prüfziffer" formControlName="check">
+            <mat-error *ngIf="signUpForm?.get('check')?.errors?.required">
+                Dieses Feld muss ausgefüllt sein.
+            </mat-error>
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput name="fromDate" [matDatepicker]="pickerInvalidationDate" placeholder="Auslaufdatum">
+            <input matInput placeholder="Auslaufdatum" [min]="minDateInvalidationDate"
+                   [matDatepicker]="pickerInvalidationDate" formControlName="invalidationDate">
             <mat-datepicker-toggle matSuffix [for]="pickerInvalidationDate"></mat-datepicker-toggle>
             <mat-datepicker #pickerInvalidationDate></mat-datepicker>
+            <mat-error *ngIf="signUpForm?.get('street')?.errors?.required">
+                Dieses Feld muss ausgefüllt sein.
+            </mat-error>
         </mat-form-field>
     </div>
 
     <h3>Anmeldedaten</h3>
     <div>
         <mat-form-field>
-            <input type="email" matInput placeholder="E-Mail">
+            <input type="email" matInput placeholder="E-Mail" formControlName="email">
+            <mat-error>
+                <span *ngIf="signUpForm?.get('email')?.errors?.required">
+                    Dieses Feld muss ausgefüllt sein.
+                </span>
+                <span *ngIf="signUpForm?.get('email')?.errors?.email">
+                    Dieses Feld muss eine gültige E-Mail Adresse enthalten.
+                </span>
+            </mat-error>
         </mat-form-field>
 
         <mat-form-field>
-            <input type="password" matInput placeholder="Passwort">
+            <input type="password" matInput placeholder="Passwort" formControlName="password">
+            <mat-error *ngIf="signUpForm?.get('password')?.errors?.required">
+                Dieses Feld muss ausgefüllt sein.
+            </mat-error>
         </mat-form-field>
 
         <mat-form-field>
-            <input type="password" matInput placeholder="Passwort bestätigen">
+            <input type="password" matInput placeholder="Passwort bestätigen" formControlName="passwordConfirm">
+            <mat-error *ngIf="signUpForm?.get('passwordConfirm')?.errors?.required">
+                Dieses Feld muss ausgefüllt sein.
+            </mat-error>
         </mat-form-field>
     </div>
-
-    <button mat-raised-button type="submit" color="primary">Registrieren</button>
+    <mat-error *ngIf="signUpForm?.errors?.password">
+        Die Passwörter müssen übereinstimmen.
+    </mat-error>
+    <button mat-raised-button type="submit" color="primary" [disabled]="signUpForm.invalid">Registrieren</button>
 </form>
