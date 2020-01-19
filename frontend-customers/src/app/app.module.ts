@@ -11,7 +11,8 @@ import {LayoutModule} from '@angular/cdk/layout';
 import {MaterialModule} from './material.module';
 import {NavigationComponent} from './components/navigation/navigation.component';
 import {NgModule} from '@angular/core';
-import { SignUpComponent } from './components/signup/sign-up.component';
+import {SignUpComponent} from './components/signup/sign-up.component';
+import {SignUpPageComponent} from './pages/sign-up-page/sign-up-page.component';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { SignUpComponent } from './components/signup/sign-up.component';
         FlightOverviewComponent,
         FlightSearchComponent,
         NavigationComponent,
-        SignUpComponent
+        SignUpComponent,
+        SignUpPageComponent
     ],
     imports: [
         AppRoutingModule,
