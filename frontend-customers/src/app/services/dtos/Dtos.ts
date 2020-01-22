@@ -12,3 +12,10 @@ export interface SignUpDto {
     email: string;
     password: string;
 }
+
+export interface FlightDto {
+    start: string;
+    destination: string;
+    startTime: Date;
+    arrivalTime: Date;
+}
