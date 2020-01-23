@@ -6,6 +6,6 @@
             (bookingStateChanged)="onBookingStateChanged($event, flightWithPrice.flight.id)">
 </app-flight>
 <div class="actions">
-    <button mat-raised-button color="primary">Zurück</button>
+    <button mat-raised-button color="primary" routerLink="">Zurück</button>
     <button mat-raised-button color="primary" [disabled]="bookedFlightsEmpty()">Weiter</button>
 </div>
