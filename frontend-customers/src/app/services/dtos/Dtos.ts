@@ -13,6 +13,20 @@ export interface SignUpDto {
     password: string;
 }
 
+export interface UpdateProfileDto {
+    lastname: string;
+    name: string;
+    birthDate: Date;
+    street: string;
+    zipCode: string;
+    placeOfResidence: string;
+    cardOwner: string;
+    cardNumber: string;
+    check: string;
+    invalidationDate: Date;
+    email: string;
+}
+
 export interface FlightDto {
     id: number;
     start: string;
