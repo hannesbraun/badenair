@@ -13,6 +13,7 @@ import {NavigationComponent} from './components/navigation/navigation.component'
 import {NgModule} from '@angular/core';
 import {SignUpComponent} from './components/signup/sign-up.component';
 import {SignUpPageComponent} from './pages/sign-up-page/sign-up-page.component';
+import {ProfileFormComponent} from './components/profile-form/profile-form.component';
 import {FlightComponent} from './components/flight/flight.component';
 import {FlightInfoComponent} from './components/flight/flight-info/flight-info.component';
 import {CheckButtonComponent} from './components/flight/check-button/check-button.component';
@@ -28,6 +29,8 @@ import {HoverClassDirective} from './directives/hover-class.directive';
         FlightSearchComponent,
         NavigationComponent,
         SignUpComponent,
+        SignUpPageComponent,
+        ProfileFormComponent,
         SignUpPageComponent,
         FlightComponent,
         FlightInfoComponent,
