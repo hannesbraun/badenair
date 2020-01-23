@@ -47,4 +47,8 @@ export class FlightsPageComponent implements OnInit {
             this.bookedFlights = this.bookedFlights.filter(id => id !== flightId);
         }
     }
+
+    bookedFlightsEmpty(): boolean {
+        return this.bookedFlights.length === 0;
+    }
 }
