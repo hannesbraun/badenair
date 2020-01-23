@@ -14,6 +14,7 @@ export interface SignUpDto {
 }
 
 export interface FlightDto {
+    id: number;
     start: string;
     destination: string;
     startTime: Date;
