@@ -23,6 +23,7 @@ export class FlightsPageComponent implements OnInit {
     }
 
     ngOnInit() {
+        // TODO: Replace with service
         for (let i = 0; i < 10; i++) {
             this.flightsWithPrice.push(
                 {
@@ -45,6 +46,5 @@ export class FlightsPageComponent implements OnInit {
         } else {
             this.bookedFlights = this.bookedFlights.filter(id => id !== flightId);
         }
-        console.log(this.bookedFlights);
     }
 }

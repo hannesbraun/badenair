@@ -3,6 +3,10 @@ mat-card-content {
   flex-flow: row wrap;
   align-items: center;
   justify-content: space-between;
+  
+  @media (max-width: 992px) {
+    flex-flow: column;
+  }
 }
 
 .duration {
