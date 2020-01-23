@@ -16,6 +16,8 @@ import {SignUpPageComponent} from './pages/sign-up-page/sign-up-page.component';
 import {FlightComponent} from './components/flight/flight.component';
 import {FlightInfoComponent} from './components/flight/flight-info/flight-info.component';
 import {CheckButtonComponent} from './components/flight/check-button/check-button.component';
+import {FlightsPageComponent} from './pages/flights-page/flights-page.component';
+import {HoverClassDirective} from './directives/hover-class.directive';
 
 
 @NgModule({
@@ -29,7 +31,9 @@ import {CheckButtonComponent} from './components/flight/check-button/check-butto
         SignUpPageComponent,
         FlightComponent,
         FlightInfoComponent,
-        CheckButtonComponent
+        CheckButtonComponent,
+        FlightsPageComponent,
+        HoverClassDirective
     ],
     imports: [
         AppRoutingModule,
