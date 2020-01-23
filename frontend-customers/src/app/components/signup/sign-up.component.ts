@@ -70,9 +70,9 @@ export class SignUpComponent implements OnInit {
         const yearOfMinimumAge = now.getFullYear() - 18;
 
         this.minDateBirthDate = new Date(1900, 0, 1);
-        this.maxDateBirthDate = now;
+        this.maxDateBirthDate = new Date(now);
         this.maxDateBirthDate.setFullYear(yearOfMinimumAge);
-        this.minDateInvalidationDate = now;
+        this.minDateInvalidationDate = new Date(now);
         this.minDateInvalidationDate.setTime(now.getTime() + SignUpComponent.DAY_IN_MILLISECONDS);
     }
 }
