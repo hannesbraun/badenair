@@ -7,5 +7,5 @@
 </app-flight>
 <div class="actions">
     <button mat-raised-button color="primary">Zurück</button>
-    <button mat-raised-button color="primary">Weiter</button>
+    <button mat-raised-button color="primary" [disabled]="bookedFlightsEmpty()">Weiter</button>
 </div>
