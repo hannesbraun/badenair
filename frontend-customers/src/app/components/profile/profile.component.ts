@@ -6,6 +6,7 @@ import {
     ChangePasswordDialogComponent,
     ChangePasswordDialogOutput
 } from './change-password-dialog/change-password-dialog.component';
+import {getFormControlValueFunction} from '../../services/util/FormUtils';
 
 @Component({
     selector: 'app-profile',
@@ -13,6 +14,8 @@ import {
     styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent {
+
+    private readonly getFormControlValue: (formControlName: string) => any | null;
 
     @Output() saveProfileSettings: EventEmitter<UpdateProfileDto> = new EventEmitter();
     @Output() changePassword: EventEmitter<ChangePasswordDialogOutput> = new EventEmitter();
@@ -23,6 +26,7 @@ export class ProfileComponent {
     });
 
     constructor(private formBuilder: FormBuilder, private dialog: MatDialog) {
+        this.getFormControlValue = getFormControlValueFunction(this.profileForm);
     }
 
     onSubmit() {
@@ -40,10 +44,5 @@ export class ProfileComponent {
                 this.changePassword.emit(output);
             }
         });
-    }
-
-    private getFormControlValue(formControlName: string): string | null {
-        const formControl = this.profileForm.get(formControlName);
-        return formControl ? formControl.value : null;
     }
 }

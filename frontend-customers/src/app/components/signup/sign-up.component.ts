@@ -2,6 +2,7 @@ import {Component, EventEmitter, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {passwordsMatchValidator} from '../../services/util/FormValidators';
 import {SignUpDto} from '../../services/dtos/Dtos';
+import {getFormControlValueFunction} from '../../services/util/FormUtils';
 
 @Component({
     selector: 'app-sign-up',
@@ -9,6 +10,8 @@ import {SignUpDto} from '../../services/dtos/Dtos';
     styleUrls: ['./sign-up.component.scss']
 })
 export class SignUpComponent {
+
+    private readonly getFormControlValue: (formControlName: string) => any | null;
 
     @Output() signUpSubmit: EventEmitter<SignUpDto> = new EventEmitter();
 
@@ -20,6 +23,7 @@ export class SignUpComponent {
     }, {validators: passwordsMatchValidator});
 
     constructor(private formBuilder: FormBuilder) {
+        this.getFormControlValue = getFormControlValueFunction(this.signUpForm);
     }
 
     onSubmit() {
@@ -30,10 +34,5 @@ export class SignUpComponent {
                 password: this.getFormControlValue('password')
             } as SignUpDto);
         }
-    }
-
-    private getFormControlValue(formControlName: string): string | Date | null {
-        const formControl = this.signUpForm.get(formControlName);
-        return formControl ? formControl.value : null;
     }
 }
