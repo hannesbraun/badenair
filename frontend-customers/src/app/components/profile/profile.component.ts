@@ -1,6 +1,11 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {SignUpDto, UpdateProfileDto} from '../../services/dtos/Dtos';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MatDialog} from '@angular/material';
+import {
+    ChangePasswordDialogComponent,
+    ChangePasswordDialogOutput
+} from './change-password-dialog/change-password-dialog.component';
 
 @Component({
     selector: 'app-profile',
@@ -10,13 +15,14 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 export class ProfileComponent {
 
     @Output() saveProfileSettings: EventEmitter<UpdateProfileDto> = new EventEmitter();
+    @Output() changePassword: EventEmitter<ChangePasswordDialogOutput> = new EventEmitter();
 
     profileForm: FormGroup = this.formBuilder.group({
         profile: [],
         email: ['', [Validators.required, Validators.email]]
     });
 
-    constructor(private formBuilder: FormBuilder) {
+    constructor(private formBuilder: FormBuilder, private dialog: MatDialog) {
     }
 
     onSubmit() {
@@ -28,10 +34,16 @@ export class ProfileComponent {
         }
     }
 
+    onClickChangePassword() {
+        this.dialog.open(ChangePasswordDialogComponent).afterClosed().subscribe((output: ChangePasswordDialogOutput) => {
+            if (output) {
+                this.changePassword.emit(output);
+            }
+        });
+    }
+
     private getFormControlValue(formControlName: string): string | null {
         const formControl = this.profileForm.get(formControlName);
         return formControl ? formControl.value : null;
     }
-
-
 }

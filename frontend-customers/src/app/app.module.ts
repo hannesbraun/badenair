@@ -3,6 +3,7 @@ import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {BrowserModule} from '@angular/platform-browser';
+import {ChangePasswordDialogComponent} from './components/profile/change-password-dialog/change-password-dialog.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {FlightOverviewComponent} from './components/flight-overview/flight-overview.component';
 import {FlightSearchComponent} from './components/flight-search/flight-search.component';
@@ -26,6 +27,7 @@ import {HoverClassDirective} from './directives/hover-class.directive';
     declarations: [
         AccountComponent,
         AppComponent,
+        ChangePasswordDialogComponent,
         FlightOverviewComponent,
         FlightSearchComponent,
         NavigationComponent,
@@ -50,7 +52,8 @@ import {HoverClassDirective} from './directives/hover-class.directive';
         ReactiveFormsModule,
     ],
     providers: [],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent],
+    entryComponents: [ChangePasswordDialogComponent]
 })
 export class AppModule {
 }
