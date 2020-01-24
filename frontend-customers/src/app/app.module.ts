@@ -1,4 +1,5 @@
 import {AccountComponent} from './components/account/account.component';
+import {AccountSettingsPageComponent} from './pages/account-settings-page/account-settings-page.component';
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -26,6 +27,7 @@ import {HoverClassDirective} from './directives/hover-class.directive';
 @NgModule({
     declarations: [
         AccountComponent,
+        AccountSettingsPageComponent,
         AppComponent,
         ChangePasswordDialogComponent,
         FlightOverviewComponent,
