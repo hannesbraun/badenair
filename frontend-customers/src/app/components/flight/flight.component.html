@@ -1,0 +1,12 @@
+<mat-card appHoverClass hoverClass="mat-elevation-z8">
+    <mat-card-content>
+        <app-flight-info [time]="flight.startTime" [location]="flight.start"></app-flight-info>
+        <p class="duration">{{(flight.arrivalTime - flight.startTime) | date:'HH:mm:ss'}}</p>
+        <app-flight-info [time]="flight.arrivalTime" [location]="flight.destination"></app-flight-info>
+        <p class="large">Personen: {{numberOfPassengers}}</p>
+        <div>
+            <p class="large">Preis: {{price | currency:'EUR'}}</p>
+            <app-check-button (bookingStateChanged)="onBookingStateChanged($event)" ></app-check-button>
+        </div>
+    </mat-card-content>
+</mat-card>

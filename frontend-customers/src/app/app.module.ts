@@ -1,60 +1,61 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-
-import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NavigationComponent } from './navigation/navigation.component';
-import { LayoutModule } from '@angular/cdk/layout';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
-import {RouterModule} from "@angular/router";
-import {appRoutes} from "./routes";
-import { AccountComponent } from './account/account.component';
-import { FlightSearchComponent } from './flight-search/flight-search.component';
-import {MatRadioModule} from '@angular/material/radio';
-import {MatAutocompleteModule} from "@angular/material/autocomplete";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {MatInputModule} from "@angular/material/input";
-import {MatDatepickerModule} from "@angular/material/datepicker";
-import {MatNativeDateModule} from "@angular/material/core";
-import {FormsModule} from "@angular/forms";
-import {MatGridListModule} from "@angular/material/grid-list";
-import {FlexModule} from "@angular/flex-layout/typings/flex";
-import {FlexLayoutModule} from "@angular/flex-layout";
-import { FlightOverviewComponent } from './flight-overview/flight-overview.component';
+import {AccountComponent} from './components/account/account.component';
+import {AccountSettingsPageComponent} from './pages/account-settings-page/account-settings-page.component';
+import {AppComponent} from './app.component';
+import {AppRoutingModule} from './app-routing.module';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {BrowserModule} from '@angular/platform-browser';
+import {ChangePasswordDialogComponent} from './components/profile/change-password-dialog/change-password-dialog.component';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {FlightOverviewComponent} from './components/flight-overview/flight-overview.component';
+import {FlightSearchComponent} from './components/flight-search/flight-search.component';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {LayoutModule} from '@angular/cdk/layout';
+import {MaterialModule} from './material.module';
+import {NavigationComponent} from './components/navigation/navigation.component';
+import {NgModule} from '@angular/core';
+import {ProfileComponent} from './components/profile/profile.component';
+import {ProfileFormComponent} from './components/profile-form/profile-form.component';
+import {SignUpComponent} from './components/signup/sign-up.component';
+import {SignUpPageComponent} from './pages/sign-up-page/sign-up-page.component';
+import {FlightComponent} from './components/flight/flight.component';
+import {FlightInfoComponent} from './components/flight/flight-info/flight-info.component';
+import {CheckButtonComponent} from './components/flight/check-button/check-button.component';
+import {FlightsPageComponent} from './pages/flights-page/flights-page.component';
+import {HoverClassDirective} from './directives/hover-class.directive';
 
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    NavigationComponent,
-    AccountComponent,
-    FlightSearchComponent,
-    FlightOverviewComponent
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    LayoutModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatSidenavModule,
-    MatIconModule,
-    MatListModule,
-    MatRadioModule,
-    RouterModule.forRoot(appRoutes),
-    MatAutocompleteModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    FormsModule,
-    FlexLayoutModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+    declarations: [
+        AccountComponent,
+        AccountSettingsPageComponent,
+        AppComponent,
+        ChangePasswordDialogComponent,
+        FlightOverviewComponent,
+        FlightSearchComponent,
+        NavigationComponent,
+        ProfileComponent,
+        ProfileFormComponent,
+        SignUpComponent,
+        SignUpPageComponent,
+        FlightComponent,
+        FlightInfoComponent,
+        CheckButtonComponent,
+        FlightsPageComponent,
+        HoverClassDirective
+    ],
+    imports: [
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        BrowserModule,
+        FlexLayoutModule,
+        FormsModule,
+        LayoutModule,
+        MaterialModule,
+        ReactiveFormsModule,
+    ],
+    providers: [],
+    bootstrap: [AppComponent],
+    entryComponents: [ChangePasswordDialogComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

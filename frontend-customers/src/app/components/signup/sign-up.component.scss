@@ -1,0 +1,13 @@
+div {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+div mat-form-field {
+  flex: 1 100%;
+  margin: 5px;
+}
+
+button {
+  margin-top: 5px;
+}
