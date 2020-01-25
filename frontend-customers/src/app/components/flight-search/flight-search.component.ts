@@ -20,7 +20,7 @@ export class FlightSearchComponent implements OnInit {
 
     onSearch() {
         if (this.searchForm.valid) {
-            this.router.navigate(['flightOverview']);
+            this.router.navigate(['flights']);
         }
     }
 }
