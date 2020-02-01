@@ -13,6 +13,7 @@ import {NavigationComponent} from "./components/navigation/navigation.component"
 import { TimeTrackingComponent } from './components/time-tracking/time-tracking.component';
 import {AppRoutingModule} from "./app-routing.module";
 import {AccountComponent} from "./components/account/account.component";
+import {SecondsToTimePipe} from "./pipes/seconds-to-time.pipe";
 
 @NgModule({
     declarations: [
@@ -22,7 +23,8 @@ import {AccountComponent} from "./components/account/account.component";
         ScheduleConflictDialogComponent,
         NavigationComponent,
         TimeTrackingComponent,
-        AccountComponent
+        AccountComponent,
+        SecondsToTimePipe
     ],
     imports: [
         BrowserAnimationsModule,

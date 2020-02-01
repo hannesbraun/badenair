@@ -6,7 +6,7 @@ import {Component, OnInit} from '@angular/core';
     styleUrls: ['./time-tracking.component.scss']
 })
 export class TimeTrackingComponent implements OnInit {
-    elapsedTime: number = 0;
+    elapsedTime = 0;
     timer: any;
 
     constructor() {
@@ -15,15 +15,15 @@ export class TimeTrackingComponent implements OnInit {
     ngOnInit() {
     }
 
-    start() {
+    start(): void {
         this.timer = setInterval(this.updateTime, 1000);
     }
 
-    stop() {
+    stop(): void {
         clearInterval(this.timer);
     }
 
-    reset() {
+    reset(): void {
         this.elapsedTime = 0;
     }
 
