@@ -6,7 +6,6 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {BrowserModule} from '@angular/platform-browser';
 import {ChangePasswordDialogComponent} from './components/profile/change-password-dialog/change-password-dialog.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import {FlightOverviewComponent} from './components/flight-overview/flight-overview.component';
 import {FlightSearchComponent} from './components/flight-search/flight-search.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {LayoutModule} from '@angular/cdk/layout';
@@ -30,7 +29,6 @@ import {HoverClassDirective} from './directives/hover-class.directive';
         AccountSettingsPageComponent,
         AppComponent,
         ChangePasswordDialogComponent,
-        FlightOverviewComponent,
         FlightSearchComponent,
         NavigationComponent,
         ProfileComponent,

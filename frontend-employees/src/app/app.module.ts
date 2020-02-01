@@ -9,18 +9,27 @@ import {MaterialModule} from './material.module';
 import {ScheduleConflictDialogComponent} from './components/flight-overview/dialogs/schedule-conflict-dialog/schedule-conflict-dialog.component';
 import {ReactiveFormsModule} from '@angular/forms';
 
+import {NavigationComponent} from "./components/navigation/navigation.component";
+import { TimeTrackingComponent } from './components/time-tracking/time-tracking.component';
+import {AppRoutingModule} from "./app-routing.module";
+import {AccountComponent} from "./components/account/account.component";
+
 @NgModule({
     declarations: [
         AppComponent,
         FlightInfoDialogComponent,
         FlightOverviewComponent,
-        ScheduleConflictDialogComponent
+        ScheduleConflictDialogComponent,
+        NavigationComponent,
+        TimeTrackingComponent,
+        AccountComponent
     ],
     imports: [
         BrowserAnimationsModule,
         BrowserModule,
         MaterialModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        AppRoutingModule
     ],
     providers: [],
     bootstrap: [AppComponent],
