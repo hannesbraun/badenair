@@ -7,6 +7,7 @@ import {Component, OnInit} from '@angular/core';
 })
 export class TimeTrackingComponent implements OnInit {
     elapsedTime = 0;
+    isTimerRunning = false;
     timer: any;
 
     constructor() {
@@ -16,10 +17,12 @@ export class TimeTrackingComponent implements OnInit {
     }
 
     start(): void {
+        this.isTimerRunning = true;
         this.timer = setInterval(this.updateTime, 1000);
     }
 
     stop(): void {
+        this.isTimerRunning = false;
         clearInterval(this.timer);
     }
 
