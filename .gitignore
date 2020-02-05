@@ -139,3 +139,6 @@ modules.xml
 .idea/sonarlint
 
 # End of https://www.gitignore.io/api/eclipse,intellij+all
+
+.DS_Store
+.vagrant/
