@@ -1,6 +1,6 @@
 <div class="time-tracking-container">
     <button mat-raised-button class="start-button mat-primary" [disabled]="isTimerRunning" (click)="start()">Start</button>
-    <button mat-raised-button class="stop-button mat-warn" (click)="stop()">Stop</button>
+    <button mat-raised-button class="stop-button mat-warn" [disabled]="!isTimerRunning" (click)="stop()">Stop</button>
     <div>Arbeitsdauer:</div>
-    <div class="elapsed-time">{{ elapsedTime | secondsToTime }}</div>
+    <div class="elapsed-time">{{ time | date:'HH:mm:ss':'UTC' }}</div>
 </div>

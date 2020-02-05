@@ -18,7 +18,8 @@ export class TimeTrackingComponent implements OnInit {
 
     start(): void {
         this.isTimerRunning = true;
-        this.timer = setInterval(this.updateTime, 1000);
+        this.timer = setInterval(() =>
+            this.elapsedTime++, 1000);
     }
 
     stop(): void {
@@ -30,7 +31,7 @@ export class TimeTrackingComponent implements OnInit {
         this.elapsedTime = 0;
     }
 
-    updateTime = () => {
-        this.elapsedTime++;
+    get time() {
+        return this.elapsedTime * 1000;
     }
 }
