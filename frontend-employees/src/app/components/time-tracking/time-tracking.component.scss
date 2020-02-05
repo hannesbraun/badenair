@@ -1,0 +1,22 @@
+.time-tracking-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-gap: 30px;
+  justify-content: center;
+  align-content: center;
+  height: 80vh;
+}
+
+.start-button, .stop-button {
+  width: 150px;
+  height: 50px;
+  font-size: 1.2rem;
+}
+
+.start-button-clicked {
+  opacity: 0.6;
+}
+
+.elapsed-time {
+  text-align: end;
+}
