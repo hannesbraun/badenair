@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {FlightDto} from "../../services/dtos/Dtos";
-import {Person} from "../flight/flight.component";
+import {Baggage, BaggageState, Person} from "../flight/flight.component";
 
 interface BookedFlight {
     flights: FlightDto;
     persons: Person[];
+    baggages: Baggage[];
 }
 
 @Component({
@@ -36,6 +37,10 @@ export class BookedFlightsComponent implements OnInit {
                         {name: 'Peter Hase', id: 1},
                         {name: 'Klaus Kleber', id: 1},
                         {name: 'Max Mustermann', id: 1}
+                    ],
+                    baggages: [
+                        {id: 9231, state: BaggageState.inPlane},
+                        {id: 4782, state: BaggageState.onLoad}
                     ]
                 }
             );

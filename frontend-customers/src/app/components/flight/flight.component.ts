@@ -7,6 +7,16 @@ export interface Person {
     id: number;
 }
 
+export interface Baggage {
+    id: number;
+    state: BaggageState;
+}
+
+export enum BaggageState {
+    inPlane = 'Im Flugzeug',
+    onLoad = 'Verladen'
+}
+
 @Component({
     selector: 'app-flight',
     templateUrl: './flight.component.html',
@@ -18,10 +28,18 @@ export class FlightComponent {
     @Input() price !: number;
     @Input() flight !: FlightDto;
     @Input() persons !: Person[];
+    @Input() checkInState !: boolean;
+    @Input() baggages !: Baggage[];
 
     @Output() bookingStateChanged = new EventEmitter<BookingState>();
+    @Output() onCheckInButtonClick = new EventEmitter<FlightDto>();
+
 
     onBookingStateChanged(newState: BookingState) {
         this.bookingStateChanged.emit(newState);
+    }
+
+    checkIn() {
+        this.onCheckInButtonClick.emit(this.flight);
     }
 }
