@@ -9,10 +9,12 @@ import {MaterialModule} from './material.module';
 import {ScheduleConflictDialogComponent} from './components/flight-overview/dialogs/schedule-conflict-dialog/schedule-conflict-dialog.component';
 import {ReactiveFormsModule} from '@angular/forms';
 
-import {NavigationComponent} from "./components/navigation/navigation.component";
-import { TimeTrackingComponent } from './components/time-tracking/time-tracking.component';
-import {AppRoutingModule} from "./app-routing.module";
-import {AccountComponent} from "./components/account/account.component";
+import {NavigationComponent} from './components/navigation/navigation.component';
+import {TimeTrackingComponent} from './components/time-tracking/time-tracking.component';
+import {AppRoutingModule} from './app-routing.module';
+import {AccountComponent} from './components/account/account.component';
+import {LoginComponent} from './components/login/login.component';
+import {MatInputModule} from '@angular/material/input';
 
 @NgModule({
     declarations: [
@@ -22,18 +24,20 @@ import {AccountComponent} from "./components/account/account.component";
         ScheduleConflictDialogComponent,
         NavigationComponent,
         TimeTrackingComponent,
-        AccountComponent
+        AccountComponent,
+        LoginComponent
     ],
     imports: [
         BrowserAnimationsModule,
         BrowserModule,
         MaterialModule,
         ReactiveFormsModule,
-        AppRoutingModule
+        AppRoutingModule,
+        MatInputModule
     ],
     providers: [],
     bootstrap: [AppComponent],
-    entryComponents: [FlightInfoDialogComponent, ScheduleConflictDialogComponent]
+    entryComponents: [FlightInfoDialogComponent, ScheduleConflictDialogComponent, LoginComponent]
 })
 export class AppModule {
 }
