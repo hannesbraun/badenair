@@ -1,41 +1,41 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport
-      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-      [mode]="(isHandset$ | async) ? 'over' : 'side'">
-    <mat-toolbar routerLink="/">Baden Air</mat-toolbar>
-    <mat-nav-list>
-      <a mat-list-item (click)="login()">{{ loggedIn ? 'Login' : 'Logout' }}</a>
-      <a *ngIf="!loggedIn" mat-list-item routerLink="/account">Mein Konto</a>
-    </mat-nav-list>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <mat-toolbar color="primary">
-      <button
-        type="button"
-        aria-label="Toggle sidenav"
-        mat-icon-button
-        (click)="drawer.toggle()"
-        *ngIf="isHandset$ | async">
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-      </button>
-      <button mat-button routerLink="/" class="logo">Baden Air</button>
-      <span class="fill-space"></span>
-      <span
-        *ngIf="!(isHandset$ | async)">
-        <button
-          (click)="login()"
-          mat-flat-button>
-          {{ loggedIn ? 'Login' : 'Logout' }}
-        </button>
-        <button
-          routerLink="/account"
-          (click)="openMyAccount()"
-          *ngIf="!loggedIn"
-          mat-button>
-          Mein Konto
-        </button>
-      </span>
-    </mat-toolbar>
-    <ng-content></ng-content>
-  </mat-sidenav-content>
+    <mat-sidenav #drawer class="sidenav" fixedInViewport
+        [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+        [mode]="(isHandset$ | async) ? 'over' : 'side'">
+        <mat-toolbar routerLink="/">Baden Air</mat-toolbar>
+        <mat-nav-list>
+            <a mat-list-item (click)="login()">{{ loggedIn ? 'Logout' : 'Login' }}</a>
+            <a *ngIf="!loggedIn" mat-list-item routerLink="/account">Mein Konto</a>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <mat-toolbar color="primary">
+            <button
+                type="button"
+                aria-label="Toggle sidenav"
+                mat-icon-button
+                (click)="drawer.toggle()"
+                *ngIf="isHandset$ | async">
+                <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+            </button>
+            <button mat-button routerLink="/" class="logo">Baden Air</button>
+            <span class="fill-space"></span>
+            <span
+                *ngIf="!(isHandset$ | async)">
+                <button
+                    (click)="login()"
+                    mat-flat-button>
+                    {{ loggedIn ? 'Logout' : 'Login'  }}
+                </button>
+                <button
+                    routerLink="/account"
+                    (click)="openMyAccount()"
+                    *ngIf="loggedIn"
+                    mat-button>
+                    Mein Konto
+                </button>
+            </span>
+        </mat-toolbar>
+        <ng-content></ng-content>
+    </mat-sidenav-content>
 </mat-sidenav-container>

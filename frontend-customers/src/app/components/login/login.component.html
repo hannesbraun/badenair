@@ -1,0 +1,23 @@
+<h1 mat-dialog-title>Login</h1>
+<mat-dialog-content>
+    <form [formGroup]="LoginForm" (ngSubmit)="login()">
+        <mat-form-field>
+            <input type="text" matInput placeholder="Benutzername" formControlName="username">
+            <mat-error *ngIf="LoginForm?.get('username')?.errors?.required">
+                Dieses Feld muss ausgefüllt sein.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input type="password" matInput placeholder="Passwort" formControlName="password">
+            <mat-error *ngIf="LoginForm?.get('password')?.errors?.required">
+                Dieses Feld muss ausgefüllt sein.
+            </mat-error>
+        </mat-form-field>
+
+        <button mat-button (click)="signUp()">Noch nicht Registriert?</button>
+        <button type="submit" mat-raised-button color="primary"
+                [disabled]="LoginForm.invalid">Login
+        </button>
+    </form>
+</mat-dialog-content>
