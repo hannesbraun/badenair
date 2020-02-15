@@ -1,0 +1,7 @@
+<h2>Gebuchte Flüge:</h2>
+<app-flight *ngFor="let flight of bookedFlights"
+            [flight]="flight.flights"
+            [persons]="flight.persons"
+            [checkInState]="true"
+            [baggages]="flight.baggages">
+</app-flight>

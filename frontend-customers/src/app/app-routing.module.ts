@@ -6,6 +6,7 @@ import {AccountComponent} from './components/account/account.component';
 import {SignUpPageComponent} from './pages/sign-up-page/sign-up-page.component';
 import {FlightsPageComponent} from './pages/flights-page/flights-page.component';
 import {AccountSettingsPageComponent} from './pages/account-settings-page/account-settings-page.component';
+import {BookedFlightsComponent} from './components/booked-flights/booked-flights.component';
 
 export const appRoutes: Routes = [
     {path: '', component: FlightSearchComponent},
@@ -13,6 +14,7 @@ export const appRoutes: Routes = [
     {path: 'settings', component: AccountSettingsPageComponent},
     {path: 'flights', component: FlightsPageComponent},
     {path: 'signup', component: SignUpPageComponent},
+    {path: 'booked', component: BookedFlightsComponent}
 ];
 
 @NgModule({

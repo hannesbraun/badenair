@@ -3,10 +3,14 @@ mat-card-content {
   flex-flow: row wrap;
   align-items: center;
   justify-content: space-between;
-  
+
   @media (max-width: 992px) {
     flex-flow: column;
   }
+}
+
+mat-card-footer {
+  padding: 16px;
 }
 
 .duration {
@@ -19,7 +23,23 @@ mat-card-content {
   font-weight: bold;
 }
 
+.baggage-list {
+  .baggage {
+    margin-bottom: 10px;
+
+    & > b {
+      display: contents;
+    }
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+
 div {
   display: flex;
   flex-flow: column nowrap;
 }
+
