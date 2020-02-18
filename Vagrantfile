@@ -1,6 +1,6 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "debian/buster64"
-  config.vm.box_version = "10.0.0"
+  config.vm.box_version = "10.3.0"
 
   config.vm.provider :virtualbox do |vb|
     vb.name = "BadenAir Server"
