@@ -14,8 +14,8 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: <<-SHELL
          sudo apt-get update -y
 
-         # Install AdoptOpenJDK
-         sudo apt-get install -y curl gnupg software-properties-common
+         # Install AdoptOpenJDK and other useful stuff
+         sudo apt-get install -y curl gnupg software-properties-common psmisc htop
          wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | sudo apt-key add -
          sudo add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/
          sudo apt-get update -y
@@ -34,13 +34,26 @@ Vagrant.configure("2") do |config|
          npm install
   SHELL
 
-#  config.trigger.after :up do |trigger|
-#    trigger.info = "Starting the BadenAir server..."
-#    trigger.run_remote = {path: "vagrant_up.sh"}
-#  end
+  $up_script = <<-'SCRIPT'
+    cd /vagrant/frontend-customers/
+    echo "Starting angular for customers"
+    ng serve --host 0.0.0.0 --port 31416 &> /dev/null &
+    cd /vagrant/frontend-employees/
+    echo "Starting angular for employees"
+    ng serve --host 0.0.0.0 --port 42069 &> /dev/null &
+  SCRIPT
 
-#  config.trigger.before :halt do |trigger|
-#    trigger.info = "Killing the BadenAir server..."
-#    trigger.run_remote = {path: "vagrant_halt.sh"}
-#   end
+  $halt_script = <<-'SCRIPT'
+     killall -15 -r ^ng
+  SCRIPT
+  
+  config.trigger.after :up do |trigger|
+    trigger.info = "Starting the BadenAir server..."
+    trigger.run_remote = {inline: $up_script}
+  end
+
+  config.trigger.before :halt do |trigger|
+    trigger.info = "Killing the BadenAir server..."
+    trigger.run_remote = {inline: $halt_script}
+  end
 end
