@@ -12,10 +12,15 @@ export class FlightSearchComponent implements OnInit {
 
     @ViewChild('searchForm', {static: true}) searchForm !: NgForm;
 
+
     constructor(private router: Router) {
     }
 
     ngOnInit() {
+    }
+
+    get now() {
+        return new Date();
     }
 
     onSearch() {

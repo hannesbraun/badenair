@@ -1,72 +1,74 @@
 <h1>Flugsuche</h1>
 <form #searchForm="ngForm" (ngSubmit)="onSearch()">
-  <div gdColumns.gt-sm="3" gdColumns.sm="2" gdColumns.xs="1" gdGap="20px">
-    <mat-radio-group gdColumn.gt-sm="1/3" gdColumns="2" gdColumn.sm="1/3" gdColumn.xs="1" gdGap="10px" name="flight"
-                     #flightType="ngModel" ngModel required>
-      <mat-radio-button gdColumn="1" gdColumn.xs="1" value="1">Hin- und Rückflug</mat-radio-button>
-      <mat-radio-button gdColumn="2" gdColumn.xs="1" value="2">nur Hinflug</mat-radio-button>
-    </mat-radio-group>
+    <div gdColumns.gt-sm="3" gdColumns.sm="2" gdColumns.xs="1" gdGap="20px">
+        <mat-radio-group gdColumn.gt-sm="1/3" gdColumns="2" gdColumn.sm="1/3" gdColumn.xs="1" gdGap="10px" name="flight"
+                         #flightType="ngModel" ngModel required>
+            <mat-radio-button gdColumn="1" gdColumn.xs="1" value="1">Hin- und Rückflug</mat-radio-button>
+            <mat-radio-button gdColumn="2" gdColumn.xs="1" value="2">nur Hinflug</mat-radio-button>
+        </mat-radio-group>
 
-    <mat-form-field gdColumn.gt-sm="1" gdColumn.xs="1">
-      <input type="text" name="von" placeholder="Von" aria-label="Number" required matInput #fromInput="ngModel" ngModel
-             [matAutocomplete]="auto">
-      <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let option of options" [value]="option">
-          {{option}}
-        </mat-option>
-      </mat-autocomplete>
-      <mat-error *ngIf="fromInput.hasError('required')">
-        Start Flughafen wird <strong>benötigt</strong>
-      </mat-error>
-    </mat-form-field>
+        <mat-form-field gdColumn.gt-sm="1" gdColumn.xs="1">
+            <input type="text" name="von" placeholder="Von" aria-label="Number" required matInput #fromInput="ngModel"
+                   ngModel
+                   [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let option of options" [value]="option">
+                    {{option}}
+                </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="fromInput.hasError('required')">
+                Start Flughafen wird <strong>benötigt</strong>
+            </mat-error>
+        </mat-form-field>
 
-    <mat-form-field gdColumn.xs="1">
-      <input type="text" name="to" placeholder="Nach" required aria-label="Number" matInput #toInput="ngModel" ngModel
-             [matAutocomplete]="auto">
-      <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let option of options" [value]="option">
-          {{option}}
-        </mat-option>
-      </mat-autocomplete>
-      <mat-error *ngIf="toInput.hasError('required')">
-        Ziel Flughafen wird <strong>benötigt</strong>
-      </mat-error>
-    </mat-form-field>
+        <mat-form-field gdColumn.xs="1">
+            <input type="text" name="to" placeholder="Nach" required aria-label="Number" matInput #toInput="ngModel"
+                   ngModel
+                   [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let option of options" [value]="option">
+                    {{option}}
+                </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="toInput.hasError('required')">
+                Ziel Flughafen wird <strong>benötigt</strong>
+            </mat-error>
+        </mat-form-field>
 
-    <mat-form-field gdColumn.gt-sm="1" gdColumn.xs="1">
-      <input matInput name="fromDate" [matDatepicker]="pickerFromDate" required #fromDateInput="ngModel" ngModel
-             placeholder="Hinreise Datum">
-      <mat-datepicker-toggle matSuffix [for]="pickerFromDate"></mat-datepicker-toggle>
-      <mat-datepicker #pickerFromDate></mat-datepicker>
+        <mat-form-field gdColumn.gt-sm="1" gdColumn.xs="1">
+            <input matInput name="fromDate" [matDatepicker]="pickerFromDate" required #fromDateInput="ngModel" ngModel
+                   placeholder="Hinreise Datum" [min]="now">
+            <mat-datepicker-toggle matSuffix [for]="pickerFromDate"></mat-datepicker-toggle>
+            <mat-datepicker #pickerFromDate></mat-datepicker>
 
-      <mat-error *ngIf="fromDateInput.hasError('required')">
-        Hinreise Datum wird <strong>benötigt</strong>
-      </mat-error>
-    </mat-form-field>
+            <mat-error *ngIf="fromDateInput.hasError('required')">
+                Hinreise Datum wird <strong>benötigt</strong>
+            </mat-error>
+        </mat-form-field>
 
-    <mat-form-field gdColumn.xs="1">
-      <input matInput name="toDate" [matDatepicker]="pickerToDate" required #toDateInput="ngModel" ngModel
-             placeholder="Rückreise Datum">
-      <mat-datepicker-toggle matSuffix [for]="pickerToDate"></mat-datepicker-toggle>
-      <mat-datepicker #pickerToDate></mat-datepicker>
+        <mat-form-field gdColumn.xs="1">
+            <input matInput name="toDate" [matDatepicker]="pickerToDate" required #toDateInput="ngModel" ngModel
+                   placeholder="Rückreise Datum" [min]="now">
+            <mat-datepicker-toggle matSuffix [for]="pickerToDate"></mat-datepicker-toggle>
+            <mat-datepicker #pickerToDate></mat-datepicker>
 
-      <mat-error *ngIf="toDateInput.hasError('required')">
-        Rückreise Datum wird <strong>benötigt</strong>
-      </mat-error>
-    </mat-form-field>
+            <mat-error *ngIf="toDateInput.hasError('required')">
+                Rückreise Datum wird <strong>benötigt</strong>
+            </mat-error>
+        </mat-form-field>
 
-    <mat-form-field gdColumn.gt-sm="3" gdColumn.xs="1">
-      <input name="personNumber" type="number" matInput required placeholder="Anzahl Passagiere"
-             #personInput="ngModel"
-             ngModel>
-      <mat-error *ngIf="personInput.hasError('required')">
-        Anzahl Passagiere wird <strong>benötigt</strong>
-      </mat-error>
-    </mat-form-field>
+        <mat-form-field gdColumn.gt-sm="3" gdColumn.xs="1">
+            <input name="personNumber" type="number" matInput required placeholder="Anzahl Passagiere"
+                   #personInput="ngModel" min="1"
+                   ngModel>
+            <mat-error *ngIf="personInput.hasError('required')">
+                Anzahl Passagiere wird <strong>benötigt</strong>
+            </mat-error>
+        </mat-form-field>
 
-    <div gdColumn.gt-sm="3" gdColumn.xs="1" class="submit-button">
-      <button type="submit" mat-raised-button>Suchen</button>
+        <div gdColumn.gt-sm="3" gdColumn.xs="1" class="submit-button">
+            <button type="submit" mat-raised-button>Suchen</button>
+        </div>
     </div>
-  </div>
 
 </form>

@@ -27,13 +27,13 @@
                     mat-flat-button>
                     {{ loggedIn ? 'Logout' : 'Login'  }}
                 </button>
-                <button
-                    routerLink="/account"
-                    (click)="openMyAccount()"
-                    *ngIf="loggedIn"
-                    mat-button>
+                <button mat-button [matMenuTriggerFor]="menu" *ngIf="loggedIn">
                     Mein Konto
                 </button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item routerLink="/booked">Gebuchte Flüge</button>
+                    <button mat-menu-item routerLink="/settings">Account Einstellungen</button>
+                </mat-menu>
             </span>
         </mat-toolbar>
         <ng-content></ng-content>
