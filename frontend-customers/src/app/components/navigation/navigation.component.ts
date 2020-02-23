@@ -2,6 +2,8 @@ import {Component} from '@angular/core';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {Observable} from 'rxjs';
 import {map, shareReplay} from 'rxjs/operators';
+import {MatDialog} from '@angular/material/dialog';
+import {LoginComponent} from '../login/login.component';
 import {Router} from '@angular/router';
 
 @Component({
@@ -16,20 +18,31 @@ export class NavigationComponent {
             map(result => result.matches),
             shareReplay()
         );
-    loggedIn = true;
+    loggedIn = false;
 
-    constructor(private breakpointObserver: BreakpointObserver, private router: Router) {
+
+    constructor(private breakpointObserver: BreakpointObserver,
+                private dialog: MatDialog,
+                private router: Router
+    ) {
     }
 
     login() {
         if (!this.loggedIn) {
+            const loginDialog = this.dialog.open(LoginComponent);
+            loginDialog.afterClosed()
+                .subscribe((output: boolean) => {
+                    if (output) {
+                        this.loggedIn = output;
+                    }
+                });
+        } else {
+            this.loggedIn = false;
             this.router.navigate(['/']);
         }
-        this.loggedIn = !this.loggedIn;
     }
 
     openMyAccount() {
 
     }
-
 }

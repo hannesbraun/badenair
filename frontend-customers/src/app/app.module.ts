@@ -1,4 +1,3 @@
-import {AccountComponent} from './components/account/account.component';
 import {AccountSettingsPageComponent} from './pages/account-settings-page/account-settings-page.component';
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
@@ -22,11 +21,11 @@ import {CheckButtonComponent} from './components/flight/check-button/check-butto
 import {FlightsPageComponent} from './pages/flights-page/flights-page.component';
 import {HoverClassDirective} from './directives/hover-class.directive';
 import {BookedFlightsComponent} from './components/booked-flights/booked-flights.component';
+import {LoginComponent} from './components/login/login.component';
 
 
 @NgModule({
     declarations: [
-        AccountComponent,
         AccountSettingsPageComponent,
         AppComponent,
         ChangePasswordDialogComponent,
@@ -41,7 +40,8 @@ import {BookedFlightsComponent} from './components/booked-flights/booked-flights
         CheckButtonComponent,
         FlightsPageComponent,
         HoverClassDirective,
-        BookedFlightsComponent
+        BookedFlightsComponent,
+        LoginComponent
     ],
     imports: [
         AppRoutingModule,
@@ -55,7 +55,7 @@ import {BookedFlightsComponent} from './components/booked-flights/booked-flights
     ],
     providers: [],
     bootstrap: [AppComponent],
-    entryComponents: [ChangePasswordDialogComponent]
+    entryComponents: [ChangePasswordDialogComponent, LoginComponent]
 })
 export class AppModule {
 }
