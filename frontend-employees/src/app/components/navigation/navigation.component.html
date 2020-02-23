@@ -10,7 +10,7 @@
             <a mat-list-item>Urlaubsplanung</a>
             <a mat-list-item>Zeiterfassung</a>
             <a mat-list-item>Start/Landung</a>
-            <a mat-list-item routerLink="/flightoverview" >Flugplan</a>
+            <a mat-list-item routerLink="/flightoverview">Flugplan</a>
             <a mat-list-item>Wartungsergebnisse</a>
         </mat-nav-list>
     </mat-sidenav>
@@ -57,7 +57,7 @@
             </button>
             <button
                 *ngIf="!(isHandset$ | async) && !loggedIn"
-                routerLink="/account"
+                routerLink="/maintenance"
                 mat-button>
                 Wartungsergebnisse
             </button>
