@@ -12,7 +12,6 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {NavigationComponent} from './components/navigation/navigation.component';
 import {TimeTrackingComponent} from './components/time-tracking/time-tracking.component';
 import {AppRoutingModule} from './app-routing.module';
-import {AccountComponent} from './components/account/account.component';
 import {LoginComponent} from './components/login/login.component';
 import {PlaneMaintenanceComponent} from './components/plane-maintenance/plane-maintenance.component';
 
@@ -24,7 +23,6 @@ import {PlaneMaintenanceComponent} from './components/plane-maintenance/plane-ma
         ScheduleConflictDialogComponent,
         NavigationComponent,
         TimeTrackingComponent,
-        AccountComponent,
         PlaneMaintenanceComponent,
         LoginComponent
     ],

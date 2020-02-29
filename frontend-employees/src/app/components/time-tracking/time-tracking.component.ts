@@ -1,19 +1,16 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
     selector: 'app-time-tracking',
     templateUrl: './time-tracking.component.html',
     styleUrls: ['./time-tracking.component.scss']
 })
-export class TimeTrackingComponent implements OnInit {
+export class TimeTrackingComponent {
     elapsedTime = 0;
     isTimerRunning = false;
     timer: any;
 
     constructor() {
-    }
-
-    ngOnInit() {
     }
 
     start(): void {
@@ -25,10 +22,6 @@ export class TimeTrackingComponent implements OnInit {
     stop(): void {
         this.isTimerRunning = false;
         clearInterval(this.timer);
-    }
-
-    reset(): void {
-        this.elapsedTime = 0;
     }
 
     get time() {
