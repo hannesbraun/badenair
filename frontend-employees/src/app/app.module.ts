@@ -16,6 +16,7 @@ import {AccountComponent} from './components/account/account.component';
 import {PlaneMaintenanceComponent} from './components/plane-maintenance/plane-maintenance.component';
 import {MatInputModule} from '@angular/material/input';
 import {LoginComponent} from './components/login/login.component';
+import { StartLandingComponent } from './components/start-landing/start-landing.component';
 
 @NgModule({
     declarations: [
@@ -27,7 +28,8 @@ import {LoginComponent} from './components/login/login.component';
         TimeTrackingComponent,
         AccountComponent,
         PlaneMaintenanceComponent,
-        LoginComponent
+        LoginComponent,
+        StartLandingComponent
     ],
     imports: [
         BrowserAnimationsModule,
