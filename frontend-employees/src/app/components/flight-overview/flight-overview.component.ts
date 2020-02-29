@@ -21,6 +21,7 @@ import {
     ScheduleConflictDialogInput
 } from './dialogs/schedule-conflict-dialog/schedule-conflict-dialog.component';
 import {ScheduleConflictServiceService} from '../../services/conflicts/schedule-conflict-service.service';
+import {FlightService} from '../../services/flights/flight.service';
 
 interface LengthData {
     start: number;
@@ -40,20 +41,27 @@ export class FlightOverviewComponent implements OnInit {
 
     calculatedLengths: LengthData[][] = [];
 
-    constructor(private dialog: MatDialog, private scheduleConflictServiceService: ScheduleConflictServiceService) {
+    constructor(private dialog: MatDialog,
+                private scheduleConflictServiceService: ScheduleConflictServiceService,
+                private flightService: FlightService) {
     }
 
     ngOnInit() {
-        this.schedules
-            .map(schedule => schedule.flights)
-            .forEach((flights: FlightDto[], index: number) => {
-                this.calculatedLengths[index] = flights.map(flight => {
-                    return {
-                        start: calculateStart(flight),
-                        duration: calculateDurationLength(flight),
-                        remaining: calculateRemainingLength(flight)
-                    };
-                });
+        // TODO remove subscription to Service
+        this.flightService.getPlaneSchedules()
+            .subscribe(schedules => {
+                this.schedules = schedules;
+                this.schedules
+                    .map(schedule => schedule.flights)
+                    .forEach((flights: FlightDto[], index: number) => {
+                        this.calculatedLengths[index] = flights.map(flight => {
+                            return {
+                                start: calculateStart(flight),
+                                duration: calculateDurationLength(flight),
+                                remaining: calculateRemainingLength(flight)
+                            };
+                        });
+                    });
             });
     }
 

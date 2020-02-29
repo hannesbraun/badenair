@@ -14,7 +14,8 @@ import {TimeTrackingComponent} from './components/time-tracking/time-tracking.co
 import {AppRoutingModule} from './app-routing.module';
 import {AccountComponent} from './components/account/account.component';
 import {PlaneMaintenanceComponent} from './components/plane-maintenance/plane-maintenance.component';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatInputModule} from '@angular/material/input';
+import {LoginComponent} from './components/login/login.component';
 
 @NgModule({
     declarations: [
@@ -25,7 +26,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
         NavigationComponent,
         TimeTrackingComponent,
         AccountComponent,
-        PlaneMaintenanceComponent
+        PlaneMaintenanceComponent,
+        LoginComponent
     ],
     imports: [
         BrowserAnimationsModule,
@@ -33,11 +35,11 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
         MaterialModule,
         ReactiveFormsModule,
         AppRoutingModule,
-        MatProgressBarModule
+        MatInputModule
     ],
     providers: [],
     bootstrap: [AppComponent],
-    entryComponents: [FlightInfoDialogComponent, ScheduleConflictDialogComponent]
+    entryComponents: [FlightInfoDialogComponent, ScheduleConflictDialogComponent, LoginComponent]
 })
 export class AppModule {
 }
