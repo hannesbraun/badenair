@@ -42,4 +42,8 @@ export class FlightComponent {
     checkIn() {
         this.onCheckInButtonClick.emit(this.flight);
     }
+
+    getDuration() {
+        return this.flight.arrivalTime.getTime() - this.flight.startTime.getTime();
+    }
 }
