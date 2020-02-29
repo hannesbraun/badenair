@@ -11,7 +11,7 @@ import {
     totalWidth
 } from '../../services/util/SVGUtil';
 import {FlightDto, PlaneScheduleDto} from '../../services/dtos/Dtos';
-import {MatDialog, MatDialogConfig} from '@angular/material';
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {
     FlightInfoDialogComponent,
     FlightInfoDialogInput

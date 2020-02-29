@@ -13,9 +13,8 @@ import {NavigationComponent} from './components/navigation/navigation.component'
 import {TimeTrackingComponent} from './components/time-tracking/time-tracking.component';
 import {AppRoutingModule} from './app-routing.module';
 import {AccountComponent} from './components/account/account.component';
-import {PlaneMaintenanceComponent} from './components/plane-maintenance/plane-maintenance.component';
-import {MatInputModule} from '@angular/material/input';
 import {LoginComponent} from './components/login/login.component';
+import {PlaneMaintenanceComponent} from './components/plane-maintenance/plane-maintenance.component';
 
 @NgModule({
     declarations: [
@@ -34,12 +33,10 @@ import {LoginComponent} from './components/login/login.component';
         BrowserModule,
         MaterialModule,
         ReactiveFormsModule,
-        AppRoutingModule,
-        MatInputModule
+        AppRoutingModule
     ],
     providers: [],
-    bootstrap: [AppComponent],
-    entryComponents: [FlightInfoDialogComponent, ScheduleConflictDialogComponent, LoginComponent]
+    bootstrap: [AppComponent]
 })
 export class AppModule {
 }
