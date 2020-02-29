@@ -1,0 +1,36 @@
+.plane-maintenance-container {
+  display: grid;
+  grid-gap: 20px;
+
+  & > mat-card {
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: 3fr 1fr;
+
+    .state {
+      color: limegreen;
+
+      &.state-defect {
+        color: red;
+      }
+    }
+
+    .progress {
+      background-color: #DDDDDD;
+      width: 100%;
+      height: 100%;
+      border-radius: 5px;
+
+      & > .progress-indicator {
+        border-radius: 5px;
+        width: 100%;
+        height: 100%;
+        background-color: #3f51b5;
+        transform-origin: left;
+        transition: transform 0.5s ease-in-out;
+      }
+    }
+  }
+}
+
+

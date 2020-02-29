@@ -51,7 +51,7 @@ import {LoginComponent} from './components/login/login.component';
         FormsModule,
         LayoutModule,
         MaterialModule,
-        ReactiveFormsModule,
+        ReactiveFormsModule
     ],
     providers: [],
     bootstrap: [AppComponent],

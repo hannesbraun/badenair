@@ -13,8 +13,9 @@ import {NavigationComponent} from './components/navigation/navigation.component'
 import {TimeTrackingComponent} from './components/time-tracking/time-tracking.component';
 import {AppRoutingModule} from './app-routing.module';
 import {AccountComponent} from './components/account/account.component';
-import {LoginComponent} from './components/login/login.component';
+import {PlaneMaintenanceComponent} from './components/plane-maintenance/plane-maintenance.component';
 import {MatInputModule} from '@angular/material/input';
+import {LoginComponent} from './components/login/login.component';
 
 @NgModule({
     declarations: [
@@ -25,6 +26,7 @@ import {MatInputModule} from '@angular/material/input';
         NavigationComponent,
         TimeTrackingComponent,
         AccountComponent,
+        PlaneMaintenanceComponent,
         LoginComponent
     ],
     imports: [
