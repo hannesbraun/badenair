@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {FlightDto} from "../../services/dtos/Dtos";
-import {Baggage, BaggageState, Person} from "../flight/flight.component";
+import {FlightDto} from '../../services/dtos/Dtos';
+import {Baggage, BaggageState, Person} from '../flight/flight.component';
 
 interface BookedFlight {
     flights: FlightDto;

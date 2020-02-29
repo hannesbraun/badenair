@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {Router} from '@angular/router';
 
@@ -7,16 +7,12 @@ import {Router} from '@angular/router';
     templateUrl: './flight-search.component.html',
     styleUrls: ['./flight-search.component.scss']
 })
-export class FlightSearchComponent implements OnInit {
+export class FlightSearchComponent {
     options = ['Baden Baden', 'Offenburg'];
 
     @ViewChild('searchForm', {static: true}) searchForm !: NgForm;
 
-
     constructor(private router: Router) {
-    }
-
-    ngOnInit() {
     }
 
     get now() {

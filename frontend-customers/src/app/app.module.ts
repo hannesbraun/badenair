@@ -54,8 +54,7 @@ import {LoginComponent} from './components/login/login.component';
         ReactiveFormsModule
     ],
     providers: [],
-    bootstrap: [AppComponent],
-    entryComponents: [ChangePasswordDialogComponent, LoginComponent]
+    bootstrap: [AppComponent]
 })
 export class AppModule {
 }

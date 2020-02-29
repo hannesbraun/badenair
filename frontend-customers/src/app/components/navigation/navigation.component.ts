@@ -41,8 +41,4 @@ export class NavigationComponent {
             this.router.navigate(['/']);
         }
     }
-
-    openMyAccount() {
-
-    }
 }
