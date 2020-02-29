@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {SignUpDto, UpdateProfileDto} from '../../services/dtos/Dtos';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MatDialog} from '@angular/material';
+import {MatDialog} from '@angular/material/dialog';
 import {
     ChangePasswordDialogComponent,
     ChangePasswordDialogOutput
