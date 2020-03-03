@@ -22,6 +22,7 @@ import {CheckButtonComponent} from './components/flight/check-button/check-butto
 import {FlightsPageComponent} from './pages/flights-page/flights-page.component';
 import {HoverClassDirective} from './directives/hover-class.directive';
 import {BookedFlightsComponent} from './components/booked-flights/booked-flights.component';
+import { PassengersFormComponent } from './components/passengers-form/passengers-form.component';
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import {BookedFlightsComponent} from './components/booked-flights/booked-flights
         CheckButtonComponent,
         FlightsPageComponent,
         HoverClassDirective,
-        BookedFlightsComponent
+        BookedFlightsComponent,
+        PassengersFormComponent
     ],
     imports: [
         AppRoutingModule,

@@ -34,3 +34,13 @@ export interface FlightDto {
     startTime: Date;
     arrivalTime: Date;
 }
+
+export interface PassengerDto {
+    name: string;
+    surname: string;
+    baggage1: number;
+    baggage2: number;
+    baggage3: number;
+    baggage4: number;
+  
+  }

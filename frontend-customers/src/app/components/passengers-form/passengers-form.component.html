@@ -1,0 +1,32 @@
+<form [formGroup]="form" (ngSubmit)="submit()"> 
+    <div class="card-layout" formArrayName="items" *ngFor="let item of form.controls['items'].controls; let i = index">
+        <mat-card [formGroupName]="i" >
+            <mat-card-header>
+                <mat-card-title>Mitreisender {{i+1}}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content fxLayout="row" fxLayoutGap="20px">
+                <div fxLayout="column" fxFlex>
+                    <mat-form-field>
+                        <input matInput type="text" placeholder="Vorname" formControlName='name'>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput type="text" placeholder="Nachname" formControlName='surname'>
+                    </mat-form-field>
+                </div>
+                <div fxLayout="column" fxFlex>
+                    <mat-form-field *ngFor="let i of [0, 1, 2, 3]">
+                        <mat-label>{{i+1}}. Gepäckstück</mat-label>
+                        <mat-select formControlName="baggage{{i+1}}">
+                            <mat-option>Kein Gepäckstück</mat-option>
+                            <mat-option *ngFor="let baggage of baggageCapacity" [value]="baggage">{{baggage}}kg Gepäckstück</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div fxLayoutAlign="space-between">
+        <button mat-raised-button >Zurück</button>
+        <button mat-raised-button color="primary" type="submit">Weiter</button>
+    </div>
+</form>
