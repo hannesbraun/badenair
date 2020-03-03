@@ -4,10 +4,10 @@ import { PassengerDto } from 'src/app/services/dtos/Dtos';
 
 @Component({
   selector: 'app-passenger-form',
-  templateUrl: './passenger-form.component.html',
-  styleUrls: ['./passenger-form.component.scss']
+  templateUrl: './passengers-form.component.html',
+  styleUrls: ['./passengers-form.component.scss']
 })
-export class PassengerFormComponent implements OnInit {
+export class PassengersFormComponent implements OnInit {
 
   form!: FormGroup;
   passengerCount!: number;
