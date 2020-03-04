@@ -12,11 +12,12 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {NavigationComponent} from './components/navigation/navigation.component';
 import {TimeTrackingComponent} from './components/time-tracking/time-tracking.component';
 import {AppRoutingModule} from './app-routing.module';
-import {AccountComponent} from './components/account/account.component';
-import {PlaneMaintenanceComponent} from './components/plane-maintenance/plane-maintenance.component';
-import {MatInputModule} from '@angular/material/input';
 import {LoginComponent} from './components/login/login.component';
-import { StartLandingComponent } from './components/start-landing/start-landing.component';
+import {PlaneMaintenanceComponent} from './components/plane-maintenance/plane-maintenance.component';
+import {UpdateBaggageComponent} from './components/update-baggage/update-baggage.component';
+import {ServiceSchedulePageComponent} from './pages/service-schedule-page/service-schedule-page.component';
+import {UpdateBaggagePageComponent} from './pages/update-baggage-page/update-baggage-page.component';
+import {StartLandingComponent} from './components/start-landing/start-landing.component';
 
 @NgModule({
     declarations: [
@@ -26,9 +27,11 @@ import { StartLandingComponent } from './components/start-landing/start-landing.
         ScheduleConflictDialogComponent,
         NavigationComponent,
         TimeTrackingComponent,
-        AccountComponent,
         PlaneMaintenanceComponent,
         LoginComponent,
+        UpdateBaggageComponent,
+        ServiceSchedulePageComponent,
+        UpdateBaggagePageComponent,
         StartLandingComponent
     ],
     imports: [
@@ -36,12 +39,10 @@ import { StartLandingComponent } from './components/start-landing/start-landing.
         BrowserModule,
         MaterialModule,
         ReactiveFormsModule,
-        AppRoutingModule,
-        MatInputModule
+        AppRoutingModule
     ],
     providers: [],
-    bootstrap: [AppComponent],
-    entryComponents: [FlightInfoDialogComponent, ScheduleConflictDialogComponent, LoginComponent]
+    bootstrap: [AppComponent]
 })
 export class AppModule {
 }

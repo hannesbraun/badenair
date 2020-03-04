@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MatDialogRef} from '@angular/material';
+import {MatDialogRef} from '@angular/material/dialog';
 import {passwordsMatchValidator} from '../../../services/util/FormValidators';
 
 export interface ChangePasswordDialogOutput {

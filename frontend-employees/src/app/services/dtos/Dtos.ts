@@ -1,4 +1,5 @@
 export interface FlightDto {
+    id: number;
     start: string;
     destination: string;
     startTime: Date;
@@ -22,4 +23,25 @@ export enum ScheduleConfigSolution {
     CANCEL_FLIGHT,
     DO_NOTHING,
     USE_BACKUP_PLANE
+}
+
+export enum BaggageState {
+    ON_FLIGHT,
+    READY_TO_GET
+}
+
+export interface ChangeBaggageStateDto {
+    flightId: number;
+    baggageId: string;
+    state: BaggageState;
+}
+
+export interface ServiceScheduleDto {
+    schedule: Schedule;
+    employee: string;
+}
+
+export interface Schedule {
+    start: Date;
+    end: Date;
 }

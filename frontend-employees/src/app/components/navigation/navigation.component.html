@@ -1,5 +1,5 @@
 <mat-sidenav-container class="sidenav-container">
-    <mat-sidenav #drawer class="sidenav" fixedInViewport
+    <mat-sidenav #drawer class="sidenav" [fixedInViewport]="true"
         [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
         [mode]="(isHandset$ | async) ? 'over' : 'side'">
         <mat-toolbar routerLink="/">Baden Air</mat-toolbar>
@@ -45,6 +45,12 @@
             </button>
             <button
                 *ngIf="!(isHandset$ | async) && loggedIn"
+                routerLink="/baggage"
+                mat-button>
+                Gepäckverfolgung
+            </button>
+            <button
+                *ngIf="!(isHandset$ | async) && loggedIn"
                 routerLink="/start-landing"
                 mat-button>
                 Start/Landung
@@ -60,6 +66,12 @@
                 routerLink="/maintenance"
                 mat-button>
                 Wartungsergebnisse
+            </button>
+            <button
+                *ngIf="!(isHandset$ | async) && loggedIn"
+                routerLink="/serviceSchedule"
+                mat-button>
+                Bereitschaftsdienst
             </button>
             <span class="fill-space"></span>
             <span

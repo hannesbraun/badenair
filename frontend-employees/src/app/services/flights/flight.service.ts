@@ -38,6 +38,7 @@ export class FlightService {
             hasConflict: false,
             flights: [
                 {
+                    id: i,
                     start: 'Lorem ipsum dolor sit amet',
                     destination: 'Lorem ipsum dolor sit amet',
                     startTime: startDate,
