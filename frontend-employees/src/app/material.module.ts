@@ -12,6 +12,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
 import {MatInputModule} from '@angular/material/input';
 import {MatTableModule} from '@angular/material/table';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import {MatTableModule} from '@angular/material/table';
         MatSidenavModule,
         MatInputModule,
         MatTableModule,
+        MatProgressSpinnerModule,
     ],
     exports: [
         MatButtonModule,
@@ -40,6 +42,7 @@ import {MatTableModule} from '@angular/material/table';
         MatSidenavModule,
         MatInputModule,
         MatTableModule,
+        MatProgressSpinnerModule,
     ],
     providers: [
         {provide: MAT_DATE_LOCALE, useValue: 'de-DE'}

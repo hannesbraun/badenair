@@ -1,14 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-
-export interface ServiceScheduleDto {
-    schedule: Schedule;
-    employee: string;
-}
-
-export interface Schedule {
-    start: Date;
-    end: Date;
-}
+import {ServiceScheduleDto} from '../../services/dtos/Dtos';
+import {ServiceScheduleService} from '../../services/service-schedule/service-schedule.service';
 
 @Component({
     selector: 'app-service-schedule-page',
@@ -17,42 +9,16 @@ export interface Schedule {
 })
 export class ServiceSchedulePageComponent implements OnInit {
 
-    dataSource: ServiceScheduleDto[] = [
-        {
-            schedule: {
-                start: new Date(),
-                end: new Date()
-            },
-            employee: 'Max Mustermann'
-        },
-        {
-            schedule: {
-                start: new Date(),
-                end: new Date()
-            },
-            employee: 'Max Mustermann'
-        },
-        {
-            schedule: {
-                start: new Date(),
-                end: new Date()
-            },
-            employee: 'Max Mustermann'
-        },
-        {
-            schedule: {
-                start: new Date(),
-                end: new Date()
-            },
-            employee: 'Max Mustermann'
-        }
-    ];
+    serviceScheduleData: ServiceScheduleDto[] | undefined;
     displayedColumns = ['scheduledTime', 'name'];
 
-    constructor() {
+    constructor(private serviceScheduleService: ServiceScheduleService) {
     }
 
     ngOnInit(): void {
+        this.serviceScheduleService.getServiceSchedule().subscribe(dto => {
+            this.serviceScheduleData = dto;
+        });
     }
 
 }
