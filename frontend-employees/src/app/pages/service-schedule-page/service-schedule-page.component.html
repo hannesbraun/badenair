@@ -1,6 +1,6 @@
 <h1>Bereitschaftsdienst</h1>
 
-<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+<mat-table [dataSource]="serviceScheduleData" *ngIf="serviceScheduleData; else loading" class="mat-elevation-z8">
     <ng-container matColumnDef="scheduledTime">
         <mat-header-cell *matHeaderCellDef> Von - Bis </mat-header-cell>
         <mat-cell *matCellDef="let serviceScheduleDto">
@@ -16,3 +16,7 @@
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 </mat-table>
+
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>

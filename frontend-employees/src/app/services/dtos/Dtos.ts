@@ -23,3 +23,13 @@ export enum ScheduleConfigSolution {
     DO_NOTHING,
     USE_BACKUP_PLANE
 }
+
+export interface ServiceScheduleDto {
+    schedule: Schedule;
+    employee: string;
+}
+
+export interface Schedule {
+    start: Date;
+    end: Date;
+}
