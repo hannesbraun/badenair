@@ -45,6 +45,12 @@
             </button>
             <button
                 *ngIf="!(isHandset$ | async) && loggedIn"
+                routerLink="/baggage"
+                mat-button>
+                Gepäckverfolgung
+            </button>
+            <button
+                *ngIf="!(isHandset$ | async) && loggedIn"
                 routerLink="/account"
                 mat-button>
                 Start/Landung
