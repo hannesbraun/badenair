@@ -1,0 +1,29 @@
+<h1>Flugbericht - {{ name }}</h1>
+
+<div class="start-landing-container">
+    <h3>{{ planeName }}:</h3>
+    <mat-card>
+        <div>Start:</div>
+        <button mat-raised-button (click)="start()" [disabled]="isStarted">Starten</button>
+        <div>
+            <div *ngIf="startTime">Gestartet am: {{startTime | date: 'dd.MM.yyyy'}} um {{startTime | date: 'HH:mm'}}Uhr
+
+            </div>
+        </div>
+        <div>Landung:</div>
+        <button mat-raised-button (click)="land()" [disabled]="!isStarted">Landen</button>
+        <div>
+            <div *ngIf="landingTime">Gelandet am: {{landingTime | date: 'dd.MM.yyyy'}}
+                um {{landingTime | date: 'HH:mm'}}
+                Uhr
+            </div>
+        </div>
+        <div>Panne:</div>
+        <button mat-raised-button (click)="hasDelay = true">Panne</button>
+        <div></div>
+        <div>Voraussichtliche Verzögerung:</div>
+        <mat-form-field>
+            <input type="number" matInput name="delay" [disabled]="!hasDelay">
+        </mat-form-field>
+    </mat-card>
+</div>

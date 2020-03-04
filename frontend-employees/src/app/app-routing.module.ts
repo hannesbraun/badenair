@@ -5,6 +5,7 @@ import {TimeTrackingComponent} from './components/time-tracking/time-tracking.co
 import {PlaneMaintenanceComponent} from './components/plane-maintenance/plane-maintenance.component';
 import {UpdateBaggagePageComponent} from './pages/update-baggage-page/update-baggage-page.component';
 import {ServiceSchedulePageComponent} from './pages/service-schedule-page/service-schedule-page.component';
+import {StartLandingComponent} from './components/start-landing/start-landing.component';
 
 
 const routes: Routes = [
@@ -12,8 +13,8 @@ const routes: Routes = [
     {path: 'maintenance', component: PlaneMaintenanceComponent},
     {path: 'time', component: TimeTrackingComponent},
     {path: 'baggage', component: UpdateBaggagePageComponent},
-    {path: 'time', component: TimeTrackingComponent},
-    {path: 'serviceSchedule', component: ServiceSchedulePageComponent}
+    {path: 'serviceSchedule', component: ServiceSchedulePageComponent},
+    {path: 'start-landing', component: StartLandingComponent}
 ];
 
 @NgModule({

@@ -17,6 +17,7 @@ import {PlaneMaintenanceComponent} from './components/plane-maintenance/plane-ma
 import {UpdateBaggageComponent} from './components/update-baggage/update-baggage.component';
 import {ServiceSchedulePageComponent} from './pages/service-schedule-page/service-schedule-page.component';
 import {UpdateBaggagePageComponent} from './pages/update-baggage-page/update-baggage-page.component';
+import {StartLandingComponent} from './components/start-landing/start-landing.component';
 
 @NgModule({
     declarations: [
@@ -29,9 +30,9 @@ import {UpdateBaggagePageComponent} from './pages/update-baggage-page/update-bag
         PlaneMaintenanceComponent,
         LoginComponent,
         UpdateBaggageComponent,
-        LoginComponent,
         ServiceSchedulePageComponent,
-        UpdateBaggagePageComponent
+        UpdateBaggagePageComponent,
+        StartLandingComponent
     ],
     imports: [
         BrowserAnimationsModule,
