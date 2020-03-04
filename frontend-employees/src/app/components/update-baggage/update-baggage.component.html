@@ -1,0 +1,30 @@
+<form [formGroup]="updateBaggageForm" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+        <mat-select formControlName="flightSelect" placeholder="Flug auswählen...">
+            <mat-option *ngFor="let flight of availableFlights" value="{{flight.id}}">{{flight.id}} ({{flight.start}}
+                - {{flight.destination}})
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="updateBaggageForm?.get('flightSelect')?.errors?.required">
+            Es muss ein Flug ausgewählt sein.
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-select formControlName="stateSelect" placeholder="Status auswählen...">
+            <mat-option value="{{baggageStates.ON_FLIGHT}}">Im Flugzeug</mat-option>
+            <mat-option value="{{baggageStates.READY_TO_GET}}">Bereit zum Abholen</mat-option>
+        </mat-select>
+        <mat-error *ngIf="updateBaggageForm?.get('stateSelect')?.errors?.required">
+            Es muss ein Status ausgewählt sein.
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+        <input type="text" matInput formControlName="baggageId" placeholder="Gepäckstücknummer"/>
+        <mat-error *ngIf="updateBaggageForm?.get('baggageId')?.errors?.required">
+            Dieses Feld muss ausgefüllt sein.
+        </mat-error>
+    </mat-form-field>
+    <div class="action">
+        <button type="submit" mat-raised-button color="primary" [disabled]="!updateBaggageForm.valid">Aktualisieren</button>
+    </div>
+</form>

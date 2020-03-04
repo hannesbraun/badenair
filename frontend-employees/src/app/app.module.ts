@@ -14,6 +14,7 @@ import {TimeTrackingComponent} from './components/time-tracking/time-tracking.co
 import {AppRoutingModule} from './app-routing.module';
 import {LoginComponent} from './components/login/login.component';
 import {PlaneMaintenanceComponent} from './components/plane-maintenance/plane-maintenance.component';
+import { UpdateBaggageComponent } from './components/update-baggage/update-baggage.component';
 import { ServiceSchedulePageComponent } from './pages/service-schedule-page/service-schedule-page.component';
 
 @NgModule({
@@ -25,6 +26,8 @@ import { ServiceSchedulePageComponent } from './pages/service-schedule-page/serv
         NavigationComponent,
         TimeTrackingComponent,
         PlaneMaintenanceComponent,
+        LoginComponent,
+        UpdateBaggageComponent,
         LoginComponent,
         ServiceSchedulePageComponent
     ],
