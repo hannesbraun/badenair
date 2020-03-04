@@ -1,0 +1,18 @@
+<h1>Bereitschaftsdienst</h1>
+
+<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <ng-container matColumnDef="scheduledTime">
+        <mat-header-cell *matHeaderCellDef> Von - Bis </mat-header-cell>
+        <mat-cell *matCellDef="let serviceScheduleDto">
+            {{serviceScheduleDto.schedule.start | date:' dd.MM.yyyy'}} - {{serviceScheduleDto.schedule.end | date:' dd.MM.yyyy'}}
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef> Angestellte(r) </mat-header-cell>
+        <mat-cell *matCellDef="let serviceScheduleDto"> {{serviceScheduleDto.employee}} </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>

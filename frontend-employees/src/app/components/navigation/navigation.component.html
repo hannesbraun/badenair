@@ -61,6 +61,12 @@
                 mat-button>
                 Wartungsergebnisse
             </button>
+            <button
+                *ngIf="!(isHandset$ | async) && loggedIn"
+                routerLink="/serviceSchedule"
+                mat-button>
+                Bereitschaftsdienst
+            </button>
             <span class="fill-space"></span>
             <span
                 *ngIf="!(isHandset$ | async)">

@@ -11,6 +11,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
 import {MatInputModule} from '@angular/material/input';
+import {MatTableModule} from '@angular/material/table';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import {MatInputModule} from '@angular/material/input';
         MatSelectModule,
         MatSidenavModule,
         MatInputModule,
+        MatTableModule,
     ],
     exports: [
         MatButtonModule,
@@ -36,7 +38,8 @@ import {MatInputModule} from '@angular/material/input';
         MatDialogModule,
         MatSelectModule,
         MatSidenavModule,
-        MatInputModule
+        MatInputModule,
+        MatTableModule,
     ],
     providers: [
         {provide: MAT_DATE_LOCALE, useValue: 'de-DE'}
