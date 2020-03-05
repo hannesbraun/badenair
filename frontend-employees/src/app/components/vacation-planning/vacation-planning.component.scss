@@ -1,0 +1,21 @@
+.planner-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-column-gap: 30px;
+  grid-row-gap: 20px;
+  align-items: center;
+
+  .vacation-days {
+    align-self: center;
+    color: limegreen;
+  }
+
+  .mat-table {
+    grid-column: 1/5;
+  }
+
+  .mat-calendar {
+    min-height: 320px;
+  }
+}
+
