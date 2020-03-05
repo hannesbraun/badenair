@@ -1,5 +1,5 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PassengerDto} from 'src/app/services/dtos/Dtos';
 
 @Component({
@@ -17,27 +17,28 @@ export class PassengersFormComponent implements OnInit {
     @Output() onPassengersSubmit = new EventEmitter<PassengerDto[]>();
 
 
-    constructor(private fb: FormBuilder) {
+    constructor(private formBuilder: FormBuilder) {
     }
 
     ngOnInit() {
-        this.passengerCount = 3; //TODO: Get passengers count from flightsearch
-        this.form = this.fb.group({
-            items: this.fb.array([])
+        this.passengerCount = 3; // TODO: Get passengers count from flightsearch
+        this.form = this.formBuilder.group({
+            items: this.formBuilder.array([])
         });
         this.createFormArray();
     }
 
     createFormArray() {
         for (let i = 0; i < this.passengerCount; i++) {
-            (this.form.controls.items as FormArray).push(this.fb.group({
-                name: ['', Validators.required],
-                surname: ['', Validators.required],
-                baggage1: [0],
-                baggage2: [0],
-                baggage3: [0],
-                baggage4: [0]
-            }));
+            (this.form.controls.items as FormArray)
+                .push(this.formBuilder.group({
+                    name: ['', Validators.required],
+                    surname: ['', Validators.required],
+                    baggage1: [0],
+                    baggage2: [0],
+                    baggage3: [0],
+                    baggage4: [0]
+                }));
         }
     }
 
@@ -49,5 +50,9 @@ export class PassengersFormComponent implements OnInit {
         );
 
         this.onPassengersSubmit.emit(passengers);
+    }
+
+    get forms(): AbstractControl[] {
+        return (this.form.controls.items as FormArray).controls;
     }
 }

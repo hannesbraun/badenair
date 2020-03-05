@@ -1,0 +1,16 @@
+mat-dialog-content > form {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-gap: 20px;
+  padding: 10px;
+  justify-content: end;
+}
+
+.mat-form-field {
+  grid-column: 1 / 3;
+}
+
+.login-button {
+  grid-column: 2;
+}
+

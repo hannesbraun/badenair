@@ -1,12 +1,11 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {SignUpDto, UpdateProfileDto} from '../../services/dtos/Dtos';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MatDialog} from '@angular/material';
+import {MatDialog} from '@angular/material/dialog';
 import {
     ChangePasswordDialogComponent,
     ChangePasswordDialogOutput
 } from './change-password-dialog/change-password-dialog.component';
-import {getFormControlValueFunction} from '../../services/util/FormUtils';
 
 @Component({
     selector: 'app-profile',
@@ -14,8 +13,6 @@ import {getFormControlValueFunction} from '../../services/util/FormUtils';
     styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent {
-
-    private readonly getFormControlValue: (formControlName: string) => any | null;
 
     @Output() saveProfileSettings: EventEmitter<UpdateProfileDto> = new EventEmitter();
     @Output() changePassword: EventEmitter<ChangePasswordDialogOutput> = new EventEmitter();
@@ -26,14 +23,13 @@ export class ProfileComponent {
     });
 
     constructor(private formBuilder: FormBuilder, private dialog: MatDialog) {
-        this.getFormControlValue = getFormControlValueFunction(this.profileForm);
     }
 
     onSubmit() {
         if (this.profileForm.valid) {
             this.saveProfileSettings.emit({
                 ...this.profileForm.controls.profile.value,
-                email: this.getFormControlValue('email'),
+                email: this.profileForm.get('email')?.value,
             } as SignUpDto);
         }
     }

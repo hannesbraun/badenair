@@ -1,0 +1,14 @@
+.start-landing-container {
+
+  margin-top: 60px;
+
+  mat-card {
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr;
+    grid-gap: 20px;
+
+    & > div > div {
+      text-align: right;
+    }
+  }
+}

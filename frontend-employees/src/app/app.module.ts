@@ -9,10 +9,15 @@ import {MaterialModule} from './material.module';
 import {ScheduleConflictDialogComponent} from './components/flight-overview/dialogs/schedule-conflict-dialog/schedule-conflict-dialog.component';
 import {ReactiveFormsModule} from '@angular/forms';
 
-import {NavigationComponent} from "./components/navigation/navigation.component";
-import { TimeTrackingComponent } from './components/time-tracking/time-tracking.component';
-import {AppRoutingModule} from "./app-routing.module";
-import {AccountComponent} from "./components/account/account.component";
+import {NavigationComponent} from './components/navigation/navigation.component';
+import {TimeTrackingComponent} from './components/time-tracking/time-tracking.component';
+import {AppRoutingModule} from './app-routing.module';
+import {LoginComponent} from './components/login/login.component';
+import {PlaneMaintenanceComponent} from './components/plane-maintenance/plane-maintenance.component';
+import {UpdateBaggageComponent} from './components/update-baggage/update-baggage.component';
+import {ServiceSchedulePageComponent} from './pages/service-schedule-page/service-schedule-page.component';
+import {UpdateBaggagePageComponent} from './pages/update-baggage-page/update-baggage-page.component';
+import {StartLandingComponent} from './components/start-landing/start-landing.component';
 
 @NgModule({
     declarations: [
@@ -22,7 +27,12 @@ import {AccountComponent} from "./components/account/account.component";
         ScheduleConflictDialogComponent,
         NavigationComponent,
         TimeTrackingComponent,
-        AccountComponent
+        PlaneMaintenanceComponent,
+        LoginComponent,
+        UpdateBaggageComponent,
+        ServiceSchedulePageComponent,
+        UpdateBaggagePageComponent,
+        StartLandingComponent
     ],
     imports: [
         BrowserAnimationsModule,
@@ -32,8 +42,7 @@ import {AccountComponent} from "./components/account/account.component";
         AppRoutingModule
     ],
     providers: [],
-    bootstrap: [AppComponent],
-    entryComponents: [FlightInfoDialogComponent, ScheduleConflictDialogComponent]
+    bootstrap: [AppComponent]
 })
 export class AppModule {
 }

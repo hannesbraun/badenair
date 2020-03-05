@@ -1,16 +1,16 @@
 <mat-sidenav-container class="sidenav-container">
-    <mat-sidenav #drawer class="sidenav" fixedInViewport
+    <mat-sidenav #drawer class="sidenav" [fixedInViewport]="true"
         [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
         [mode]="(isHandset$ | async) ? 'over' : 'side'">
         <mat-toolbar routerLink="/">Baden Air</mat-toolbar>
         <mat-nav-list>
-            <a mat-list-item (click)="login()">{{ loggedIn ? 'Login' : 'Logout' }}</a>
-            <a *ngIf="!loggedIn" mat-list-item routerLink="/account">Mein Konto</a>
+            <a mat-list-item (click)="login()">{{ loggedIn ? 'Logout' : 'Login' }}</a>
+            <a *ngIf="loggedIn" mat-list-item routerLink="/account">Mein Konto</a>
             <a mat-list-item>Schichtplan</a>
             <a mat-list-item>Urlaubsplanung</a>
             <a mat-list-item>Zeiterfassung</a>
             <a mat-list-item>Start/Landung</a>
-            <a mat-list-item routerLink="/flightoverview" >Flugplan</a>
+            <a mat-list-item routerLink="/flightoverview">Flugplan</a>
             <a mat-list-item>Wartungsergebnisse</a>
         </mat-nav-list>
     </mat-sidenav>
@@ -26,40 +26,52 @@
             </button>
             <button mat-button routerLink="/" class="logo">Baden Air</button>
             <button
-                *ngIf="!(isHandset$ | async) && !loggedIn"
+                *ngIf="!(isHandset$ | async) && loggedIn"
                 routerLink="/account"
                 mat-button>
                 Schichtplan
             </button>
             <button
-                *ngIf="!(isHandset$ | async) && !loggedIn"
+                *ngIf="!(isHandset$ | async) && loggedIn"
                 routerLink="/account"
                 mat-button>
                 Urlaubsplanung
             </button>
             <button
-                *ngIf="!(isHandset$ | async) && !loggedIn"
-                routerLink="/account"
+                *ngIf="!(isHandset$ | async) && loggedIn"
+                routerLink="/time"
                 mat-button>
                 Zeiterfassung
             </button>
             <button
-                *ngIf="!(isHandset$ | async) && !loggedIn"
-                routerLink="/account"
+                *ngIf="!(isHandset$ | async) && loggedIn"
+                routerLink="/baggage"
+                mat-button>
+                Gepäckverfolgung
+            </button>
+            <button
+                *ngIf="!(isHandset$ | async) && loggedIn"
+                routerLink="/start-landing"
                 mat-button>
                 Start/Landung
             </button>
             <button
-                *ngIf="!(isHandset$ | async) && !loggedIn"
+                *ngIf="!(isHandset$ | async) && loggedIn"
                 routerLink="/flightoverview"
                 mat-button>
                 Flugplan
             </button>
             <button
-                *ngIf="!(isHandset$ | async) && !loggedIn"
-                routerLink="/account"
+                *ngIf="!(isHandset$ | async) && loggedIn"
+                routerLink="/maintenance"
                 mat-button>
                 Wartungsergebnisse
+            </button>
+            <button
+                *ngIf="!(isHandset$ | async) && loggedIn"
+                routerLink="/serviceSchedule"
+                mat-button>
+                Bereitschaftsdienst
             </button>
             <span class="fill-space"></span>
             <span
@@ -67,12 +79,12 @@
                 <button
                     (click)="login()"
                     mat-flat-button>
-                    {{ loggedIn ? 'Login' : 'Logout' }}
+                    {{ loggedIn ? 'Logout' : 'Login'  }}
                 </button>
                 <button
                     routerLink="/account"
                     (click)="openMyAccount()"
-                    *ngIf="!loggedIn"
+                    *ngIf="loggedIn"
                     mat-button>
                     Mein Konto
                 </button>

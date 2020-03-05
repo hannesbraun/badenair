@@ -1,5 +1,5 @@
 <form [formGroup]="form" (ngSubmit)="submit()">
-    <div class="card-layout" formArrayName="items" *ngFor="let item of form.controls['items'].controls; let i = index">
+    <div class="card-layout" formArrayName="items" *ngFor="let item of forms; let i = index">
         <mat-card [formGroupName]="i">
             <mat-card-header>
                 <mat-card-title>Mitreisender {{i + 1}}</mat-card-title>
