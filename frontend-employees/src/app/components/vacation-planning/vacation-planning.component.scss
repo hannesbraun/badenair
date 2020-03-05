@@ -15,7 +15,51 @@
   }
 
   .mat-calendar {
-    min-height: 320px;
+    min-height: 260px;
+  }
+
+  .indicator-container {
+    display: flex;
+
+    .approved-indicator,
+    .pending-indicator {
+      &:before {
+        content: '';
+        display: inline-block;
+        height: 12px;
+        width: 12px;
+        background: limegreen;
+      }
+    }
+
+    .approved-indicator:before {
+      background: limegreen;
+    }
+
+    .pending-indicator {
+      margin-left: 20px;
+
+      &:before {
+        background: dodgerblue;
+      }
+    }
+  }
+
+  ::ng-deep {
+
+    .mat-calendar-previous-button,
+    .mat-calendar-next-button,
+    .mat-calendar-period-button {
+      display: none;
+    }
+
+    .approved-date {
+      background: limegreen;
+    }
+
+    .pending-date {
+      background: dodgerblue;
+    }
   }
 }
 

@@ -41,10 +41,15 @@
 
     <button mat-button mat-raised-button color="primary">Anfragen</button>
     <div></div>
-    <mat-calendar></mat-calendar>
-    <mat-calendar></mat-calendar>
-    <mat-calendar></mat-calendar>
-    <mat-calendar></mat-calendar>
+    <mat-calendar [dateClass]="getSelectedDates(0)"></mat-calendar>
+    <mat-calendar [startAt]="calendar1" [dateClass]="getSelectedDates(1)"></mat-calendar>
+    <mat-calendar [startAt]="calendar2" [dateClass]="getSelectedDates(2)"></mat-calendar>
+    <mat-calendar [startAt]="calendar3" [dateClass]="getSelectedDates(3)"></mat-calendar>
+
+    <div class="indicator-container">
+        <div class="approved-indicator"> Genehmigt</div>
+        <div class="pending-indicator"> Ausstehend</div>
+    </div>
 
     <table mat-table class="mat-elevation-z3" [dataSource]="dataSource">
 
