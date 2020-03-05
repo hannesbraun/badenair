@@ -1,51 +1,53 @@
-import { Component, OnInit, Output,EventEmitter } from '@angular/core';
-import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
-import { PassengerDto } from 'src/app/services/dtos/Dtos';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {PassengerDto} from 'src/app/services/dtos/Dtos';
 
 @Component({
-  selector: 'app-passenger-form',
-  templateUrl: './passengers-form.component.html',
-  styleUrls: ['./passengers-form.component.scss']
+    selector: 'app-passenger-form',
+    templateUrl: './passengers-form.component.html',
+    styleUrls: ['./passengers-form.component.scss']
 })
 export class PassengersFormComponent implements OnInit {
 
-  form!: FormGroup;
-  passengerCount!: number;
-  baggageCapacity = [15, 23, 30];
-  selectedBaggage = 0;
+    form!: FormGroup;
+    passengerCount!: number;
+    baggageCapacity = [15, 23, 30];
+    selectedBaggage = 0;
 
-  @Output() onPassengersSubmit = new EventEmitter<PassengerDto[]>();
+    @Output() onPassengersSubmit = new EventEmitter<PassengerDto[]>();
 
 
-  constructor(private fb: FormBuilder) { }
-
-  ngOnInit() {
-    this.passengerCount = 3; //TODO: Get passengers count from flightsearch
-    this.form = this.fb.group({
-      items: this.fb.array([])
-    });
-    this.createFormArray();
-  }
-
-  createFormArray() {
-    for (let i = 0; i < this.passengerCount; i++) {
-      (this.form.controls['items'] as FormArray).push(this.fb.group({
-        name: ['', Validators.required],
-        surname: ['', Validators.required],
-        baggage1: [0],
-        baggage2: [0],
-        baggage3: [0],
-        baggage4: [0]
-      }));
+    constructor(private fb: FormBuilder) {
     }
-  }
-  submit() {
-    const formModel = this.form.controls['items'].value;
 
-    const passengers : PassengerDto[] = formModel.map(
-      (passenger: PassengerDto) => Object.assign({}, passenger)
-    );
+    ngOnInit() {
+        this.passengerCount = 3; //TODO: Get passengers count from flightsearch
+        this.form = this.fb.group({
+            items: this.fb.array([])
+        });
+        this.createFormArray();
+    }
 
-    this.onPassengersSubmit.emit(passengers);
-  }
+    createFormArray() {
+        for (let i = 0; i < this.passengerCount; i++) {
+            (this.form.controls.items as FormArray).push(this.fb.group({
+                name: ['', Validators.required],
+                surname: ['', Validators.required],
+                baggage1: [0],
+                baggage2: [0],
+                baggage3: [0],
+                baggage4: [0]
+            }));
+        }
+    }
+
+    submit() {
+        const formModel = this.form.controls.items.value;
+
+        const passengers: PassengerDto[] = formModel.map(
+            (passenger: PassengerDto) => Object.assign({}, passenger)
+        );
+
+        this.onPassengersSubmit.emit(passengers);
+    }
 }
