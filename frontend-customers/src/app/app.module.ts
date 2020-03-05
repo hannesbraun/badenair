@@ -22,8 +22,7 @@ import {FlightsPageComponent} from './pages/flights-page/flights-page.component'
 import {HoverClassDirective} from './directives/hover-class.directive';
 import {BookedFlightsComponent} from './components/booked-flights/booked-flights.component';
 import {LoginComponent} from './components/login/login.component';
-import {BookedFlightsComponent} from './components/booked-flights/booked-flights.component';
-import { PassengersFormComponent } from './components/passengers-form/passengers-form.component';
+import {PassengersFormComponent} from './components/passengers-form/passengers-form.component';
 
 
 @NgModule({
@@ -43,9 +42,9 @@ import { PassengersFormComponent } from './components/passengers-form/passengers
         FlightsPageComponent,
         HoverClassDirective,
         BookedFlightsComponent,
-        PassengersFormComponent
+        PassengersFormComponent,
         BookedFlightsComponent,
-        LoginComponent
+        LoginComponent,
     ],
     imports: [
         AppRoutingModule,
@@ -55,7 +54,7 @@ import { PassengersFormComponent } from './components/passengers-form/passengers
         FormsModule,
         LayoutModule,
         MaterialModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
     ],
     providers: [],
     bootstrap: [AppComponent]
