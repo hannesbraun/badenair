@@ -1,8 +1,9 @@
+<h1>Mitreisende</h1>
 <form [formGroup]="form" (ngSubmit)="submit()">
-    <div class="card-layout" formArrayName="items" *ngFor="let item of forms; let i = index">
-        <mat-card [formGroupName]="i">
-            <mat-card-header>
-                <mat-card-title>Mitreisender {{i + 1}}</mat-card-title>
+    <div class="card-layout" formArrayName="items" *ngFor="let item of forms; let index = index">
+        <mat-card [formGroupName]="index">
+            <mat-card-header (click)="removePassenger(index)">
+                <mat-card-title>- Mitreisender {{ index + 1 }}</mat-card-title>
             </mat-card-header>
             <mat-card-content fxLayout="row" fxLayoutGap="20px">
                 <div fxLayout="column" fxFlex>
@@ -14,11 +15,11 @@
                     </mat-form-field>
                 </div>
                 <div fxLayout="column" fxFlex>
-                    <mat-form-field *ngFor="let i of [0, 1, 2, 3]">
-                        <mat-label>{{i + 1}}. Gepäckstück</mat-label>
-                        <mat-select formControlName="baggage{{i+1}}">
+                    <mat-form-field *ngFor="let baggage of [0, 1, 2, 3]">
+                        <mat-label>{{ baggage + 1 }}. Gepäckstück</mat-label>
+                        <mat-select formControlName="baggage{{ baggage + 1 }}">
                             <mat-option>Kein Gepäckstück</mat-option>
-                            <mat-option *ngFor="let baggage of baggageCapacity" [value]="baggage">{{baggage}}kg
+                            <mat-option *ngFor="let baggage of baggageCapacity" [value]="baggage">{{ baggage }}kg
                                 Gepäckstück
                             </mat-option>
                         </mat-select>
@@ -27,7 +28,13 @@
             </mat-card-content>
         </mat-card>
     </div>
-    <div fxLayoutAlign="space-between">
+    <mat-card (click)="appendPassenger()">
+        <mat-card-header>
+            <mat-card-title>+ Mitreisender {{ formArray.length + 1 }}</mat-card-title>
+        </mat-card-header>
+    </mat-card>
+
+    <div fxLayoutAlign="space-between" class="navigation-buttons">
         <button mat-raised-button routerLink="/flights">Zurück</button>
         <button mat-raised-button color="primary" type="submit">Weiter</button>
     </div>
