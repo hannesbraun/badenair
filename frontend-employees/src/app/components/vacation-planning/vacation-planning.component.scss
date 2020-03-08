@@ -18,6 +18,10 @@
     min-height: 260px;
   }
 
+  h3 {
+    grid-column: 1/5;
+  }
+
   .indicator-container {
     display: flex;
 

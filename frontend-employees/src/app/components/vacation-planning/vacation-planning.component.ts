@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {MatCalendarCellCssClasses} from '@angular/material/datepicker';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 enum vacationState {
     pending = 'Ausstehend',
@@ -14,15 +15,17 @@ enum vacationState {
 export class VacationPlanningComponent implements OnInit {
 
     calendar1: Date;
-    calender2: Date;
-    calender3: Date;
+    calendar2: Date;
+    calendar3: Date;
+
+    vacationDays = 13;
+    vacationDaysLeft = 9;
 
     dataSource = [
         {duration: [new Date(), new Date()], days: 3, state: vacationState.pending},
         {duration: [new Date(), new Date()], days: 4, state: vacationState.approved},
         {duration: [new Date(), new Date()], days: 6, state: vacationState.pending},
     ];
-
     displayedColumns: string[] = ['duration', 'days', 'state'];
 
     approvedDates = [
@@ -31,7 +34,6 @@ export class VacationPlanningComponent implements OnInit {
         [13, 14],
         [23, 24, 25]
     ];
-
     pendingDates = [
         [1],
         [24, 25],
@@ -39,14 +41,26 @@ export class VacationPlanningComponent implements OnInit {
         [12, 13, 14, 15, 16]
     ];
 
-    constructor() {
+    requestVacationForm: FormGroup = this.formBuilder.group({
+        fromDate: ['', Validators.required],
+        toDate: ['', Validators.required],
+        fromTimeOfDay: ['', Validators.required],
+        toTimeOfDay: ['', Validators.required]
+    });
+
+    constructor(private formBuilder: FormBuilder) {
+        const date = (offset: number) => new Date(this.currentDate.getFullYear(), (this.currentDate.getMonth() + offset) % 11);
+
+        this.calendar1 = date(1);
+        this.calendar2 = date(2);
+        this.calendar3 = date(3);
     }
 
     ngOnInit(): void {
-        const currentDate = new Date();
-        this.calendar1 = new Date(currentDate.getFullYear(), (currentDate.getMonth() + 1) % 11);
-        this.calendar2 = new Date(currentDate.getFullYear(), (currentDate.getMonth() + 2) % 11);
-        this.calendar3 = new Date(currentDate.getFullYear(), (currentDate.getMonth() + 3) % 11);
+    }
+
+    get currentDate() {
+        return new Date();
     }
 
     getSelectedDates(calenderNumber: number) {
@@ -64,5 +78,11 @@ export class VacationPlanningComponent implements OnInit {
             }
             return '';
         };
+    }
+
+    onSubmit() {
+        if (this.requestVacationForm.valid) {
+            // TODO implement on Submit
+        }
     }
 }
