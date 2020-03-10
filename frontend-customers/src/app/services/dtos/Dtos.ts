@@ -42,5 +42,4 @@ export interface PassengerDto {
     baggage2: number;
     baggage3: number;
     baggage4: number;
-  
-  }
+}
