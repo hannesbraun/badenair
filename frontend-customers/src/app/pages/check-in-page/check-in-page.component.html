@@ -1,0 +1,21 @@
+<h1>Check-In erfolgreich</h1>
+<mat-card appHoverClass hoverClass="mat-elevation-z8" *ngIf="flight; else loading">
+    <mat-card-content>
+        <app-flight-info [time]="flight.startTime" [location]="flight.start"></app-flight-info>
+        <p class="duration">{{getDuration() | date:'HH:mm:ss'}}</p>
+        <app-flight-info [time]="flight.arrivalTime" [location]="flight.destination"></app-flight-info>
+    </mat-card-content>
+</mat-card>
+<p>
+    Der Check-In war erfolgreich und die Boardingpässe können heruntergeladen werden.
+</p>
+<ng-container *ngIf="passengers; else loading">
+    <app-check-in-info *ngFor="let passenger of passengers"
+                       [passenger]="passenger"
+                       (download)="onDownload(passenger)"
+    ></app-check-in-info>
+</ng-container>
+
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>

@@ -24,6 +24,7 @@ import {BookedFlightsComponent} from './components/booked-flights/booked-flights
 import {LoginComponent} from './components/login/login.component';
 import {PassengersFormComponent} from './components/passengers-form/passengers-form.component';
 import {CheckInInfoComponent} from './components/check-in-info/check-in-info.component';
+import { CheckInPageComponent } from './pages/check-in-page/check-in-page.component';
 
 
 @NgModule({
@@ -47,6 +48,7 @@ import {CheckInInfoComponent} from './components/check-in-info/check-in-info.com
         BookedFlightsComponent,
         LoginComponent,
         CheckInInfoComponent,
+        CheckInPageComponent,
     ],
     imports: [
         AppRoutingModule,
