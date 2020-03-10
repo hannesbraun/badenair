@@ -23,6 +23,7 @@ import {HoverClassDirective} from './directives/hover-class.directive';
 import {BookedFlightsComponent} from './components/booked-flights/booked-flights.component';
 import {LoginComponent} from './components/login/login.component';
 import {PassengersFormComponent} from './components/passengers-form/passengers-form.component';
+import {CheckInInfoComponent} from './components/check-in-info/check-in-info.component';
 
 
 @NgModule({
@@ -45,6 +46,7 @@ import {PassengersFormComponent} from './components/passengers-form/passengers-f
         PassengersFormComponent,
         BookedFlightsComponent,
         LoginComponent,
+        CheckInInfoComponent,
     ],
     imports: [
         AppRoutingModule,

@@ -1,0 +1,19 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>
+            {{passenger.name}} {{passenger.surname}}
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div>
+            <p>Geburtstag: 01.01.1970</p>
+            <p *ngIf="passenger.baggage1 !== 0">1x Gepäckstück ({{passenger.baggage1}}kg)</p>
+            <p *ngIf="passenger.baggage2 !== 0">1x Gepäckstück ({{passenger.baggage2}}kg)</p>
+            <p *ngIf="passenger.baggage3 !== 0">1x Gepäckstück ({{passenger.baggage3}}kg)</p>
+            <p *ngIf="passenger.baggage4 !== 0">1x Gepäckstück ({{passenger.baggage4}}kg)</p>
+        </div>
+        <div>
+            <button mat-raised-button color="primary" (click)="onDownload()">Download PDF</button>
+        </div>
+    </mat-card-content>
+</mat-card>
