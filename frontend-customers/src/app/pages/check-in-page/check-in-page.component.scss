@@ -1,0 +1,19 @@
+app-check-in-info {
+  margin: 5px;
+}
+
+mat-card-content {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: space-between;
+
+  @media (max-width: 992px) {
+    flex-flow: column;
+  }
+}
+
+.duration {
+  border-top: 5px solid black;
+  padding: 0 7%;
+}
