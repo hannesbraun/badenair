@@ -55,10 +55,11 @@
         <div></div>
     </ng-container>
     <h3>Kalender</h3>
-    <mat-calendar [dateClass]="getSelectedDates(0)"></mat-calendar>
-    <mat-calendar [startAt]="calendar1" [dateClass]="getSelectedDates(1)"></mat-calendar>
-    <mat-calendar [startAt]="calendar2" [dateClass]="getSelectedDates(2)"></mat-calendar>
-    <mat-calendar [startAt]="calendar3" [dateClass]="getSelectedDates(3)"></mat-calendar>
+
+    <mat-calendar class="vacation-calendar" [dateClass]="getSelectedDates(0)"></mat-calendar>
+    <mat-calendar class="vacation-calendar" [startAt]="calendar1" [dateClass]="getSelectedDates(1)"></mat-calendar>
+    <mat-calendar class="vacation-calendar" [startAt]="calendar2" [dateClass]="getSelectedDates(2)"></mat-calendar>
+    <mat-calendar class="vacation-calendar" [startAt]="calendar3" [dateClass]="getSelectedDates(3)"></mat-calendar>
 
     <div class="indicator-container">
         <div class="approved-indicator"> Genehmigt</div>
