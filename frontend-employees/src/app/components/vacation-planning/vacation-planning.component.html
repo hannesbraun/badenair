@@ -1,0 +1,91 @@
+<h1>Urlaubsplannung</h1><br>
+<div class="planner-container">
+    <h3>Neue Anfrage</h3>
+    <ng-container [formGroup]="requestVacationForm" (ngSubmit)="onSubmit()">
+        <mat-form-field>
+            <input matInput [matDatepicker]="pickerFromDate" [min]="currentDate"
+                   formControlName="fromDate"
+                   placeholder="Von">
+            <mat-datepicker-toggle matSuffix [for]="pickerFromDate"></mat-datepicker-toggle>
+            <mat-datepicker #pickerFromDate></mat-datepicker>
+
+            <mat-error *ngIf="requestVacationForm?.get('fromDate')?.errors?.required">
+                Es muss ein Datum ausgewählt sein.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput name="toDate" [matDatepicker]="pickerToDate" [min]="currentDate"
+                   formControlName="toDate"
+                   placeholder="Bis">
+            <mat-datepicker-toggle matSuffix [for]="pickerToDate"></mat-datepicker-toggle>
+            <mat-datepicker #pickerToDate></mat-datepicker>
+
+            <mat-error *ngIf="requestVacationForm?.get('toDate')?.errors?.required">
+                Es muss ein Datum ausgewählt sein.
+            </mat-error>
+        </mat-form-field>
+
+        <div class="vacation-days">{{ vacationDays }} Tage / {{ vacationDaysLeft }} verbleibend</div>
+        <div></div>
+
+        <mat-form-field>
+            <mat-select formControlName="fromTimeOfDay" placeholder="Tageszeit">
+                <mat-option value="morning">Morgens</mat-option>
+                <mat-option value="afternoon">Abends</mat-option>
+            </mat-select>
+            <mat-error *ngIf="requestVacationForm?.get('fromTimeOfDay')?.errors?.required">
+                Es muss eine Tageszeit ausgewählt sein.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-select formControlName="toTimeOfDay" placeholder="Tageszeit">
+                <mat-option value="morning">Morgens</mat-option>
+                <mat-option value="afternoon">Abends</mat-option>
+            </mat-select>
+            <mat-error *ngIf="requestVacationForm?.get('toTimeOfDay')?.errors?.required">
+                Es muss eine Tageszeit ausgewählt sein.
+            </mat-error>
+        </mat-form-field>
+
+        <button type="submit" [disabled]="requestVacationForm.invalid" mat-button mat-raised-button color="primary">
+            Anfragen
+        </button>
+        <div></div>
+    </ng-container>
+    <h3>Kalender</h3>
+
+    <mat-calendar class="vacation-calendar" [dateClass]="getSelectedDates(0)"></mat-calendar>
+    <mat-calendar class="vacation-calendar" [startAt]="calendar1" [dateClass]="getSelectedDates(1)"></mat-calendar>
+    <mat-calendar class="vacation-calendar" [startAt]="calendar2" [dateClass]="getSelectedDates(2)"></mat-calendar>
+    <mat-calendar class="vacation-calendar" [startAt]="calendar3" [dateClass]="getSelectedDates(3)"></mat-calendar>
+
+    <div class="indicator-container">
+        <div class="approved-indicator"> Genehmigt</div>
+        <div class="pending-indicator"> Ausstehend</div>
+    </div>
+    <h3>Übersicht</h3>
+    <table mat-table class="mat-elevation-z3" [dataSource]="dataSource">
+
+        <ng-container matColumnDef="duration">
+            <th mat-header-cell *matHeaderCellDef>Von - Bis</th>
+            <td mat-cell *matCellDef="let element">
+                {{element.duration[0] | date: 'dd.MM.yyyy'}}
+                bis {{element.duration[1] | date: 'dd.MM.yyyy'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="days">
+            <th mat-header-cell *matHeaderCellDef>Tage</th>
+            <td mat-cell *matCellDef="let element"> {{element.days}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="state">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let element"> {{element.state}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>

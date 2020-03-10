@@ -18,6 +18,7 @@ import {UpdateBaggageComponent} from './components/update-baggage/update-baggage
 import {ServiceSchedulePageComponent} from './pages/service-schedule-page/service-schedule-page.component';
 import {UpdateBaggagePageComponent} from './pages/update-baggage-page/update-baggage-page.component';
 import {StartLandingComponent} from './components/start-landing/start-landing.component';
+import {VacationPlanningComponent} from './components/vacation-planning/vacation-planning.component';
 
 @NgModule({
     declarations: [
@@ -32,7 +33,8 @@ import {StartLandingComponent} from './components/start-landing/start-landing.co
         UpdateBaggageComponent,
         ServiceSchedulePageComponent,
         UpdateBaggagePageComponent,
-        StartLandingComponent
+        StartLandingComponent,
+        VacationPlanningComponent
     ],
     imports: [
         BrowserAnimationsModule,

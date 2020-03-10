@@ -6,6 +6,7 @@ import {PlaneMaintenanceComponent} from './components/plane-maintenance/plane-ma
 import {UpdateBaggagePageComponent} from './pages/update-baggage-page/update-baggage-page.component';
 import {ServiceSchedulePageComponent} from './pages/service-schedule-page/service-schedule-page.component';
 import {StartLandingComponent} from './components/start-landing/start-landing.component';
+import {VacationPlanningComponent} from './components/vacation-planning/vacation-planning.component';
 
 
 const routes: Routes = [
@@ -14,7 +15,8 @@ const routes: Routes = [
     {path: 'time', component: TimeTrackingComponent},
     {path: 'baggage', component: UpdateBaggagePageComponent},
     {path: 'serviceSchedule', component: ServiceSchedulePageComponent},
-    {path: 'start-landing', component: StartLandingComponent}
+    {path: 'start-landing', component: StartLandingComponent},
+    {path: 'vacation-planning', component: VacationPlanningComponent},
 ];
 
 @NgModule({
