@@ -7,6 +7,7 @@ import {UpdateBaggagePageComponent} from './pages/update-baggage-page/update-bag
 import {ServiceSchedulePageComponent} from './pages/service-schedule-page/service-schedule-page.component';
 import {StartLandingComponent} from './components/start-landing/start-landing.component';
 import {VacationPlanningComponent} from './components/vacation-planning/vacation-planning.component';
+import {ShiftSchedulePageComponent} from './pages/shift-schedule-page/shift-schedule-page.component';
 
 
 const routes: Routes = [
@@ -17,6 +18,7 @@ const routes: Routes = [
     {path: 'serviceSchedule', component: ServiceSchedulePageComponent},
     {path: 'start-landing', component: StartLandingComponent},
     {path: 'vacation-planning', component: VacationPlanningComponent},
+    {path: 'shiftSchedule', component: ShiftSchedulePageComponent},
 ];
 
 @NgModule({
