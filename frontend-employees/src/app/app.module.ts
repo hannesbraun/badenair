@@ -19,6 +19,7 @@ import {ServiceSchedulePageComponent} from './pages/service-schedule-page/servic
 import {UpdateBaggagePageComponent} from './pages/update-baggage-page/update-baggage-page.component';
 import {StartLandingComponent} from './components/start-landing/start-landing.component';
 import {VacationPlanningComponent} from './components/vacation-planning/vacation-planning.component';
+import {ShiftSchedulePageComponent} from './pages/shift-schedule-page/shift-schedule-page.component';
 
 @NgModule({
     declarations: [
@@ -34,7 +35,8 @@ import {VacationPlanningComponent} from './components/vacation-planning/vacation
         ServiceSchedulePageComponent,
         UpdateBaggagePageComponent,
         StartLandingComponent,
-        VacationPlanningComponent
+        VacationPlanningComponent,
+        ShiftSchedulePageComponent
     ],
     imports: [
         BrowserAnimationsModule,
