@@ -38,6 +38,7 @@ export interface FlightDto {
 export interface PassengerDto {
     name: string;
     surname: string;
+    checkedIn: boolean;
     baggage1: number;
     baggage2: number;
     baggage3: number;

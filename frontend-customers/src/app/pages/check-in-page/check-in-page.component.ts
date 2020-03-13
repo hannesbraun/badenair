@@ -12,6 +12,7 @@ export class CheckInPageComponent implements OnInit {
 
     passengers: PassengerDto[] | undefined;
     flight: FlightDto | undefined;
+    isCheckInComplete: boolean = false;
 
     constructor(private passengerService: PassengerService, private flightService: FlightService) {
     }
@@ -36,5 +37,9 @@ export class CheckInPageComponent implements OnInit {
         }
 
         return 0;
+    }
+
+    checkIn() {
+        this.isCheckInComplete = true;
     }
 }
