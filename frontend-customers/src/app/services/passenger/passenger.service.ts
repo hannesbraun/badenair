@@ -16,6 +16,7 @@ export class PassengerService {
                 {
                     name: 'Max',
                     surname: 'Mustermann',
+                    checkedIn: false,
                     baggage1: 20,
                     baggage2: 0,
                     baggage3: 0,
@@ -24,6 +25,7 @@ export class PassengerService {
                 {
                     name: 'Bob',
                     surname: 'Ross',
+                    checkedIn: false,
                     baggage1: 20,
                     baggage2: 30,
                     baggage3: 0,

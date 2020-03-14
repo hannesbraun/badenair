@@ -1,7 +1,10 @@
 <mat-card appHoverClass hoverClass="mat-elevation-z8">
     <mat-card-header>
         <mat-card-title>
-            {{passenger.name}} {{passenger.surname}}
+            <mat-checkbox
+                *ngIf="!isCheckInComplete; else normal"
+                [checked]="isPassengerSelected">{{passenger.name}} {{passenger.surname}}</mat-checkbox>
+            <ng-template #normal>{{passenger.name}} {{passenger.surname}}</ng-template>
         </mat-card-title>
     </mat-card-header>
     <mat-card-content>
@@ -12,7 +15,7 @@
             <p *ngIf="passenger.baggage3 !== 0">1x Gepäckstück ({{passenger.baggage3}}kg)</p>
             <p *ngIf="passenger.baggage4 !== 0">1x Gepäckstück ({{passenger.baggage4}}kg)</p>
         </div>
-        <div>
+        <div *ngIf="isCheckInComplete">
             <button mat-raised-button color="primary" (click)="onDownload()">Download PDF</button>
         </div>
     </mat-card-content>

@@ -16,6 +16,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @NgModule({
     imports: [
@@ -34,7 +35,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
         MatSelectModule,
         MatSidenavModule,
         MatToolbarModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MatCheckboxModule
     ],
     exports: [
         MatAutocompleteModule,
@@ -52,7 +54,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
         MatSelectModule,
         MatSidenavModule,
         MatToolbarModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MatCheckboxModule
     ],
     providers: [
         {provide: MAT_DATE_LOCALE, useValue: 'de-DE'}
