@@ -1,0 +1,26 @@
+<h1>Buchung erfolgreich</h1>
+<p>
+    Ihre Buchung war erfolgreich. Sie können nun bis zu 30 Minuten vor Abflug den Check-In online durchführen. Für weitere Details besuchen sie bitte die Übersichtseite für ihre gebuchten Flüge.
+</p>
+
+<mat-card>
+    <mat-card-header>
+        <p>Ihr Flug von <b>{{start}}</b> nach <b>{{destination}}</b></p>
+    </mat-card-header>
+    <mat-card-content>
+        <p>Start: {{departureDate1 | date:'dd.MM.yyyy'}}, {{departureDate1 | date:'HH:mm:ss'}} Uhr</p>
+        <p>Landung: {{arrivalDate1 | date:'dd.MM.yyyy'}}, {{arrivalDate1 | date:'HH:mm:ss'}} Uhr</p>
+        <p>Flugdauer: {{getDuration(1)}}</p>
+    </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="departureDate2">
+    <mat-card-header>
+        <p>Ihr Flug von <b>{{destination}}</b> nach <b>{{start}}</b></p>
+    </mat-card-header>
+    <mat-card-content>
+        <p>Start: {{departureDate2 | date:'dd.MM.yyyy'}}, {{departureDate2 | date:'HH:mm:ss'}} Uhr</p>
+        <p>Landung: {{arrivalDate2 | date:'dd.MM.yyyy'}}, {{arrivalDate2 | date:'HH:mm:ss'}} Uhr</p>
+        <p>Flugdauer: {{getDuration(2)}}</p>
+    </mat-card-content>
+</mat-card>

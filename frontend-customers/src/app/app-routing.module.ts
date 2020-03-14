@@ -8,6 +8,7 @@ import {AccountSettingsPageComponent} from './pages/account-settings-page/accoun
 import {BookedFlightsComponent} from './components/booked-flights/booked-flights.component';
 import {PassengersFormComponent} from './components/passengers-form/passengers-form.component';
 import {CheckInPageComponent} from './pages/check-in-page/check-in-page.component';
+import {SuccessPageComponent} from './pages/success-page/success-page.component';
 
 export const appRoutes: Routes = [
     {path: '', component: FlightSearchComponent},
@@ -17,6 +18,7 @@ export const appRoutes: Routes = [
     {path: 'booked', component: BookedFlightsComponent},
     {path: 'passengers', component: PassengersFormComponent},
     {path: 'checkin', component: CheckInPageComponent},
+    {path: 'success', component: SuccessPageComponent},
 ];
 
 @NgModule({
