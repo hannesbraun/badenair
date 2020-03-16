@@ -1,6 +1,7 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PassengerDto} from 'src/app/services/dtos/Dtos';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-passenger-form',
@@ -15,7 +16,7 @@ export class PassengersFormComponent implements OnInit {
 
     @Output() onPassengersSubmit = new EventEmitter<PassengerDto[]>();
 
-    constructor(private formBuilder: FormBuilder) {
+    constructor(private formBuilder: FormBuilder, private router: Router) {
     }
 
     ngOnInit() {
@@ -40,6 +41,10 @@ export class PassengersFormComponent implements OnInit {
         );
 
         this.onPassengersSubmit.emit(passengers);
+        
+        if (this.form.controls.items.valid) {
+            this.router.navigate(['overview']);
+        }
     }
 
     get formArray(): FormArray {
