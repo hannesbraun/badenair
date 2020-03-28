@@ -4,7 +4,8 @@
         [mode]="(isHandset$ | async) ? 'over' : 'side'">
         <mat-toolbar routerLink="/">Baden Air</mat-toolbar>
         <mat-nav-list>
-            <a mat-list-item (click)="login()">{{ loggedIn ? 'Logout' : 'Login' }}</a>
+            <a *ngIf="!loggedIn" mat-list-item (click)="login()">Login</a>
+            <a *ngIf="loggedIn" mat-list-item (click)="logout()">Logout</a>
             <a *ngIf="loggedIn" mat-list-item routerLink="/shiftSchedule">Schichtplan</a>
             <a *ngIf="loggedIn" mat-list-item routerLink="/vacation-planning">Urlaubsplanung</a>
             <a *ngIf="loggedIn" mat-list-item routerLink="/time">Zeiterfassung</a>
@@ -77,10 +78,15 @@
             <span class="fill-space"></span>
             <span
                 *ngIf="!(isHandset$ | async)">
-                <button
+                <button *ngIf="!loggedIn"
                     (click)="login()"
                     mat-flat-button>
-                    {{ loggedIn ? 'Logout' : 'Login' }}
+                    Login
+                </button>
+                <button *ngIf="loggedIn"
+                    (click)="logout()"
+                    mat-flat-button>
+                    Logout
                 </button>
             </span>
         </mat-toolbar>

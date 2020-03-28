@@ -5,10 +5,14 @@ import {User, UserType} from '../dtos/Dtos';
     providedIn: 'root'
 })
 export class AuthService {
-
-    user!: User;
+    user: User | undefined;
 
     constructor() {
+        // TODO: replace with access Token
+        const username = localStorage.getItem('username');
+        if (username) {
+            this.login(username, '');
+        }
     }
 
     login(username: string, password: string): User | undefined {
@@ -36,7 +40,15 @@ export class AuthService {
                 return undefined;
         }
         this.user = newUser;
+        // TODO: replace with access Token
+        localStorage.setItem('username', newUser.name);
         return newUser;
+    }
+
+    logout() {
+        this.user = undefined;
+        // TODO: replace with access Token
+        localStorage.removeItem('username');
     }
 
     getUser(): User | undefined {
