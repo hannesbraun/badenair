@@ -1,9 +1,11 @@
 import {Injectable} from '@angular/core';
+import {UserType} from './auth.guard';
 
 interface User {
-    type: string;
+    type: UserType;
     name: string;
 }
+
 
 @Injectable({
     providedIn: 'root'
@@ -15,20 +17,43 @@ export class AuthService {
     constructor() {
     }
 
-    login(userName: string, password: string): boolean {
+    login(username: string, password: string): boolean {
         // TODO: send request to Server
+        switch (username) {
+            case 'pilot':
+                this.user = {
+                    name: username,
+                    type: UserType.pilot
+                };
+                return true;
 
-        if (userName === 'pilot' && password === 'pilot') {
-            return true;
+            case 'technician':
+                this.user = {
+                    name: username,
+                    type: UserType.technician
+                };
+                return true;
+
+            case 'ground':
+                this.user = {
+                    name: username,
+                    type: UserType.ground
+                };
+                return true;
+
+            case 'flightDirector':
+                this.user = {
+                    name: username,
+                    type: UserType.flightDirector
+                };
+                return true;
+
+            default:
+                return false;
         }
-        return false;
     }
 
     getUser(): User | undefined {
-        return undefined;
-        return {
-            type: 'pilot',
-            name: 'Peter',
-        };
+        return this.user;
     }
 }

@@ -3,6 +3,12 @@ import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree} from 
 import {Observable} from 'rxjs';
 import {AuthService} from './auth.service';
 
+export enum UserType {
+    pilot,
+    technician,
+    ground,
+    flightDirector
+}
 
 @Injectable({
     providedIn: 'root'
@@ -17,8 +23,16 @@ export class AuthGuard implements CanActivate {
         state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
         const user = this.authService.getUser();
+        if (!user) {
+            return false;
+        }
 
-        if (user) {
+        const expectedRole: UserType = next.data.expectedRole;
+        if (expectedRole === undefined) {
+            return true;
+        }
+
+        if (user.type === expectedRole) {
             return true;
         }
         return false;
