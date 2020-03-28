@@ -5,6 +5,7 @@ import {map, shareReplay} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {LoginComponent} from '../login/login.component';
+import {User, UserType} from '../../services/dtos/Dtos';
 
 @Component({
     selector: 'app-navigation',
@@ -19,6 +20,7 @@ export class NavigationComponent {
             shareReplay()
         );
     loggedIn = false;
+    userType !: UserType;
 
     constructor(private breakpointObserver: BreakpointObserver,
                 private router: Router,
@@ -29,9 +31,10 @@ export class NavigationComponent {
         if (!this.loggedIn) {
             const loginDialog = this.dialog.open(LoginComponent);
             loginDialog.afterClosed()
-                .subscribe((output: boolean) => {
-                    if (output) {
-                        this.loggedIn = output;
+                .subscribe((user: User) => {
+                    if (user) {
+                        this.userType = user.type;
+                        this.loggedIn = true;
                     }
                 });
         } else {
@@ -40,8 +43,11 @@ export class NavigationComponent {
         }
     }
 
-    openMyAccount() {
+    isPilot = () => this.userType === UserType.pilot;
 
-    }
+    isTechnician = () => this.userType === UserType.technician;
 
+    isGround = () => this.userType === UserType.ground;
+
+    isFlightDirector = () => this.userType === UserType.flightDirector;
 }

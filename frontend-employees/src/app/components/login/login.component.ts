@@ -25,12 +25,13 @@ export class LoginComponent {
 
     login() {
         const {username, password} = this.loginForm.value;
-        const isValidUser = this.authService.login(username, password);
+        const user = this.authService.login(username, password);
 
-        if (isValidUser) {
+        if (user) {
             this.isValidUser = true;
-            this.dialog.close(true);
+            this.dialog.close(user);
+        } else {
+            this.isValidUser = false;
         }
-        this.isValidUser = false;
     }
 }

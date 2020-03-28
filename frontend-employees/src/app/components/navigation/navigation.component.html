@@ -5,13 +5,14 @@
         <mat-toolbar routerLink="/">Baden Air</mat-toolbar>
         <mat-nav-list>
             <a mat-list-item (click)="login()">{{ loggedIn ? 'Logout' : 'Login' }}</a>
-            <a *ngIf="loggedIn" mat-list-item routerLink="/account">Mein Konto</a>
-            <a mat-list-item>Schichtplan</a>
-            <a mat-list-item>Urlaubsplanung</a>
-            <a mat-list-item>Zeiterfassung</a>
-            <a mat-list-item>Start/Landung</a>
-            <a mat-list-item routerLink="/flightoverview">Flugplan</a>
-            <a mat-list-item>Wartungsergebnisse</a>
+            <a *ngIf="loggedIn" mat-list-item routerLink="/shiftSchedule">Schichtplan</a>
+            <a *ngIf="loggedIn" mat-list-item routerLink="/vacation-planning">Urlaubsplanung</a>
+            <a *ngIf="loggedIn" mat-list-item routerLink="/time">Zeiterfassung</a>
+            <a *ngIf="loggedIn && isPilot()" mat-list-item routerLink="/start-landing">Start/Landung</a>
+            <a *ngIf="loggedIn && isFlightDirector()" mat-list-item routerLink="/flightoverview">Flugplan</a>
+            <a *ngIf="loggedIn && isTechnician()" mat-list-item routerLink="/maintenance">Wartungsergebnisse</a>
+            <a *ngIf="loggedIn" mat-list-item routerLink="/serviceSchedule">Bereitschaftsdienst</a>
+            <a *ngIf="loggedIn && isGround()" mat-list-item routerLink="/baggage">Gepäckverfolgung</a>
         </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content>
@@ -44,25 +45,25 @@
                 Zeiterfassung
             </button>
             <button
-                *ngIf="!(isHandset$ | async) && loggedIn"
+                *ngIf="!(isHandset$ | async) && loggedIn && isGround()"
                 routerLink="/baggage"
                 mat-button>
                 Gepäckverfolgung
             </button>
             <button
-                *ngIf="!(isHandset$ | async) && loggedIn"
+                *ngIf="!(isHandset$ | async) && loggedIn && isPilot()"
                 routerLink="/start-landing"
                 mat-button>
                 Start/Landung
             </button>
             <button
-                *ngIf="!(isHandset$ | async) && loggedIn"
+                *ngIf="!(isHandset$ | async) && loggedIn && isFlightDirector()"
                 routerLink="/flightoverview"
                 mat-button>
                 Flugplan
             </button>
             <button
-                *ngIf="!(isHandset$ | async) && loggedIn"
+                *ngIf="!(isHandset$ | async) && loggedIn && isTechnician()"
                 routerLink="/maintenance"
                 mat-button>
                 Wartungsergebnisse
@@ -79,14 +80,7 @@
                 <button
                     (click)="login()"
                     mat-flat-button>
-                    {{ loggedIn ? 'Logout' : 'Login'  }}
-                </button>
-                <button
-                    routerLink="/account"
-                    (click)="openMyAccount()"
-                    *ngIf="loggedIn"
-                    mat-button>
-                    Mein Konto
+                    {{ loggedIn ? 'Logout' : 'Login' }}
                 </button>
             </span>
         </mat-toolbar>

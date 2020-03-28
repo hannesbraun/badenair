@@ -1,11 +1,5 @@
 import {Injectable} from '@angular/core';
-import {UserType} from './auth.guard';
-
-interface User {
-    type: UserType;
-    name: string;
-}
-
+import {User, UserType} from '../dtos/Dtos';
 
 @Injectable({
     providedIn: 'root'
@@ -17,40 +11,32 @@ export class AuthService {
     constructor() {
     }
 
-    login(username: string, password: string): boolean {
+    login(username: string, password: string): User | undefined {
+        const newUser = {name: username} as User;
+
         // TODO: send request to Server
         switch (username) {
             case 'pilot':
-                this.user = {
-                    name: username,
-                    type: UserType.pilot
-                };
-                return true;
+                newUser.type = UserType.pilot;
+                break;
 
             case 'technician':
-                this.user = {
-                    name: username,
-                    type: UserType.technician
-                };
-                return true;
+                newUser.type = UserType.technician;
+                break;
 
             case 'ground':
-                this.user = {
-                    name: username,
-                    type: UserType.ground
-                };
-                return true;
+                newUser.type = UserType.ground;
+                break;
 
             case 'flightDirector':
-                this.user = {
-                    name: username,
-                    type: UserType.flightDirector
-                };
-                return true;
+                newUser.type = UserType.flightDirector;
+                break;
 
             default:
-                return false;
+                return undefined;
         }
+        this.user = newUser;
+        return newUser;
     }
 
     getUser(): User | undefined {

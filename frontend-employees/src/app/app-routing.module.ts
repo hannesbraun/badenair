@@ -8,7 +8,8 @@ import {ServiceSchedulePageComponent} from './pages/service-schedule-page/servic
 import {StartLandingComponent} from './components/start-landing/start-landing.component';
 import {VacationPlanningComponent} from './components/vacation-planning/vacation-planning.component';
 import {ShiftSchedulePageComponent} from './pages/shift-schedule-page/shift-schedule-page.component';
-import {AuthGuard, UserType} from './services/auth/auth.guard';
+import {AuthGuard} from './services/auth/auth.guard';
+import {UserType} from './services/dtos/Dtos';
 
 const routes: Routes = [
     {
