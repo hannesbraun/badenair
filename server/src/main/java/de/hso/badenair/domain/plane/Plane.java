@@ -19,7 +19,8 @@ public class Plane extends BaseEntity {
     @SequenceGenerator(name = "GEN_FLIGHT_ID", sequenceName = "SEQ_FLIGHT")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn
     private PlaneTypeData typeData;
 
     @Enumerated(EnumType.STRING)

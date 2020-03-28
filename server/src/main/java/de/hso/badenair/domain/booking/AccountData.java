@@ -20,6 +20,9 @@ public class AccountData extends BaseEntity {
     @SequenceGenerator(name = "GEN_ACCOUNT_DATA", sequenceName = "SEQ_ACCOUNT_DATA")
     private Long id;
 
+    @Column(name = "CUSTOMER_USER_ID")
+    private String customerUserId;
+
     @Column(name = "BIRTHDAY")
     private OffsetDateTime birthday;
 

@@ -20,10 +20,12 @@ public class ScheduledFlight extends BaseEntity {
     @SequenceGenerator(name = "GEN_SCHEDULED_FLIGHT", sequenceName = "SEQ_SCHEDULED_FLIGHT")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn
     private Airport startingAirport;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn
     private Airport destinationAirport;
 
     @Column(name = "START_TIME")

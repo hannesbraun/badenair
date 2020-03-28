@@ -5,6 +5,8 @@ spring:
     username: badenair_user
     password: badenair_password
     driverClassName: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate.ddl-auto: create-drop
   security:
     oauth2:
       resourceserver:

@@ -19,7 +19,8 @@ public class FlightCrewMember extends BaseEntity {
     @SequenceGenerator(name = "GEN_FLIGHT_CREW_MEMBER", sequenceName = "SEQ_FLIGHT_CREW_MEMBER")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn
     private Flight flight;
 
     @Column(name = "EMPLOYEE_USER_ID")

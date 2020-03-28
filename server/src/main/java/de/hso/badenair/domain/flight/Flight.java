@@ -21,10 +21,12 @@ public class Flight extends BaseEntity {
     @SequenceGenerator(name = "GEN_FLIGHT_ID", sequenceName = "SEQ_FLIGHT")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn
     private ScheduledFlight scheduledFlight;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn
     private Plane plane;
 
     @Column(name = "START_DATE")
