@@ -1,22 +1,27 @@
 <h1 mat-dialog-title>Login</h1>
 <mat-dialog-content>
-    <form [formGroup]="LoginForm" (ngSubmit)="login()">
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
         <mat-form-field>
             <input type="text" matInput placeholder="Benutzername" formControlName="username">
-            <mat-error *ngIf="LoginForm?.get('username')?.errors?.required">
+            <mat-error *ngIf="loginForm?.get('username')?.errors?.required">
                 Dieses Feld muss ausgefüllt sein.
             </mat-error>
         </mat-form-field>
 
         <mat-form-field>
             <input type="password" matInput placeholder="Passwort" formControlName="password">
-            <mat-error *ngIf="LoginForm?.get('password')?.errors?.required">
+            <mat-error *ngIf="loginForm?.get('password')?.errors?.required">
                 Dieses Feld muss ausgefüllt sein.
             </mat-error>
         </mat-form-field>
 
+        <mat-error *ngIf="!isValidUser">
+            Ihr Benutzername oder<br> ihr Password ist falsch
+        </mat-error>
+        <br>
+
         <button type="submit" mat-raised-button color="primary" class="login-button"
-                [disabled]="LoginForm.invalid">Login
+                [disabled]="loginForm.invalid">Login
         </button>
     </form>
 </mat-dialog-content>

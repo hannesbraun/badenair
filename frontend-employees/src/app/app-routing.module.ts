@@ -8,17 +8,18 @@ import {ServiceSchedulePageComponent} from './pages/service-schedule-page/servic
 import {StartLandingComponent} from './components/start-landing/start-landing.component';
 import {VacationPlanningComponent} from './components/vacation-planning/vacation-planning.component';
 import {ShiftSchedulePageComponent} from './pages/shift-schedule-page/shift-schedule-page.component';
+import {AuthGuard} from './services/auth/auth.guard';
 
 
 const routes: Routes = [
-    {path: 'flightoverview', component: FlightOverviewComponent},
-    {path: 'maintenance', component: PlaneMaintenanceComponent},
-    {path: 'time', component: TimeTrackingComponent},
-    {path: 'baggage', component: UpdateBaggagePageComponent},
-    {path: 'serviceSchedule', component: ServiceSchedulePageComponent},
-    {path: 'start-landing', component: StartLandingComponent},
-    {path: 'vacation-planning', component: VacationPlanningComponent},
-    {path: 'shiftSchedule', component: ShiftSchedulePageComponent},
+    {path: 'flightoverview', component: FlightOverviewComponent, canActivate: [AuthGuard]},
+    {path: 'maintenance', component: PlaneMaintenanceComponent, canActivate: [AuthGuard]},
+    {path: 'time', component: TimeTrackingComponent, canActivate: [AuthGuard]},
+    {path: 'baggage', component: UpdateBaggagePageComponent, canActivate: [AuthGuard]},
+    {path: 'serviceSchedule', component: ServiceSchedulePageComponent, canActivate: [AuthGuard]},
+    {path: 'start-landing', component: StartLandingComponent, canActivate: [AuthGuard]},
+    {path: 'vacation-planning', component: VacationPlanningComponent, canActivate: [AuthGuard]},
+    {path: 'shiftSchedule', component: ShiftSchedulePageComponent, canActivate: [AuthGuard]},
 ];
 
 @NgModule({
