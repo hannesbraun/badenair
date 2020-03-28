@@ -1,5 +1,13 @@
 package de.hso.badenair.domain.flight;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
 public enum FlightState {
-    // TODO: Add states
+    OK("OK"),
+    DELAYED("Verspätet");
+
+    @Getter
+    private String name;
 }
