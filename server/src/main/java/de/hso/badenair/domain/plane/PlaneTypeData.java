@@ -26,6 +26,6 @@ public class PlaneTypeData extends BaseEntity {
     @Column(name = "NUMBER_OF_PASSENGERS")
     private Integer numberOfPassengers;
 
-    @Column(name = "RANGE")
-    private Integer range;
+    @Column(name = "FLIGHT_RANGE")
+    private Integer flightRange;
 }
