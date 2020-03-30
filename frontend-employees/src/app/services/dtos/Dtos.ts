@@ -6,6 +6,18 @@ export interface FlightDto {
     arrivalTime: Date;
 }
 
+export enum UserType {
+    pilot,
+    technician,
+    ground,
+    flightDirector
+}
+
+export interface User {
+    type: UserType;
+    name: string;
+}
+
 export interface PlaneScheduleDto {
     id: number;
     plane: string;
