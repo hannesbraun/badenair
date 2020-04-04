@@ -10,15 +10,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors()
-                .and()
-                .mvcMatcher("/api/**")
-                .authorizeRequests()
-                .mvcMatchers("/api/customer/**").hasRole("badenair_customer")
-                .mvcMatchers("/api/employee/**").hasRole("badenair_employee")
-                .anyRequest().denyAll()
-                .and()
-                .oauth2ResourceServer()
-                .jwt();
+            .cors()
+            .and()
+            .authorizeRequests()
+            .mvcMatchers("/api/customer/public/**").permitAll()
+            .mvcMatchers("/api/customer/**").hasAuthority("SCOPE_customers")
+            .mvcMatchers("/api/employee/**").hasAuthority("SCOPE_employees")
+            .anyRequest().authenticated()
+            .and()
+            .oauth2ResourceServer()
+            .jwt()
+            .jwtAuthenticationConverter(new JwtAuthenticationRolesConverter());
     }
 }
