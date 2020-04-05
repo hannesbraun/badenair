@@ -14,7 +14,7 @@ export class AuthService {
     }
 
     logout() {
-        this.oAuthService.revokeTokenAndLogout();
+        this.oAuthService.logOut();
     }
 
     isLoggedIn(): boolean {
