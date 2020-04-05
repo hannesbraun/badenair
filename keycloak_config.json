@@ -20,10 +20,10 @@
   "actionTokenGeneratedByUserLifespan": 300,
   "enabled": true,
   "sslRequired": "external",
-  "registrationAllowed": true,
-  "registrationEmailAsUsername": true,
+  "registrationAllowed": false,
+  "registrationEmailAsUsername": false,
   "rememberMe": true,
-  "verifyEmail": true,
+  "verifyEmail": false,
   "loginWithEmailAllowed": true,
   "duplicateEmailsAllowed": false,
   "resetPasswordAllowed": true,
@@ -65,9 +65,41 @@
         "attributes": {}
       },
       {
+        "id": "3d3e8bb6-ebd3-4cfa-8479-a363ac3c6b2c",
+        "name": "PILOT",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "badenair",
+        "attributes": {}
+      },
+      {
+        "id": "b8ee5ddb-3ce3-43c3-a145-fc541c40156f",
+        "name": "TECHNICIAN",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "badenair",
+        "attributes": {}
+      },
+      {
         "id": "0806148e-31d8-4ff4-b31b-cbb443ea5a34",
         "name": "uma_authorization",
         "description": "${role_uma_authorization}",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "badenair",
+        "attributes": {}
+      },
+      {
+        "id": "ab4a90d3-cb05-4f38-9951-9b16457452ac",
+        "name": "FLIGHT_DIRECTOR",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "badenair",
+        "attributes": {}
+      },
+      {
+        "id": "aacbbcdd-0e6d-4dc5-8707-3b28296d172f",
+        "name": "GROUND",
         "composite": false,
         "clientRole": false,
         "containerId": "badenair",
@@ -598,7 +630,7 @@
       "clientAuthenticatorType": "client-secret",
       "secret": "**********",
       "redirectUris": [
-        "http://localhost:31416/*"
+        "*"
       ],
       "webOrigins": [
         "*"
@@ -631,6 +663,24 @@
       "authenticationFlowBindingOverrides": {},
       "fullScopeAllowed": true,
       "nodeReRegistrationTimeout": -1,
+      "protocolMappers": [
+        {
+          "id": "0e0439f0-2841-4566-8a9d-f6abf4ab1f79",
+          "name": "Roles Mapping",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "usermodel.realmRoleMapping.rolePrefix": "ROLE_",
+            "multivalued": "true",
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "roles",
+            "jsonType.label": "String"
+          }
+        }
+      ],
       "defaultClientScopes": [
         "web-origins",
         "role_list",
@@ -655,7 +705,7 @@
       "clientAuthenticatorType": "client-secret",
       "secret": "**********",
       "redirectUris": [
-        "http://localhost:42069/*"
+        "*"
       ],
       "webOrigins": [
         "*"
@@ -688,11 +738,30 @@
       "authenticationFlowBindingOverrides": {},
       "fullScopeAllowed": true,
       "nodeReRegistrationTimeout": -1,
+      "protocolMappers": [
+        {
+          "id": "18de6b65-83cf-44c0-aed2-b8a900067c45",
+          "name": "Roles Mapping",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "usermodel.realmRoleMapping.rolePrefix": "ROLE_",
+            "multivalued": "true",
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "roles",
+            "jsonType.label": "String"
+          }
+        }
+      ],
       "defaultClientScopes": [
         "web-origins",
         "role_list",
         "profile",
         "roles",
+        "employees",
         "email"
       ],
       "optionalClientScopes": [
@@ -1296,11 +1365,11 @@
           "protocolMapper": "oidc-usermodel-realm-role-mapper",
           "consentRequired": false,
           "config": {
-            "multivalued": "true",
             "user.attribute": "foo",
             "access.token.claim": "true",
             "claim.name": "realm_access.roles",
-            "jsonType.label": "String"
+            "jsonType.label": "String",
+            "multivalued": "true"
           }
         },
         {
@@ -1310,11 +1379,11 @@
           "protocolMapper": "oidc-usermodel-client-role-mapper",
           "consentRequired": false,
           "config": {
-            "multivalued": "true",
             "user.attribute": "foo",
             "access.token.claim": "true",
             "claim.name": "resource_access.${client_id}.roles",
-            "jsonType.label": "String"
+            "jsonType.label": "String",
+            "multivalued": "true"
           }
         },
         {
@@ -1350,16 +1419,16 @@
     }
   ],
   "defaultDefaultClientScopes": [
-    "profile",
     "role_list",
-    "web-origins",
+    "profile",
+    "email",
     "roles",
-    "email"
+    "web-origins"
   ],
   "defaultOptionalClientScopes": [
-    "phone",
-    "address",
     "offline_access",
+    "address",
+    "phone",
     "microprofile-jwt"
   ],
   "browserSecurityHeaders": {
