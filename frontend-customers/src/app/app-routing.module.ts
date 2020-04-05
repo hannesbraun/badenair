@@ -10,7 +10,7 @@ import {PassengersFormComponent} from './components/passengers-form/passengers-f
 import {CheckInPageComponent} from './pages/check-in-page/check-in-page.component';
 import {SuccessPageComponent} from './pages/success-page/success-page.component';
 import { BookingOverviewComponent } from './components/booking-overview/booking-overview.component';
-import {AuthGuard} from './auth/auth/auth.guard';
+import {AuthGuard} from './auth/auth.guard';
 
 
 export const appRoutes: Routes = [

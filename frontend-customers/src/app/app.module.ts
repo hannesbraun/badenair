@@ -21,13 +21,12 @@ import {CheckButtonComponent} from './components/flight/check-button/check-butto
 import {FlightsPageComponent} from './pages/flights-page/flights-page.component';
 import {HoverClassDirective} from './directives/hover-class.directive';
 import {BookedFlightsComponent} from './components/booked-flights/booked-flights.component';
-import {LoginComponent} from './components/login/login.component';
 import {PassengersFormComponent} from './components/passengers-form/passengers-form.component';
 import {CheckInInfoComponent} from './components/check-in-info/check-in-info.component';
 import {CheckInPageComponent} from './pages/check-in-page/check-in-page.component';
 import {SuccessPageComponent} from './pages/success-page/success-page.component';
 import {BookingOverviewComponent} from './components/booking-overview/booking-overview.component';
-import {AuthModule} from './auth/auth/auth.module';
+import {AuthModule} from './auth/auth.module';
 import {OAuthModule} from 'angular-oauth2-oidc';
 import {HttpClientModule} from '@angular/common/http';
 import {environment} from '../environments/environment';
@@ -51,7 +50,6 @@ import {environment} from '../environments/environment';
         BookedFlightsComponent,
         PassengersFormComponent,
         BookedFlightsComponent,
-        LoginComponent,
         CheckInInfoComponent,
         CheckInPageComponent,
         SuccessPageComponent,
