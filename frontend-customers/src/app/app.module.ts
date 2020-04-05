@@ -26,7 +26,11 @@ import {PassengersFormComponent} from './components/passengers-form/passengers-f
 import {CheckInInfoComponent} from './components/check-in-info/check-in-info.component';
 import {CheckInPageComponent} from './pages/check-in-page/check-in-page.component';
 import {SuccessPageComponent} from './pages/success-page/success-page.component';
-import { BookingOverviewComponent } from './components/booking-overview/booking-overview.component';
+import {BookingOverviewComponent} from './components/booking-overview/booking-overview.component';
+import {AuthModule} from './auth/auth/auth.module';
+import {OAuthModule} from 'angular-oauth2-oidc';
+import {HttpClientModule} from '@angular/common/http';
+import {environment} from '../environments/environment';
 
 @NgModule({
     declarations: [
@@ -62,6 +66,14 @@ import { BookingOverviewComponent } from './components/booking-overview/booking-
         LayoutModule,
         MaterialModule,
         ReactiveFormsModule,
+        AuthModule,
+        HttpClientModule,
+        OAuthModule.forRoot({
+            resourceServer: {
+                allowedUrls: [environment.backendApiRoot],
+                sendAccessToken: true
+            }
+        })
     ],
     providers: [],
     bootstrap: [AppComponent]
