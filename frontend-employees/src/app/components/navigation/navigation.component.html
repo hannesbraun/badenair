@@ -4,16 +4,18 @@
         [mode]="(isHandset$ | async) ? 'over' : 'side'">
         <mat-toolbar routerLink="/">Baden Air</mat-toolbar>
         <mat-nav-list>
-            <a *ngIf="!loggedIn" mat-list-item (click)="login()">Login</a>
-            <a *ngIf="loggedIn" mat-list-item (click)="logout()">Logout</a>
-            <a *ngIf="loggedIn" mat-list-item routerLink="/shiftSchedule">Schichtplan</a>
-            <a *ngIf="loggedIn" mat-list-item routerLink="/vacation-planning">Urlaubsplanung</a>
-            <a *ngIf="loggedIn" mat-list-item routerLink="/time">Zeiterfassung</a>
-            <a *ngIf="loggedIn && isPilot()" mat-list-item routerLink="/start-landing">Start/Landung</a>
-            <a *ngIf="loggedIn && isFlightDirector()" mat-list-item routerLink="/flightoverview">Flugplan</a>
-            <a *ngIf="loggedIn && isTechnician()" mat-list-item routerLink="/maintenance">Wartungsergebnisse</a>
-            <a *ngIf="loggedIn" mat-list-item routerLink="/serviceSchedule">Bereitschaftsdienst</a>
-            <a *ngIf="loggedIn && isGround()" mat-list-item routerLink="/baggage">Gepäckverfolgung</a>
+            <a *ngIf="!isLoggedIn" mat-list-item (click)="login()">Login</a>
+            <ng-container *ngIf="isLoggedIn">
+                <a mat-list-item (click)="logout()">Logout</a>
+                <a mat-list-item routerLink="/shiftSchedule">Schichtplan</a>
+                <a mat-list-item routerLink="/vacation-planning">Urlaubsplanung</a>
+                <a mat-list-item routerLink="/time">Zeiterfassung</a>
+                <a *ngIf="isPilot()" mat-list-item routerLink="/start-landing">Start/Landung</a>
+                <a *ngIf="isFlightDirector()" mat-list-item routerLink="/flightoverview">Flugplan</a>
+                <a *ngIf="isTechnician()" mat-list-item routerLink="/maintenance">Wartungsergebnisse</a>
+                <a mat-list-item routerLink="/serviceSchedule">Bereitschaftsdienst</a>
+                <a *ngIf="isGround()" mat-list-item routerLink="/baggage">Gepäckverfolgung</a>
+            </ng-container>
         </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content>
@@ -27,63 +29,60 @@
                 <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
             </button>
             <button mat-button routerLink="/" class="logo">Baden Air</button>
-            <button
-                *ngIf="!(isHandset$ | async) && loggedIn"
-                routerLink="/shiftSchedule"
-                mat-button>
-                Schichtplan
-            </button>
-            <button
-                *ngIf="!(isHandset$ | async) && loggedIn"
-                routerLink="/vacation-planning"
-                mat-button>
-                Urlaubsplanung
-            </button>
-            <button
-                *ngIf="!(isHandset$ | async) && loggedIn"
-                routerLink="/time"
-                mat-button>
-                Zeiterfassung
-            </button>
-            <button
-                *ngIf="!(isHandset$ | async) && loggedIn && isGround()"
-                routerLink="/baggage"
-                mat-button>
-                Gepäckverfolgung
-            </button>
-            <button
-                *ngIf="!(isHandset$ | async) && loggedIn && isPilot()"
-                routerLink="/start-landing"
-                mat-button>
-                Start/Landung
-            </button>
-            <button
-                *ngIf="!(isHandset$ | async) && loggedIn && isFlightDirector()"
-                routerLink="/flightoverview"
-                mat-button>
-                Flugplan
-            </button>
-            <button
-                *ngIf="!(isHandset$ | async) && loggedIn && isTechnician()"
-                routerLink="/maintenance"
-                mat-button>
-                Wartungsergebnisse
-            </button>
-            <button
-                *ngIf="!(isHandset$ | async) && loggedIn"
-                routerLink="/serviceSchedule"
-                mat-button>
-                Bereitschaftsdienst
-            </button>
+            <ng-container *ngIf="!(isHandset$ | async) && isLoggedIn">
+                <button
+                    routerLink="/shiftSchedule"
+                    mat-button>
+                    Schichtplan
+                </button>
+                <button
+                    routerLink="/vacation-planning"
+                    mat-button>
+                    Urlaubsplanung
+                </button>
+                <button
+                    routerLink="/time"
+                    mat-button>
+                    Zeiterfassung
+                </button>
+                <button
+                    *ngIf="isGround()"
+                    routerLink="/baggage"
+                    mat-button>
+                    Gepäckverfolgung
+                </button>
+                <button
+                    *ngIf="isPilot()"
+                    routerLink="/start-landing"
+                    mat-button>
+                    Start/Landung
+                </button>
+                <button
+                    *ngIf="isFlightDirector()"
+                    routerLink="/flightoverview"
+                    mat-button>
+                    Flugplan
+                </button>
+                <button
+                    *ngIf="isTechnician()"
+                    routerLink="/maintenance"
+                    mat-button>
+                    Wartungsergebnisse
+                </button>
+                <button
+                    routerLink="/serviceSchedule"
+                    mat-button>
+                    Bereitschaftsdienst
+                </button>
+            </ng-container>
             <span class="fill-space"></span>
-            <span
-                *ngIf="!(isHandset$ | async)">
-                <button *ngIf="!loggedIn"
+            <span *ngIf="!(isHandset$ | async)">
+                <button *ngIf="!isLoggedIn"
                     (click)="login()"
                     mat-flat-button>
                     Login
                 </button>
-                <button *ngIf="loggedIn"
+                <button *ngIf="isLoggedIn"
                     (click)="logout()"
                     mat-flat-button>
                     Logout

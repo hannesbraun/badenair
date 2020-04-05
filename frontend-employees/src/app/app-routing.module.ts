@@ -8,38 +8,17 @@ import {ServiceSchedulePageComponent} from './pages/service-schedule-page/servic
 import {StartLandingComponent} from './components/start-landing/start-landing.component';
 import {VacationPlanningComponent} from './components/vacation-planning/vacation-planning.component';
 import {ShiftSchedulePageComponent} from './pages/shift-schedule-page/shift-schedule-page.component';
-import {AuthGuard} from './services/auth/auth.guard';
-import {UserType} from './services/dtos/Dtos';
+import {AuthGuard} from './auth/auth.guard';
+import {LandingPageComponent} from './pages/landing-page/landing-page.component';
 
 const routes: Routes = [
-    {
-        path: 'flightoverview',
-        component: FlightOverviewComponent,
-        canActivate: [AuthGuard],
-        data: {expectedRole: UserType.flightDirector},
-    },
-    {
-        path: 'maintenance',
-        component: PlaneMaintenanceComponent,
-        canActivate: [AuthGuard],
-        data: {expectedRole: UserType.technician}
-    },
+    {path: '', component: LandingPageComponent},
+    {path: 'flightoverview', component: FlightOverviewComponent, canActivate: [AuthGuard]},
+    {path: 'maintenance', component: PlaneMaintenanceComponent, canActivate: [AuthGuard]},
     {path: 'time', component: TimeTrackingComponent, canActivate: [AuthGuard]},
-    {
-        path: 'baggage',
-        component: UpdateBaggagePageComponent,
-        canActivate: [AuthGuard],
-        data: {expectedRole: UserType.ground}
-    },
-    {
-        path: 'serviceSchedule', component: ServiceSchedulePageComponent, canActivate: [AuthGuard]
-    },
-    {
-        path: 'start-landing',
-        component: StartLandingComponent,
-        canActivate: [AuthGuard],
-        data: {expectedRole: UserType.pilot}
-    },
+    {path: 'baggage', component: UpdateBaggagePageComponent, canActivate: [AuthGuard]},
+    {path: 'serviceSchedule', component: ServiceSchedulePageComponent, canActivate: [AuthGuard]},
+    {path: 'start-landing', component: StartLandingComponent, canActivate: [AuthGuard]},
     {path: 'vacation-planning', component: VacationPlanningComponent, canActivate: [AuthGuard]},
     {path: 'shiftSchedule', component: ShiftSchedulePageComponent, canActivate: [AuthGuard]},
 ];
