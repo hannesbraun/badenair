@@ -10,18 +10,19 @@ import {PassengersFormComponent} from './components/passengers-form/passengers-f
 import {CheckInPageComponent} from './pages/check-in-page/check-in-page.component';
 import {SuccessPageComponent} from './pages/success-page/success-page.component';
 import { BookingOverviewComponent } from './components/booking-overview/booking-overview.component';
+import {AuthGuard} from './auth/auth/auth.guard';
 
 
 export const appRoutes: Routes = [
     {path: '', component: FlightSearchComponent},
-    {path: 'settings', component: AccountSettingsPageComponent},
+    {path: 'settings', component: AccountSettingsPageComponent, canActivate: [AuthGuard]},
     {path: 'flights', component: FlightsPageComponent},
     {path: 'signup', component: SignUpPageComponent},
-    {path: 'booked', component: BookedFlightsComponent},
-    {path: 'passengers', component: PassengersFormComponent},
-    {path: 'checkin', component: CheckInPageComponent},
-    {path: 'success', component: SuccessPageComponent},
-    {path: 'overview', component: BookingOverviewComponent},
+    {path: 'booked', component: BookedFlightsComponent, canActivate: [AuthGuard]},
+    {path: 'passengers', component: PassengersFormComponent, canActivate: [AuthGuard]},
+    {path: 'checkin', component: CheckInPageComponent, canActivate: [AuthGuard]},
+    {path: 'success', component: SuccessPageComponent, canActivate: [AuthGuard]},
+    {path: 'overview', component: BookingOverviewComponent, canActivate: [AuthGuard]},
 ];
 
 @NgModule({
