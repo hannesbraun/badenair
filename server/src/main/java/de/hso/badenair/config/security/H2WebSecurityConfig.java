@@ -6,13 +6,16 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @EnableWebSecurity
-@Profile("!h2")
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+@Profile("h2")
+public class H2WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
             .cors()
+            .and()
+            .mvcMatcher("/h2-console/**")
+            .anonymous()
             .and()
             .authorizeRequests()
             .mvcMatchers("/api/customer/public/**").permitAll()
