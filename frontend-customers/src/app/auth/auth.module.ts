@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {AuthConfig, OAuthService} from 'angular-oauth2-oidc';
+import {environment} from '../../environments/environment';
 
 
 @NgModule({
@@ -13,7 +14,7 @@ export class AuthModule {
 
     private static readonly authConfig: AuthConfig = {
         // Url of the Identity Provider
-        issuer: 'http://localhost:8080/auth/realms/badenair',
+        issuer: environment.authUrl,
         redirectUri: window.location.origin,
         clientId: 'badenair-customer',
         responseType: 'code',
