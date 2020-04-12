@@ -1,10 +1,13 @@
 package de.hso.badenair.config.security;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
+@Configuration
 @EnableWebSecurity
 @Profile("h2")
 public class H2WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -13,9 +16,6 @@ public class H2WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .cors()
-            .and()
-            .mvcMatcher("/h2-console/**")
-            .anonymous()
             .and()
             .authorizeRequests()
             .mvcMatchers("/api/customer/public/**").permitAll()
@@ -26,5 +26,12 @@ public class H2WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .oauth2ResourceServer()
             .jwt()
             .jwtAuthenticationConverter(new JwtAuthenticationRolesConverter());
+
+        http.headers().frameOptions().disable();
+    }
+
+    @Override
+    public void configure(WebSecurity web) {
+        web.ignoring().antMatchers("/h2-console/**");
     }
 }
