@@ -18,10 +18,12 @@ import {StartLandingComponent} from './components/start-landing/start-landing.co
 import {VacationPlanningComponent} from './components/vacation-planning/vacation-planning.component';
 import {ShiftSchedulePageComponent} from './pages/shift-schedule-page/shift-schedule-page.component';
 import {AuthModule} from './auth/auth.module';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {OAuthModule} from 'angular-oauth2-oidc';
 import {environment} from '../environments/environment';
-import { LandingPageComponent } from './pages/landing-page/landing-page.component';
+import {LandingPageComponent} from './pages/landing-page/landing-page.component';
+import {VacationPlanningPageComponent} from './pages/vacation-planning-page/vacation-planning-page.component';
+import {DateInterceptor} from './services/util/date.interceptor';
 
 @NgModule({
     declarations: [
@@ -38,7 +40,8 @@ import { LandingPageComponent } from './pages/landing-page/landing-page.componen
         StartLandingComponent,
         VacationPlanningComponent,
         ShiftSchedulePageComponent,
-        LandingPageComponent
+        LandingPageComponent,
+        VacationPlanningPageComponent
     ],
     imports: [
         BrowserAnimationsModule,
@@ -55,7 +58,13 @@ import { LandingPageComponent } from './pages/landing-page/landing-page.componen
             }
         })
     ],
-    providers: [],
+    providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: DateInterceptor,
+            multi: true
+        }
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule {

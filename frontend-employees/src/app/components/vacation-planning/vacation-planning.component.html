@@ -1,7 +1,6 @@
-<h1>Urlaubsplannung</h1><br>
 <div class="planner-container">
     <h3>Neue Anfrage</h3>
-    <ng-container [formGroup]="requestVacationForm" (ngSubmit)="onSubmit()">
+    <ng-container [formGroup]="requestVacationForm">
         <mat-form-field>
             <input matInput [matDatepicker]="pickerFromDate" [min]="currentDate"
                    formControlName="fromDate"
@@ -49,7 +48,7 @@
             </mat-error>
         </mat-form-field>
 
-        <button type="submit" [disabled]="requestVacationForm.invalid" mat-button mat-raised-button color="primary">
+        <button type="submit" (click)="onSubmit()" [disabled]="requestVacationForm.invalid" mat-button mat-raised-button color="primary">
             Anfragen
         </button>
         <div></div>
@@ -66,7 +65,7 @@
         <div class="pending-indicator"> Ausstehend</div>
     </div>
     <h3>Übersicht</h3>
-    <table mat-table class="mat-elevation-z3" [dataSource]="dataSource">
+    <table mat-table class="mat-elevation-z3" [dataSource]="tableData">
 
         <ng-container matColumnDef="duration">
             <th mat-header-cell *matHeaderCellDef>Von - Bis</th>
