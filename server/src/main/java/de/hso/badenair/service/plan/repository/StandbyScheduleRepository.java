@@ -1,4 +1,4 @@
-package de.hso.badenair.service.plane.repository;
+package de.hso.badenair.service.plan.repository;
 
 import de.hso.badenair.domain.schedule.StandbySchedule;
 import org.springframework.data.repository.CrudRepository;

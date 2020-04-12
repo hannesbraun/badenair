@@ -1,8 +1,8 @@
-package de.hso.badenair.controller;
+package de.hso.badenair.controller.plan;
 
 import de.hso.badenair.domain.schedule.StandbySchedule;
-import de.hso.badenair.service.plane.repository.StandbyScheduleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import de.hso.badenair.service.plan.PlanService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,13 +10,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/employee/plan")
+@RequiredArgsConstructor
 public class PlanController {
 
-    @Autowired
-    private StandbyScheduleRepository standbyScheduleRepository;
+    private final PlanService planService;
 
     @RequestMapping("/standby")
     public List<StandbySchedule> getStandbyPlan() {
-        return (List<StandbySchedule>) standbyScheduleRepository.findAll();
+        return this.planService.getStandbyPlan();
     }
 }
