@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Service
@@ -22,12 +23,17 @@ public class VacationService {
     public void requestVacation(String employeeUserId, RequestVacationDto requestVacationDto) {
         // TODO: Check if vacation can be approved
 
-        final Vacation vacation = Vacation.builder()
-            .employeeUserId(employeeUserId)
-            .startTime(requestVacationDto.getStartDate())
-            .endTime(requestVacationDto.getEndDate())
-            .build();
+        final OffsetDateTime startDate = requestVacationDto.getStartDate();
+        final OffsetDateTime endDate = requestVacationDto.getEndDate();
 
-        vacationRepository.save(vacation);
+        if (endDate.isAfter(startDate)) {
+            final Vacation vacation = Vacation.builder()
+                .employeeUserId(employeeUserId)
+                .startTime(startDate)
+                .endTime(endDate)
+                .build();
+
+            vacationRepository.save(vacation);
+        }
     }
 }
