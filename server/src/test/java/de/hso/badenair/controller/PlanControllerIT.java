@@ -3,15 +3,20 @@ package de.hso.badenair.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.hso.badenair.controller.dto.plan.RequestVacationDto;
+import de.hso.badenair.controller.plan.PlanController;
 import de.hso.badenair.domain.schedule.Vacation;
+import de.hso.badenair.service.plan.PlanService;
 import de.hso.badenair.service.plan.vacation.VacationRepository;
 import de.hso.badenair.service.plan.vacation.VacationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -36,9 +41,13 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 
 @DataJpaTest
 @ContextConfiguration(classes = PlanControllerIT.TestConfig.class)
+@ExtendWith(MockitoExtension.class)
 class PlanControllerIT {
 
     private final String API_URL = "/api/employee/plan/vacation";
+
+    @MockBean
+    private PlanService planService;
 
     @Autowired
     private VacationRepository vacationRepository;
