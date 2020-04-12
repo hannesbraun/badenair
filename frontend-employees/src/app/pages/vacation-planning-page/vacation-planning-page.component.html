@@ -1,0 +1,7 @@
+<h1>Urlaubsplannung</h1>
+<app-vacation-planning *ngIf="loading"
+    [tableData]="tableData"
+    [approvedDates]="approvedDates"
+    [pendingDates]="pendingDates"
+    (requestSubmit)="onVacationRequest($event)"
+></app-vacation-planning>

@@ -57,3 +57,13 @@ export interface Schedule {
     start: Date;
     end: Date;
 }
+
+export interface VacationDto {
+    startDate: Date;
+    endDate: Date;
+}
+
+export interface RequestVacationDto {
+    startDate: Date;
+    endDate: Date;
+}

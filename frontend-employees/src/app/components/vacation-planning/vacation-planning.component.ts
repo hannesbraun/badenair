@@ -1,10 +1,17 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatCalendarCellCssClasses} from '@angular/material/datepicker';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {RequestVacationDto} from '../../services/dtos/Dtos';
 
-enum vacationState {
-    pending = 'Ausstehend',
-    approved = 'Genehmigt'
+export enum VacationState {
+    PENDING = 'Ausstehend',
+    APPROVED = 'Genehmigt'
+}
+
+export interface VacationPlanTableData {
+    duration: Date[];
+    days: number;
+    state: VacationState;
 }
 
 @Component({
@@ -12,7 +19,7 @@ enum vacationState {
     templateUrl: './vacation-planning.component.html',
     styleUrls: ['./vacation-planning.component.scss']
 })
-export class VacationPlanningComponent implements OnInit {
+export class VacationPlanningComponent {
 
     calendar1: Date;
     calendar2: Date;
@@ -21,25 +28,13 @@ export class VacationPlanningComponent implements OnInit {
     vacationDays = 13;
     vacationDaysLeft = 9;
 
-    dataSource = [
-        {duration: [new Date(), new Date()], days: 3, state: vacationState.pending},
-        {duration: [new Date(), new Date()], days: 4, state: vacationState.approved},
-        {duration: [new Date(), new Date()], days: 6, state: vacationState.pending},
-    ];
-    displayedColumns: string[] = ['duration', 'days', 'state'];
+    @Input() tableData !: VacationPlanTableData[];
+    @Input() approvedDates !: number[][];
+    @Input() pendingDates !: number[][];
 
-    approvedDates = [
-        [2, 3, 4, 5, 6, 7],
-        [7, 8, 9, 10, 11, 12, 13],
-        [13, 14],
-        [23, 24, 25]
-    ];
-    pendingDates = [
-        [1],
-        [24, 25],
-        [],
-        [12, 13, 14, 15, 16]
-    ];
+    @Output() requestSubmit = new EventEmitter<RequestVacationDto>();
+
+    displayedColumns: string[] = ['duration', 'days', 'state'];
 
     requestVacationForm: FormGroup = this.formBuilder.group({
         fromDate: ['', Validators.required],
@@ -56,9 +51,6 @@ export class VacationPlanningComponent implements OnInit {
         this.calendar3 = date(3);
     }
 
-    ngOnInit(): void {
-    }
-
     get currentDate() {
         return new Date();
     }
@@ -70,10 +62,10 @@ export class VacationPlanningComponent implements OnInit {
         return (d: Date): MatCalendarCellCssClasses => {
             const date = d.getDate();
 
-            if (approvedDate.includes(date)) {
+            if (approvedDate?.includes(date)) {
                 return 'approved-date';
             }
-            if (pendingDate.includes(date)) {
+            if (pendingDate?.includes(date)) {
                 return 'pending-date';
             }
             return '';
@@ -82,7 +74,12 @@ export class VacationPlanningComponent implements OnInit {
 
     onSubmit() {
         if (this.requestVacationForm.valid) {
-            // TODO implement on Submit
+            const dto: RequestVacationDto = {
+                startDate: this.requestVacationForm.get('fromDate')?.value,
+                endDate: this.requestVacationForm.get('toDate')?.value
+            };
+
+            this.requestSubmit.emit(dto);
         }
     }
 }
