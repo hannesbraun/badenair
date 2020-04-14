@@ -9,11 +9,9 @@ import {BaggageState, ChangeBaggageStateDto, FlightDto} from '../../services/dto
 })
 export class UpdateBaggageComponent {
 
-    @Input() availableFlights !: FlightDto[];
     @Output() updateBaggageState = new EventEmitter<ChangeBaggageStateDto>();
 
     updateBaggageForm: FormGroup = this.formBuilder.group({
-        flightSelect: ['', Validators.required],
         stateSelect: ['', Validators.required],
         baggageId: ['', Validators.required]
     });
@@ -24,7 +22,6 @@ export class UpdateBaggageComponent {
     onSubmit() {
         if (this.updateBaggageForm.valid) {
             const dto: ChangeBaggageStateDto = {
-                flightId: this.updateBaggageForm.get('flightSelect')?.value,
                 baggageId: this.updateBaggageForm.get('baggageId')?.value,
                 state: this.updateBaggageForm.get('stateSelect')?.value
             };
