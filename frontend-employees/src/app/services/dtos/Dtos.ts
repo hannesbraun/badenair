@@ -38,12 +38,15 @@ export enum ScheduleConfigSolution {
 }
 
 export enum BaggageState {
-    ON_FLIGHT,
-    READY_TO_GET
+    AT_TRAVELLER,
+    ON_BAGGAGE_CAROUSEL,
+    IN_LUGGAGE_HALL,
+    ON_LUGGAGE_CART,
+    ON_PLANE,
+    READY_FOR_PICK_UP
 }
 
 export interface ChangeBaggageStateDto {
-    flightId: number;
     baggageId: string;
     state: BaggageState;
 }
