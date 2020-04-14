@@ -5,9 +5,13 @@ import lombok.Getter;
 
 @AllArgsConstructor
 public enum LuggageState {
-    ON_PLANE("Im Flugzeug"),
-    READY_FOR_PICK_UP("Abholbereit");
+	AT_TRAVELLER("Beim Reisenden"),
+	ON_BAGGAGE_CAROUSEL("Auf dem Gepäckband"),
+	IN_LUGGAGE_HALL("In der Gepäckhalle"),
+	ON_LUGGAGE_CART("Auf dem Gepäckwagen"),
+	ON_PLANE("Im Flugzeug"),
+	READY_FOR_PICK_UP("Bereit zum Abholen");
 
-    @Getter
-    private String name;
+	@Getter
+	private String name;
 }
