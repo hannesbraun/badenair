@@ -1,6 +1,6 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {BaggageState, ChangeBaggageStateDto, FlightDto} from '../../services/dtos/Dtos';
+import {BaggageState, ChangeBaggageStateDto} from '../../services/dtos/Dtos';
 
 @Component({
     selector: 'app-update-baggage',
