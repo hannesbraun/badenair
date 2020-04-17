@@ -14,7 +14,7 @@ import de.hso.badenair.service.luggage.LuggageService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/employee/luggage")
+@RequestMapping("/api/employee")
 @RequiredArgsConstructor
 public class LuggageController {
 
