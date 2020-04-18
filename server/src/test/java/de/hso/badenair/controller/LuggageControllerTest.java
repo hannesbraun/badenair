@@ -17,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -43,9 +42,6 @@ import de.hso.badenair.service.luggage.LuggageService;
 class LuggageControllerTest {
 
 	private final String API_URL = "/api/employee/luggage";
-
-	@MockBean
-	private LuggageService luggageService;
 
 	@Autowired
 	private LuggageRepository luggageRepository;
