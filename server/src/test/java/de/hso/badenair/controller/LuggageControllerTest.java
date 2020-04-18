@@ -1,18 +1,16 @@
 package de.hso.badenair.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
-
-import java.security.Principal;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import de.hso.badenair.controller.dto.luggage.LuggageStateDto;
+import de.hso.badenair.controller.luggage.LuggageController;
+import de.hso.badenair.domain.booking.Luggage;
+import de.hso.badenair.domain.booking.LuggageState;
+import de.hso.badenair.service.luggage.LuggageRepository;
+import de.hso.badenair.service.luggage.LuggageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -26,15 +24,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
-import de.hso.badenair.controller.dto.luggage.LuggageStateDto;
-import de.hso.badenair.controller.luggage.LuggageController;
-import de.hso.badenair.domain.booking.Luggage;
-import de.hso.badenair.domain.booking.LuggageState;
-import de.hso.badenair.service.luggage.LuggageRepository;
-import de.hso.badenair.service.luggage.LuggageService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 @DataJpaTest
 @ContextConfiguration(classes = LuggageControllerTest.TestConfig.class)
@@ -59,31 +53,34 @@ class LuggageControllerTest {
 		mvc = standaloneSetup(uut).build();
 	}
 
-	@Test
-	void testNonExistingLuggage() throws Exception {
-		Principal principal = Mockito.mock(Principal.class);
-		when(principal.getName()).thenReturn("user");
+    @Test
+    void testNonExistingLuggage() throws Exception {
+        LuggageStateDto dto = new LuggageStateDto(1234L,
+            LuggageState.ON_BAGGAGE_CAROUSEL);
+        mvc.perform(patch(API_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(dto)))
+            .andExpect(status().isNotFound());
+    }
 
-		mvc.perform(get(API_URL).principal(principal))
-				.andExpect(status().isNotFound());
-	}
+    @Test
+    void testUpdatingState() throws Exception {
+        Luggage luggage = Luggage.builder()
+            .state(LuggageState.AT_TRAVELLER)
+            .weight(23)
+            .build();
 
-	@Test
-	void testUpdatingState() throws Exception {
-		Principal principal = Mockito.mock(Principal.class);
-		when(principal.getName()).thenReturn("user");
+        final Luggage savedLuggage = luggageRepository.save(luggage);
 
-		Luggage luggage = new Luggage(Long.valueOf(1234),
-				LuggageState.AT_TRAVELLER, Integer.valueOf(23));
-		luggageRepository.save(luggage);
+        LuggageStateDto dto = new LuggageStateDto(savedLuggage.getId(),
+            LuggageState.ON_BAGGAGE_CAROUSEL);
+        mvc.perform(patch(API_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(dto)))
+            .andDo(print())
+            .andExpect(status().isNoContent());
 
-		LuggageStateDto dto = new LuggageStateDto(Long.valueOf(1234),
-				LuggageState.ON_BAGGAGE_CAROUSEL);
-		mvc.perform(patch(API_URL).contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(dto))
-				.principal(principal)).andExpect(status().isNoContent());
-
-		luggage = luggageRepository.findById(Long.valueOf(1234)).get();
+        luggage = luggageRepository.findById(savedLuggage.getId()).get();
 
 		assertThat(luggage.getState())
 				.isEqualTo(LuggageState.ON_BAGGAGE_CAROUSEL);
