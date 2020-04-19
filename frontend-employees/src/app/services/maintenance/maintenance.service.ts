@@ -14,7 +14,7 @@ export class MaintenanceService {
   constructor(private http : HttpClient) { }
 
   updateMaintenance(planeId: number): Observable<void> {
-    return this.http.patch<void>(`${this.apiUrl}/maintenance${planeId}`, null);
+    return this.http.patch<void>(`${this.apiUrl}/maintenance/${planeId}`, null);
     // Todo: Errorhandling
   }
 

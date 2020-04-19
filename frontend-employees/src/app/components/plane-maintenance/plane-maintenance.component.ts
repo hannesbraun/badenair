@@ -27,6 +27,7 @@ export class PlaneMaintenanceComponent implements OnInit {
     }
 
     onRepairButtonPressed(currentPlane: PlaneMaintenance){
-        this.maintenanceService.updateMaintenance(currentPlane.id);
+        this.maintenanceService.updateMaintenance(currentPlane.id).subscribe(result=> console.log);
+        currentPlane.state = 'WAITING';
     }
 }
