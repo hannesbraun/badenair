@@ -10,7 +10,7 @@ import java.time.OffsetDateTime;
 @Value
 public class FinishRegistrationDto {
     @Past
-    OffsetDateTime birthday;
+    OffsetDateTime birthDate;
 
     @NotBlank
     String street;
@@ -31,5 +31,5 @@ public class FinishRegistrationDto {
     String check;
 
     @Future
-    OffsetDateTime expirationDate;
+    OffsetDateTime invalidationDate;
 }

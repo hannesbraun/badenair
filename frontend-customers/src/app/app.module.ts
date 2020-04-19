@@ -28,9 +28,10 @@ import {SuccessPageComponent} from './pages/success-page/success-page.component'
 import {BookingOverviewComponent} from './components/booking-overview/booking-overview.component';
 import {AuthModule} from './auth/auth.module';
 import {OAuthModule} from 'angular-oauth2-oidc';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {environment} from '../environments/environment';
 import {SignupDialogComponent} from './components/signup-dialog/signup-dialog.component';
+import {DateInterceptor} from './services/util/date.interceptor';
 
 @NgModule({
     declarations: [
@@ -75,7 +76,13 @@ import {SignupDialogComponent} from './components/signup-dialog/signup-dialog.co
             }
         })
     ],
-    providers: [],
+    providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: DateInterceptor,
+            multi: true
+        }
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule {

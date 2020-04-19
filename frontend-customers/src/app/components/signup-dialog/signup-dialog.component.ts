@@ -1,7 +1,6 @@
-import {Component, Inject} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {AccountData} from '../../services/dtos/Dtos';
+import {MatDialogRef} from '@angular/material/dialog';
 
 @Component({
     selector: 'app-signup-dialog',
@@ -14,8 +13,7 @@ export class SignupDialogComponent {
         profile: []
     });
 
-    constructor(private formBuilder: FormBuilder, private dialog: MatDialogRef<SignupDialogComponent>,
-                @Inject(MAT_DIALOG_DATA) public data: AccountData) {
+    constructor(private formBuilder: FormBuilder, private dialog: MatDialogRef<SignupDialogComponent>) {
     }
 
     onSubmit() {
@@ -23,5 +21,4 @@ export class SignupDialogComponent {
             this.dialog.close(this.profileForm.controls.profile.value);
         }
     }
-
 }

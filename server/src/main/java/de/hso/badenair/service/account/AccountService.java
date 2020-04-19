@@ -25,14 +25,15 @@ public class AccountService {
         final AccountData accountData = accountDataRepository.findByCustomerUserId(userId)
             .orElseGet(this::getEmptyAccountData);
 
-        accountData.setBirthday(dto.getBirthday());
+        accountData.setCustomerUserId(userId);
+        accountData.setBirthday(dto.getBirthDate());
         accountData.setStreet(dto.getStreet());
         accountData.setZipCode(dto.getZipCode());
         accountData.setCity(dto.getPlaceOfResidence());
         accountData.setCardOwner(dto.getCardOwner());
         accountData.setCardNumber(dto.getCardNumber());
         accountData.setCvv(dto.getCheck());
-        accountData.setExpirationDate(dto.getExpirationDate());
+        accountData.setExpirationDate(dto.getInvalidationDate());
     }
 
     private AccountData getEmptyAccountData() {
@@ -40,15 +41,16 @@ public class AccountService {
     }
 
     private AccountDataDto mapToDto(AccountData accountData) {
+        // TODO: Extract to mapper
         return AccountDataDto.builder()
-            .birthday(accountData.getBirthday())
+            .birthDate(accountData.getBirthday())
             .street(accountData.getStreet())
             .zipCode(accountData.getZipCode())
             .placeOfResidence(accountData.getCity())
             .cardOwner(accountData.getCardOwner())
             .cardNumber(accountData.getCardNumber())
             .check(accountData.getCvv())
-            .expirationDate(accountData.getExpirationDate())
+            .invalidationDate(accountData.getExpirationDate())
             .build();
     }
 }
