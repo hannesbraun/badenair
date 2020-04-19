@@ -3,6 +3,7 @@ package de.hso.badenair.service.account;
 import de.hso.badenair.controller.dto.account.AccountDataDto;
 import de.hso.badenair.controller.dto.account.FinishRegistrationDto;
 import de.hso.badenair.domain.booking.AccountData;
+import de.hso.badenair.util.mapper.AccountDataMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ public class AccountService {
 
     public AccountDataDto getAccountData(String userId) {
         return accountDataRepository.findByCustomerUserId(userId)
-            .map(this::mapToDto)
+            .map(AccountDataMapper::mapToDto)
             .orElse(AccountDataDto.builder().build());
     }
 
@@ -38,19 +39,5 @@ public class AccountService {
 
     private AccountData getEmptyAccountData() {
         return accountDataRepository.save(AccountData.builder().build());
-    }
-
-    private AccountDataDto mapToDto(AccountData accountData) {
-        // TODO: Extract to mapper
-        return AccountDataDto.builder()
-            .birthDate(accountData.getBirthday())
-            .street(accountData.getStreet())
-            .zipCode(accountData.getZipCode())
-            .placeOfResidence(accountData.getCity())
-            .cardOwner(accountData.getCardOwner())
-            .cardNumber(accountData.getCardNumber())
-            .check(accountData.getCvv())
-            .invalidationDate(accountData.getExpirationDate())
-            .build();
     }
 }
