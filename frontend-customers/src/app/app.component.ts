@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {SignupDialogComponent} from './components/signup-dialog/signup-dialog.component';
 import {AccountService} from './services/account/account.service';
+import {AuthService} from './auth/auth.service';
 
 @Component({
     selector: 'app-root',
@@ -12,18 +13,25 @@ export class AppComponent implements OnInit {
 
     accountDataVerified = false;
 
-    constructor(private dialog: MatDialog, private accountService: AccountService) {
+    constructor(private dialog: MatDialog, private accountService: AccountService, private authService: AuthService) {
     }
 
     ngOnInit(): void {
-        if (!this.accountDataVerified) {
+        if (this.authService.isLoggedIn() && !this.accountDataVerified) {
             this.accountService.getAccountData().subscribe(data => {
-                if (Object.values(data).some(value => value === undefined)) {
+                data.name = this.authService.getGivenName();
+                data.lastname = this.authService.getFamilyName();
+
+                if (Object.values(data).some(value => value === null)) {
                     const dialogConfig: MatDialogConfig = {
-                        disableClose: true
+                        disableClose: true,
+                        data
                     };
 
-                    this.dialog.open(SignupDialogComponent, dialogConfig).afterClosed().subscribe(value => this.accountDataVerified = true);
+                    this.dialog.open(SignupDialogComponent, dialogConfig).afterClosed().subscribe(accountData => {
+                        this.accountDataVerified = true;
+                        this.accountService.finishRegistration(accountData).subscribe();
+                    });
                 }
             });
         }

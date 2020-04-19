@@ -20,4 +20,12 @@ export class AuthService {
     isLoggedIn(): boolean {
         return this.oAuthService.hasValidIdToken();
     }
+
+    getGivenName() {
+        return (this.oAuthService.getIdentityClaims() as {given_name: string}).given_name;
+    }
+
+    getFamilyName() {
+        return (this.oAuthService.getIdentityClaims() as {family_name: string}).family_name;
+    }
 }
