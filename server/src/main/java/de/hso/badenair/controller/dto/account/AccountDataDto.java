@@ -8,12 +8,12 @@ import java.time.OffsetDateTime;
 @Data
 @Builder
 public class AccountDataDto {
-    private OffsetDateTime birthday;
+    private OffsetDateTime birthDate;
     private String street;
     private String zipCode;
     private String placeOfResidence;
     private String cardOwner;
     private String cardNumber;
     private String check;
-    private OffsetDateTime expirationDate;
+    private OffsetDateTime invalidationDate;
 }
