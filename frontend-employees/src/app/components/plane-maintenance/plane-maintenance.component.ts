@@ -1,4 +1,6 @@
 import {Component, OnInit} from '@angular/core';
+import { MaintenanceService } from 'src/app/services/maintenance/maintenance.service';
+import { PlaneMaintenance } from 'src/app/services/dtos/Dtos';
 
 @Component({
     selector: 'app-plane-maintenance',
@@ -6,20 +8,25 @@ import {Component, OnInit} from '@angular/core';
     styleUrls: ['./plane-maintenance.component.scss']
 })
 export class PlaneMaintenanceComponent implements OnInit {
-    planes = [
-        {name: 'Flugzeug 1', distance: 1329, isDefect: false},
-        {name: 'Flugzeug 2', distance: 5959, isDefect: true},
-        {name: 'Flugzeug 3', distance: 13155, isDefect: true},
-        {name: 'Flugzeug 4', distance: 1642, isDefect: false}
-    ];
+    planes: PlaneMaintenance[] = [];
 
-    constructor() {
+    constructor(private maintenanceService : MaintenanceService) {
+
     }
 
     ngOnInit() {
+        this.getPlanes();
+    }
+
+    getPlanes(){
+        this.maintenanceService.getMaintenanceList().subscribe(result=>this.planes = result);
     }
 
     getIndicatorLength(distance: number) {
         return {transform: `scaleX(${distance / 1000 % 1})`};
+    }
+
+    onRepairButtonPressed(currentPlane: PlaneMaintenance){
+        this.maintenanceService.updateMaintenance(currentPlane.id);
     }
 }
