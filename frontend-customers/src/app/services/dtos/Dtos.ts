@@ -13,6 +13,8 @@ export interface SignUpDto {
     password: string;
 }
 
+export type AccountData = Partial<Omit<SignUpDto, 'password' | 'email'>>;
+
 export interface UpdateProfileDto {
     lastname: string;
     name: string;
