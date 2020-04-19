@@ -14,6 +14,7 @@ export interface SignUpDto {
 }
 
 export type AccountData = Partial<Omit<SignUpDto, 'password' | 'email'>>;
+export type FinishRegistrationDto = Omit<AccountData, 'lastname' | 'name'>;
 
 export interface UpdateProfileDto {
     lastname: string;
