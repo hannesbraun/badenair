@@ -30,6 +30,7 @@ import {AuthModule} from './auth/auth.module';
 import {OAuthModule} from 'angular-oauth2-oidc';
 import {HttpClientModule} from '@angular/common/http';
 import {environment} from '../environments/environment';
+import {SignupDialogComponent} from './components/signup-dialog/signup-dialog.component';
 
 @NgModule({
     declarations: [
@@ -54,6 +55,7 @@ import {environment} from '../environments/environment';
         CheckInPageComponent,
         SuccessPageComponent,
         BookingOverviewComponent,
+        SignupDialogComponent
     ],
     imports: [
         AppRoutingModule,
