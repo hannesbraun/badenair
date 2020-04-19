@@ -12,8 +12,8 @@
                    ngModel
                    [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete">
-                <mat-option *ngFor="let option of options" [value]="option">
-                    {{option}}
+                <mat-option *ngFor="let option of options$ | async" [value]="option.name">
+                    {{option.name}}
                 </mat-option>
             </mat-autocomplete>
             <mat-error *ngIf="fromInput.hasError('required')">
@@ -26,8 +26,8 @@
                    ngModel
                    [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete">
-                <mat-option *ngFor="let option of options" [value]="option">
-                    {{option}}
+                <mat-option *ngFor="let option of options$ | async" [value]="option.name">
+                    {{option.name}}
                 </mat-option>
             </mat-autocomplete>
             <mat-error *ngIf="toInput.hasError('required')">
