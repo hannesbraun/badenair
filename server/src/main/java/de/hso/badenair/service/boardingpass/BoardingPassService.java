@@ -1,0 +1,378 @@
+package de.hso.badenair.service.boardingpass;
+
+import java.awt.Color;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.springframework.stereotype.Service;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+
+import de.hso.badenair.domain.booking.Luggage;
+import de.hso.badenair.domain.booking.Traveler;
+import de.hso.badenair.service.luggage.LuggageRepository;
+import de.hso.badenair.service.traveler.TravelerRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class BoardingPassService {
+
+	private final TravelerRepository travelerRepository;
+
+	private final LuggageRepository luggageRepository;
+
+	public byte[] getBoardingPass(Long id) {
+		Optional<Traveler> traveler = travelerRepository.findById(id);
+		if (!traveler.isPresent()) {
+			// Traveler not found
+			return null;
+		} else if (!traveler.get().isCheckedIn()) {
+			// Traveler not checked in
+			return null;
+		}
+
+		// Get luggage information
+		List<Luggage> luggage = luggageRepository
+				.findAllByTravelerId(traveler.get().getId());
+
+		try {
+			return generatePdf(traveler.get(), luggage);
+		} catch (IOException e) {
+			return null;
+		}
+	}
+
+	// The following code may look ugly. Sorry.
+
+	private byte[] generatePdf(Traveler traveler, List<Luggage> luggage)
+			throws IOException {
+		// Duration
+		Double durationInHours = traveler.getBooking().getFlight()
+				.getScheduledFlight().getDurationInHours();
+		int minutes = (int) ((durationInHours - durationInHours.intValue())
+				* 60.0);
+		String duration = durationInHours.intValue() + " Stunden, " + minutes
+				+ " Minuten";
+
+		// TODO: Fix time-zone issues
+
+		// Start date
+		OffsetDateTime startTime = traveler.getBooking().getFlight()
+				.getScheduledFlight().getStartTime();
+		OffsetDateTime startDate = traveler.getBooking().getFlight()
+				.getStartDate();
+		String startDateString = startDate
+				.format(DateTimeFormatter.ofPattern("dd. MMMM yyyy")) + ", "
+				+ startTime.format(DateTimeFormatter.ofPattern("HH:mm Uhr"))
+				+ " (" + startTime.getOffset().getDisplayName(TextStyle.SHORT,
+						Locale.GERMAN)
+				+ ")";
+
+		// Arrival date
+		OffsetDateTime arrivalDate = startDate.withHour(startTime.getHour())
+				.withMinute(startTime.getMinute())
+				.plusHours(durationInHours.intValue()).plusMinutes(minutes);
+		String arrivalDateString = arrivalDate
+				.format(DateTimeFormatter.ofPattern("dd. MMMM yyyy, HH:mm Uhr"))
+				+ ", " + " (" + startTime.getOffset()
+						.getDisplayName(TextStyle.SHORT, Locale.GERMAN)
+				+ ")";
+
+		// QR code string
+		StringBuilder qrCodeStringBuilder = new StringBuilder();
+		qrCodeStringBuilder.append("BadenAir Bordkarte für ");
+		qrCodeStringBuilder.append(traveler.getFirstName());
+		qrCodeStringBuilder.append(" ");
+		qrCodeStringBuilder.append(traveler.getLastName());
+		qrCodeStringBuilder.append("\n--------\n\nFlugnummer: ");
+		qrCodeStringBuilder.append(traveler.getBooking().getFlight()
+				.getScheduledFlight().getId().toString());
+		qrCodeStringBuilder.append("\nVon: ");
+		qrCodeStringBuilder.append(traveler.getBooking().getFlight()
+				.getScheduledFlight().getStartingAirport().getName());
+		qrCodeStringBuilder.append("\nNach: ");
+		qrCodeStringBuilder.append(traveler.getBooking().getFlight()
+				.getScheduledFlight().getDestinationAirport().getName());
+		qrCodeStringBuilder.append("\nFlugdauer: ");
+		qrCodeStringBuilder.append(duration);
+		qrCodeStringBuilder.append("\nStart: ");
+		qrCodeStringBuilder.append(startDateString);
+		qrCodeStringBuilder.append("\nLandung: ");
+		qrCodeStringBuilder.append(arrivalDateString);
+		qrCodeStringBuilder.append("\nGepäckstück 1: ");
+		qrCodeStringBuilder.append(getLuggageString(luggage, 0));
+		qrCodeStringBuilder.append("\nGepäckstück 2: ");
+		qrCodeStringBuilder.append(getLuggageString(luggage, 1));
+		qrCodeStringBuilder.append("\nGepäckstück 3: ");
+		qrCodeStringBuilder.append(getLuggageString(luggage, 2));
+		qrCodeStringBuilder.append("\nGepäckstück 4: ");
+		qrCodeStringBuilder.append(getLuggageString(luggage, 3));
+
+		// Document setup
+		PDDocument document = new PDDocument();
+		ByteArrayOutputStream result = new ByteArrayOutputStream();
+		PDPage page = new PDPage();
+		document.addPage(page);
+		PDPageContentStream contents = new PDPageContentStream(document, page);
+
+		// Border for site
+		float border = 39.0f;
+
+		// Y length of boarding pass
+		float yLength = 300.0f;
+
+		// Size of QR code
+		float qrCodeSize = 125.0f;
+
+		// QR Code for whatever reason with the same information
+		try {
+			PDImageXObject qrCode = PDImageXObject.createFromByteArray(document,
+					generateQRCode(qrCodeStringBuilder.toString()), null);
+			contents.drawImage(qrCode, 612.0f - border - qrCodeSize,
+					792.0f - border - yLength, qrCodeSize, qrCodeSize);
+		} catch (WriterException | IOException e) {
+			// Whatever... don't add the QR code
+			e.printStackTrace();
+		}
+
+		// Add the BadenAir logo
+		PDImageXObject logo = PDImageXObject.createFromByteArray(document,
+				this.getClass().getResourceAsStream("logo2.png").readAllBytes(),
+				"logo2.png");
+		float logoOffset = 5.0f;
+		float logoSizeX = 585.0f * 0.14f;
+		float logoSizeY = 375.0f * 0.14f;
+		contents.drawImage(logo, border + logoOffset,
+				792.0f - border - logoSizeY - logoOffset, logoSizeX, logoSizeY);
+
+		// Demo ad
+		PDImageXObject ad = PDImageXObject.createFromByteArray(document, this
+				.getClass().getResourceAsStream("ad_scaled.png").readAllBytes(),
+				"ad_scaled.png");
+		float adSizeX = 1000.0f * 0.534f;
+		float adSizeY = 705.0f * 0.534f;
+		contents.drawImage(ad, border, border, adSizeX, adSizeY);
+
+		// Draw rectangular border
+		contents.setStrokingColor(Color.BLACK);
+		contents.setLineWidth(2.5f);
+		contents.moveTo(border, 792.0f - border);
+		contents.lineTo(border, 792.0f - border - yLength);
+		contents.lineTo(612.0f - border, 792.0f - border - yLength);
+		contents.lineTo(612.0f - border, 792.0f - border);
+		contents.lineTo(border, 792.0f - border);
+		contents.closeAndStroke();
+
+		// Draw other borders inside rectangle
+		contents.setLineWidth(1.0f);
+
+		// First horizontal line
+		contents.moveTo(border, 792.0f - border - logoSizeY - logoOffset);
+		contents.lineTo(612.0f - border,
+				792.0f - border - logoSizeY - logoOffset);
+
+		// Vertical line in header
+		contents.moveTo(612.0f - border - logoSizeY - logoOffset,
+				792.0f - border - logoSizeY - logoOffset);
+		contents.lineTo(612.0f - border - logoSizeY - logoOffset,
+				792.0f - border);
+
+		// Second horizontal line
+		float secondLineOffset = 117.0f;
+		contents.moveTo(border,
+				792.0f - border - logoSizeY - logoOffset - secondLineOffset);
+		contents.lineTo(612.0f - border,
+				792.0f - border - logoSizeY - logoOffset - secondLineOffset);
+
+		contents.closeAndStroke();
+
+		// Fonts to use
+		PDFont fontBold = PDType1Font.HELVETICA_BOLD;
+		PDFont fontNormal = PDType1Font.HELVETICA;
+
+		// Header settings
+		contents.setLeading(20.0f);
+
+		// Passenger
+		contents.beginText();
+		contents.newLineAtOffset(border + logoSizeX + 14.0f,
+				792.0f - border - 22.0f);
+		contents.setNonStrokingColor(Color.DARK_GRAY);
+		contents.setFont(fontBold, 11);
+		contents.showText("Passagier");
+		contents.newLine();
+		contents.setNonStrokingColor(Color.BLACK);
+		contents.setFont(fontNormal, 14);
+		contents.showText(
+				traveler.getFirstName() + " " + traveler.getLastName());
+		contents.endText();
+
+		// Seat number
+		contents.beginText();
+		contents.newLineAtOffset(612.0f - border - logoSizeY + 1.0f,
+				792.0f - border - 22.0f);
+		contents.setNonStrokingColor(Color.DARK_GRAY);
+		contents.setFont(fontBold, 11);
+		contents.showText("Sitzplatz");
+		contents.newLine();
+		contents.setNonStrokingColor(Color.BLACK);
+		contents.setFont(fontNormal, 14);
+		contents.showText(traveler.getSeatNumber());
+		contents.endText();
+
+		// Body settings
+		contents.setLeading(17.0f);
+
+		// Start/destination
+		contents.beginText();
+		contents.newLineAtOffset(border + 14.0f,
+				792.0f - border - logoSizeY - 24.0f);
+		contents.setNonStrokingColor(Color.DARK_GRAY);
+		contents.setFont(fontBold, 10);
+		contents.showText("Flugnummer");
+		contents.newLine();
+		contents.setNonStrokingColor(Color.BLACK);
+		contents.setFont(fontNormal, 13);
+		contents.showText(traveler.getBooking().getFlight().getScheduledFlight()
+				.getId().toString());
+		contents.newLine();
+		contents.setNonStrokingColor(Color.DARK_GRAY);
+		contents.setFont(fontBold, 10);
+		contents.showText("Von");
+		contents.newLine();
+		contents.setNonStrokingColor(Color.BLACK);
+		contents.setFont(fontNormal, 13);
+		contents.showText(traveler.getBooking().getFlight().getScheduledFlight()
+				.getStartingAirport().getName());
+		contents.newLine();
+		contents.setNonStrokingColor(Color.DARK_GRAY);
+		contents.setFont(fontBold, 10);
+		contents.showText("Nach");
+		contents.newLine();
+		contents.setNonStrokingColor(Color.BLACK);
+		contents.setFont(fontNormal, 13);
+		contents.showText(traveler.getBooking().getFlight().getScheduledFlight()
+				.getDestinationAirport().getName());
+		contents.endText();
+
+		// Time stuff
+		contents.beginText();
+		contents.newLineAtOffset(612.0f / 2.0f + 14.0f,
+				792.0f - border - logoSizeY - 24.0f);
+		contents.setNonStrokingColor(Color.DARK_GRAY);
+		contents.setFont(fontBold, 10);
+		contents.showText("Flugdauer");
+		contents.newLine();
+		contents.setNonStrokingColor(Color.BLACK);
+		contents.setFont(fontNormal, 13);
+		contents.showText(duration);
+		contents.newLine();
+		contents.setNonStrokingColor(Color.DARK_GRAY);
+		contents.setFont(fontBold, 10);
+		contents.showText("Start");
+		contents.newLine();
+		contents.setNonStrokingColor(Color.BLACK);
+		contents.setFont(fontNormal, 13);
+		contents.showText(startDateString);
+		contents.newLine();
+		contents.setNonStrokingColor(Color.DARK_GRAY);
+		contents.setFont(fontBold, 10);
+		contents.showText("Landung");
+		contents.newLine();
+		contents.setNonStrokingColor(Color.BLACK);
+		contents.setFont(fontNormal, 13);
+		contents.showText(arrivalDateString);
+		contents.endText();
+
+		// Luggage
+		contents.beginText();
+		contents.newLineAtOffset(border + 14.0f, 792.0f - border - logoSizeY
+				- logoOffset - secondLineOffset - 34.0f);
+		contents.setNonStrokingColor(Color.DARK_GRAY);
+		contents.setFont(fontBold, 10);
+		contents.showText("Gepäckstück 1");
+		contents.newLine();
+		contents.setNonStrokingColor(Color.BLACK);
+		contents.setFont(fontNormal, 13);
+		contents.showText(getLuggageString(luggage, 0));
+		contents.setLeading(30.0f);
+		contents.newLine();
+		contents.setNonStrokingColor(Color.DARK_GRAY);
+		contents.setFont(fontBold, 10);
+		contents.showText("Gepäckstück 2");
+		contents.setLeading(17.0f);
+		contents.newLine();
+		contents.setNonStrokingColor(Color.BLACK);
+		contents.setFont(fontNormal, 13);
+		contents.showText(getLuggageString(luggage, 1));
+		contents.endText();
+		contents.beginText();
+		contents.newLineAtOffset((612.0f - qrCodeSize) / 2.0f + 14.0f, 792.0f
+				- border - logoSizeY - logoOffset - secondLineOffset - 34.0f);
+		contents.setNonStrokingColor(Color.DARK_GRAY);
+		contents.setFont(fontBold, 10);
+		contents.showText("Gepäckstück 3");
+		contents.newLine();
+		contents.setNonStrokingColor(Color.BLACK);
+		contents.setFont(fontNormal, 13);
+		contents.showText(getLuggageString(luggage, 2));
+		contents.setLeading(30.0f);
+		contents.newLine();
+		contents.setNonStrokingColor(Color.DARK_GRAY);
+		contents.setFont(fontBold, 10);
+		contents.showText("Gepäckstück 4");
+		contents.setLeading(17.0f);
+		contents.newLine();
+		contents.setNonStrokingColor(Color.BLACK);
+		contents.setFont(fontNormal, 13);
+		contents.showText(getLuggageString(luggage, 3));
+		contents.endText();
+
+		// End of document content
+		contents.close();
+
+		// Save document
+		document.save(result);
+		document.close();
+
+		return result.toByteArray();
+	}
+
+	private byte[] generateQRCode(String input)
+			throws WriterException, IOException {
+		QRCodeWriter qrCodeWriter = new QRCodeWriter();
+		BitMatrix bitMatrix = qrCodeWriter.encode(input, BarcodeFormat.QR_CODE,
+				1024, 1024);
+
+		ByteArrayOutputStream result = new ByteArrayOutputStream();
+		MatrixToImageWriter.writeToStream(bitMatrix, "PNG", result);
+		return result.toByteArray();
+	}
+
+	private String getLuggageString(List<Luggage> list, int index) {
+		if (list.size() <= index) {
+			return "Nicht gebucht";
+		} else {
+			return "Gebucht (maximal " + list.get(index) + " kg)";
+		}
+	}
+}
