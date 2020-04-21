@@ -30,7 +30,7 @@ public class PlanController {
     @GetMapping("/shift")
     public ResponseEntity<List<ShiftDto>> getShiftPlan(Principal user) {
         final List<ShiftDto> shiftDtos = shiftPlanService.getShiftPlan(user.getName()).stream()
-            .map(shift -> new ShiftDto(/* TODO ??? */))
+            .map(shift -> new ShiftDto(shift.getStartTime(), shift.getEndTime()))
             .collect(Collectors.toList());
         return ResponseEntity.ok(shiftDtos);
     }
