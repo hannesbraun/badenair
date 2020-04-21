@@ -1,14 +1,16 @@
 import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {PlaneScheduleDto} from '../dtos/Dtos';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class FlightService {
 
-    constructor() {
-    }
+    apiUrl = environment.backendApiRoot;
+    constructor(private http : HttpClient) { }
 
     // TODO: Remove when getPlaneSchedules is implemented
     private static getStartDate(): Date {
@@ -58,4 +60,10 @@ export class FlightService {
 
         return of(flights);
     }
+
+    updateFlightTracking(flightId: number, action : string){
+        return this.http.patch(`${this.apiUrl}/flight/tracking/${flightId}`, action);
+        //Todo: Error-handling
+    }
+    
 }
