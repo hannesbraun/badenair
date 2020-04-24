@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.hso.badenair.service.boardingpass.BoardingPassService;
@@ -17,7 +18,7 @@ public class BoardingPassController {
 	private final BoardingPassService boardingPassService;
 
 	@GetMapping("/boardingpass")
-	public ResponseEntity<?> getBoardingPass(Long travelerId) {
+	public ResponseEntity<?> getBoardingPass(@RequestParam Long travelerId) {
 		final byte[] boardingPassPdf = boardingPassService
 				.getBoardingPass(travelerId);
 
