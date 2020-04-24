@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.List;
@@ -73,28 +74,31 @@ public class BoardingPassService {
 		String duration = durationInHours.intValue() + " Stunden, " + minutes
 				+ " Minuten";
 
-		// TODO: Fix time-zone issues
-
 		// Start date
+		String timezoneStart = traveler.getBooking().getFlight()
+				.getScheduledFlight().getStartingAirport().getTimezone();
 		OffsetDateTime startTime = traveler.getBooking().getFlight()
 				.getScheduledFlight().getStartTime();
 		OffsetDateTime startDate = traveler.getBooking().getFlight()
-				.getStartDate();
+				.getStartDate().withHour(startTime.getHour())
+				.withMinute(startTime.getMinute())
+				.withOffsetSameInstant(ZoneOffset.of(timezoneStart));
 		String startDateString = startDate
-				.format(DateTimeFormatter.ofPattern("dd. MMMM yyyy")) + ", "
-				+ startTime.format(DateTimeFormatter.ofPattern("HH:mm Uhr"))
+				.format(DateTimeFormatter.ofPattern("dd. MMMM yyyy, HH:mm Uhr"))
 				+ " (" + startTime.getOffset().getDisplayName(TextStyle.SHORT,
 						Locale.GERMAN)
 				+ ")";
 
 		// Arrival date
-		OffsetDateTime arrivalDate = startDate.withHour(startTime.getHour())
-				.withMinute(startTime.getMinute())
-				.plusHours(durationInHours.intValue()).plusMinutes(minutes);
+		String timezoneDestination = traveler.getBooking().getFlight()
+				.getScheduledFlight().getDestinationAirport().getTimezone();
+		OffsetDateTime arrivalDate = startDate
+				.plusHours(durationInHours.intValue()).plusMinutes(minutes)
+				.withOffsetSameInstant(ZoneOffset.of(timezoneDestination));
 		String arrivalDateString = arrivalDate
 				.format(DateTimeFormatter.ofPattern("dd. MMMM yyyy, HH:mm Uhr"))
-				+ ", " + " (" + startTime.getOffset()
-						.getDisplayName(TextStyle.SHORT, Locale.GERMAN)
+				+ " (" + startTime.getOffset().getDisplayName(TextStyle.SHORT,
+						Locale.GERMAN)
 				+ ")";
 
 		// QR code string
