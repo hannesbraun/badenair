@@ -6,17 +6,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Bean;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -24,9 +26,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import de.hso.badenair.controller.boardingpass.BoardingPassController;
 import de.hso.badenair.domain.booking.Booking;
@@ -36,9 +35,14 @@ import de.hso.badenair.domain.booking.Traveler;
 import de.hso.badenair.domain.flight.Airport;
 import de.hso.badenair.domain.flight.Flight;
 import de.hso.badenair.domain.flight.ScheduledFlight;
+import de.hso.badenair.domain.plane.Plane;
+import de.hso.badenair.domain.plane.PlaneState;
+import de.hso.badenair.domain.plane.PlaneType;
 import de.hso.badenair.service.boardingpass.BoardingPassService;
 import de.hso.badenair.service.luggage.LuggageRepository;
+import de.hso.badenair.service.plane.repository.PlaneTypeDataRepository;
 import de.hso.badenair.service.traveler.TravelerRepository;
+import de.hso.badenair.util.init.StaticDataInitializer;
 
 @DataJpaTest
 @ContextConfiguration(classes = BoardingPassControllerTest.TestConfig.class)
@@ -47,14 +51,14 @@ class BoardingPassControllerTest {
 
 	private final String API_URL = "/api/customer/boardingpass";
 
-	@Autowired
+	@MockBean
 	private TravelerRepository travelerRepository;
 
-	@Autowired
+	@MockBean
 	private LuggageRepository luggageRepository;
 
 	@Autowired
-	private ObjectMapper objectMapper;
+	private PlaneTypeDataRepository planeTypeDataRepository;
 
 	@Autowired
 	private BoardingPassController uut;
@@ -69,50 +73,56 @@ class BoardingPassControllerTest {
 	@Test
 	void testNonExistingTraveler() throws Exception {
 		mvc.perform(get(API_URL).contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(Long.valueOf(12345))))
-				.andExpect(status().isNotFound());
+				.param("travelerId", "12345")).andExpect(status().isNotFound());
 	}
 
 	@Test
 	void testGetBoardingPass() throws Exception {
-		Airport startingAirport = Airport.builder().name("Basel-Mulhouse")
-				.build();
-		Airport destinationAirport = Airport.builder().name("Porto").build();
-		ScheduledFlight scheduledFlight = ScheduledFlight.builder()
+		Airport startingAirport = Airport.builder().id(1l)
+				.name("Basel-Mulhouse").timezone("+1").build();
+		Airport destinationAirport = Airport.builder().id(2l).name("Porto")
+				.timezone("+2").build();
+		Plane plane = Plane.builder().id(1l)
+				.typeData(planeTypeDataRepository
+						.findAllByType(PlaneType.B737_400).get(0))
+				.state(PlaneState.WAITING).build();
+		ScheduledFlight scheduledFlight = ScheduledFlight.builder().id(1l)
 				.startingAirport(startingAirport)
-				.destinationAirport(destinationAirport).startTime(OffsetDateTime
-						.of(0, 0, 0, 6, 50, 0, 0, ZoneOffset.of("+2")))
-				.durationInHours(2.35).build();
-		Flight flight = Flight.builder().scheduledFlight(scheduledFlight)
-				.startDate(OffsetDateTime.now(ZoneId.of("GMT+1"))).build();
-		Booking booking = Booking.builder().flight(flight).build();
-		Traveler traveler = Traveler.builder().firstName("Bob").lastName("Ross")
-				.seatNumber("21F").checkedIn(true).booking(booking).build();
-		final Traveler savedTraveler = travelerRepository.save(traveler);
+				.destinationAirport(destinationAirport)
+				.startTime(OffsetDateTime.of(2020, 1, 1, 6, 50, 0, 0,
+						ZoneOffset.of("+1")))
+				.durationInHours(2.5833333333333333).build();
+		Flight flight = Flight.builder().id(1l).scheduledFlight(scheduledFlight)
+				.startDate(OffsetDateTime.of(2020, 4, 24, 0, 0, 0, 0,
+						ZoneOffset.of("+1")))
+				.plane(plane).build();
+		Booking booking = Booking.builder().id(1l).flight(flight).build();
+		Traveler traveler = Traveler.builder().id(1l).firstName("Bob")
+				.lastName("Ross").seatNumber("21F").checkedIn(true)
+				.booking(booking).build();
 
-		Luggage luggage = Luggage.builder().state(LuggageState.AT_TRAVELLER)
-				.weight(23).traveler(traveler).build();
-		luggageRepository.save(luggage);
+		Luggage luggage = Luggage.builder().id(1l)
+				.state(LuggageState.AT_TRAVELLER).weight(23).traveler(traveler)
+				.build();
 
-		mvc.perform(
-				get(API_URL).contentType(MediaType.APPLICATION_JSON).content(
-						objectMapper.writeValueAsString(savedTraveler.getId())))
+		Mockito.when(travelerRepository.findById(Mockito.anyLong()))
+				.thenReturn(Optional.of(traveler));
+		Mockito.when(luggageRepository.findAllByTravelerId(Mockito.anyLong()))
+				.thenReturn(List.of(luggage));
+
+		mvc.perform(get(API_URL).contentType(MediaType.APPLICATION_JSON)
+				.param("travelerId", traveler.getId().toString()))
 				.andDo(print()).andExpect(status().isOk());
 	}
 
 	@Configuration
 	@EnableJpaRepositories(basePackageClasses = {TravelerRepository.class,
-			LuggageRepository.class})
-	@EntityScan(basePackageClasses = {Airport.class, ScheduledFlight.class,
-			Flight.class, Traveler.class, Luggage.class})
+			LuggageRepository.class, PlaneTypeDataRepository.class})
+	@EntityScan(basePackageClasses = {Airport.class, Booking.class,
+			Flight.class, ScheduledFlight.class, Luggage.class, Plane.class,
+			Traveler.class})
 	@ComponentScan(basePackageClasses = {BoardingPassService.class})
-	@Import({BoardingPassController.class})
+	@Import({BoardingPassController.class, StaticDataInitializer.class})
 	static class TestConfig {
-		@Bean
-		public ObjectMapper objectMapper() {
-			final ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.registerModule(new JavaTimeModule());
-			return objectMapper;
-		}
 	}
 }

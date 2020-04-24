@@ -2,6 +2,7 @@ package de.hso.badenair.service.boardingpass;
 
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+import org.apache.pdfbox.io.IOUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -18,6 +20,7 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -84,9 +87,9 @@ public class BoardingPassService {
 				.withMinute(startTime.getMinute())
 				.withOffsetSameInstant(ZoneOffset.of(timezoneStart));
 		String startDateString = startDate
-				.format(DateTimeFormatter.ofPattern("dd. MMMM yyyy, HH:mm Uhr"))
-				+ " (" + startTime.getOffset().getDisplayName(TextStyle.SHORT,
-						Locale.GERMAN)
+				.format(DateTimeFormatter.ofPattern("dd. MMMM yyyy, HH:mm"))
+				+ " Uhr (" + startTime.getOffset()
+						.getDisplayName(TextStyle.SHORT, Locale.GERMAN)
 				+ ")";
 
 		// Arrival date
@@ -96,9 +99,9 @@ public class BoardingPassService {
 				.plusHours(durationInHours.intValue()).plusMinutes(minutes)
 				.withOffsetSameInstant(ZoneOffset.of(timezoneDestination));
 		String arrivalDateString = arrivalDate
-				.format(DateTimeFormatter.ofPattern("dd. MMMM yyyy, HH:mm Uhr"))
-				+ " (" + startTime.getOffset().getDisplayName(TextStyle.SHORT,
-						Locale.GERMAN)
+				.format(DateTimeFormatter.ofPattern("dd. MMMM yyyy, HH:mm"))
+				+ " Uhr (" + arrivalDate.getOffset()
+						.getDisplayName(TextStyle.SHORT, Locale.GERMAN)
 				+ ")";
 
 		// QR code string
@@ -159,9 +162,11 @@ public class BoardingPassService {
 		}
 
 		// Add the BadenAir logo
+		FileInputStream logoInputStream = new FileInputStream(
+				ResourceUtils.getFile("classpath:logo2.png"));
 		PDImageXObject logo = PDImageXObject.createFromByteArray(document,
-				this.getClass().getResourceAsStream("logo2.png").readAllBytes(),
-				"logo2.png");
+				IOUtils.toByteArray(logoInputStream), "logo2.png");
+		logoInputStream.close();
 		float logoOffset = 5.0f;
 		float logoSizeX = 585.0f * 0.14f;
 		float logoSizeY = 375.0f * 0.14f;
@@ -169,9 +174,11 @@ public class BoardingPassService {
 				792.0f - border - logoSizeY - logoOffset, logoSizeX, logoSizeY);
 
 		// Demo ad
-		PDImageXObject ad = PDImageXObject.createFromByteArray(document, this
-				.getClass().getResourceAsStream("ad_scaled.png").readAllBytes(),
-				"ad_scaled.png");
+		FileInputStream adInputStream = new FileInputStream(
+				ResourceUtils.getFile("classpath:ad_scaled.png"));
+		PDImageXObject ad = PDImageXObject.createFromByteArray(document,
+				IOUtils.toByteArray(adInputStream), "ad_scaled.png");
+		adInputStream.close();
 		float adSizeX = 1000.0f * 0.534f;
 		float adSizeY = 705.0f * 0.534f;
 		contents.drawImage(ad, border, border, adSizeX, adSizeY);
@@ -376,7 +383,7 @@ public class BoardingPassService {
 		if (list.size() <= index) {
 			return "Nicht gebucht";
 		} else {
-			return "Gebucht (maximal " + list.get(index) + " kg)";
+			return "Gebucht (maximal " + list.get(index).getWeight() + " kg)";
 		}
 	}
 }
