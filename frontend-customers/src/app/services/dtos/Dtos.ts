@@ -11,6 +11,7 @@ export interface SignUpDto {
     invalidationDate: Date;
     email: string;
     password: string;
+    [key: string]: string | Date;
 }
 
 export type FinishRegistrationDto = Omit<SignUpDto, 'password' | 'email' | 'lastname' | 'name'>;
