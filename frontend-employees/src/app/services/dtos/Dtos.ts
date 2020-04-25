@@ -70,3 +70,9 @@ export interface RequestVacationDto {
     startDate: Date;
     endDate: Date;
 }
+
+export interface PlaneMaintenance {
+    id: number;
+    state: string;
+    traveledDistance: number;
+}

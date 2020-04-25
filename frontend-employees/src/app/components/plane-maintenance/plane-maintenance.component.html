@@ -1,15 +1,15 @@
 <h1>Wartungsergebnisse:</h1>
 <div class="plane-maintenance-container">
     <mat-card *ngFor="let plane of planes">
-        <h3>{{ plane.name }}</h3>
-        <div [class.state-defect]="plane.isDefect" class="state">
-            Status: {{ plane.isDefect ? 'Defekt' : 'OK' }}
+        <h3>{{ plane.id }}</h3>
+        <div [class.state-defect]="(plane.state === 'IN_MAINTENANCE')" class="state">
+            Status: {{ (plane.state === 'IN_MAINTENANCE') ? 'Defekt' : 'OK' }}
         </div>
         <div class="progress">
             <div class="progress-indicator"
-                 [ngStyle]="getIndicatorLength(plane.distance)"></div>
+                 [ngStyle]="getIndicatorLength(plane.traveledDistance)"></div>
         </div>
-        <button mat-raised-button>Reparieren</button>
-        <div>Zurückgelegte Strecke: {{ plane.distance }} km</div>
+        <button (click)="onRepairButtonPressed(plane)" mat-raised-button>Reparieren</button>
+        <div>Zurückgelegte Strecke: {{ plane.traveledDistance }} km</div>
     </mat-card>
 </div>

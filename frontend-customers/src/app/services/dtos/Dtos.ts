@@ -13,6 +13,9 @@ export interface SignUpDto {
     password: string;
 }
 
+export type FinishRegistrationDto = Omit<SignUpDto, 'password' | 'email' | 'lastname' | 'name'>;
+export type AccountData = Partial<FinishRegistrationDto>;
+
 export interface UpdateProfileDto {
     lastname: string;
     name: string;

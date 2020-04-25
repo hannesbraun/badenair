@@ -9,6 +9,7 @@ import {
     Validators
 } from '@angular/forms';
 import {Subscription} from 'rxjs';
+import {AuthService} from '../../auth/auth.service';
 
 export interface ProfileFormValue {
     lastname: string;
@@ -45,8 +46,8 @@ export class ProfileFormComponent implements ControlValueAccessor, OnDestroy {
     private static readonly DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
 
     profileForm: FormGroup = this.formBuilder.group({
-        lastname: ['', Validators.required],
-        name: ['', Validators.required],
+        lastname: [{value: this.authService.getFamilyName() ?? '', disabled: true}, Validators.required],
+        name: [{value: this.authService.getGivenName() ?? '', disabled: true}, Validators.required],
         birthDate: ['', Validators.required],
         street: ['', Validators.required],
         zipCode: ['', [Validators.required, Validators.pattern('[0-9]{5}')]],
@@ -64,7 +65,7 @@ export class ProfileFormComponent implements ControlValueAccessor, OnDestroy {
     onChange: any = () => {};
     onTouched: any = () => {};
 
-    constructor(private formBuilder: FormBuilder) {
+    constructor(private formBuilder: FormBuilder, private authService: AuthService) {
         this.initDateBoundaries();
 
         this.subscriptions.push(
@@ -90,10 +91,6 @@ export class ProfileFormComponent implements ControlValueAccessor, OnDestroy {
     writeValue(value: ProfileFormValue): void {
         if (value) {
             this.value = value;
-        }
-
-        if (value === null) {
-            this.profileForm.reset();
         }
     }
 
