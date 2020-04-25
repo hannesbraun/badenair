@@ -2,7 +2,7 @@
 <form [formGroup]="searchForm" (ngSubmit)="onSearch()" *ngIf="(airports | async); else loading">
     <div gdColumns.gt-sm="3" gdColumns.sm="2" gdColumns.xs="1" gdGap="20px">
         <mat-radio-group gdColumn.gt-sm="1/3" gdColumns="2" gdColumn.sm="1/3" gdColumn.xs="1" gdGap="10px"
-                         formControlName="type">
+                         formControlName="type" (change)="toggleDisableToDate($event)">
             <mat-radio-button gdColumn="1" gdColumn.xs="1" value="1">Hin- und Rückflug</mat-radio-button>
             <mat-radio-button gdColumn="2" gdColumn.xs="1" value="2">nur Hinflug</mat-radio-button>
         </mat-radio-group>

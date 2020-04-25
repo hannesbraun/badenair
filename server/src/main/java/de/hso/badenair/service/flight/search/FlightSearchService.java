@@ -15,8 +15,9 @@ public class FlightSearchService {
     private final FlightRepository flightRepository;
 
     public List<Flight> getFlights(int start, int destination, int passengers, Date date) {
-        List<Flight> flights = (List<Flight>)flightRepository.findAll();
+        List<Flight> flights = (List<Flight>) flightRepository.findAll();
 
+        // TODO: add check for Date and Passenger Count
         return flights.stream()
             .filter(flight -> flight.getScheduledFlight().getStartingAirport().getId() == start)
             .filter(flight -> flight.getScheduledFlight().getDestinationAirport().getId() == destination)

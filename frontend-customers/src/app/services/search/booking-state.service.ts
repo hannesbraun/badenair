@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {FlightDto} from '../dtos/Dtos';
+import {SearchFormValue} from '../../components/flight-search/flight-search.component';
 
 interface BookingState {
-    searchValue: any;
+    searchValue: SearchFormValue;
     passengers: number;
     returnFlights: FlightDto[];
     toFlights: FlightDto[];
@@ -57,11 +58,11 @@ export class BookingStateService {
         });
     }
 
-    setSearchValue(value: any) {
+    setSearchValue(value: SearchFormValue) {
         this.bookingState.next({
             ...this.bookingState.getValue(),
             searchValue: value,
-            direction: value.type,
+            direction: value.type === '1',
         });
     }
 

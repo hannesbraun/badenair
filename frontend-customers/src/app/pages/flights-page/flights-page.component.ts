@@ -17,7 +17,7 @@ export class FlightsPageComponent implements OnInit {
     toFlights: FlightDto[] = [];
     numberOfPassengers = 3;
     directionState = true;
-    type = 0;
+    type = '1';
 
     private bookedFlights: number[] = [];
 

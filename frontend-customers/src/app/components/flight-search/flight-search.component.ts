@@ -2,6 +2,16 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {AirportDto} from '../../services/dtos/Dtos';
+import {MatRadioChange} from '@angular/material/radio';
+
+export interface SearchFormValue {
+    start: string;
+    destination: string;
+    fromDate: Date;
+    toDate?: Date;
+    passengers: number;
+    type: string;
+}
 
 @Component({
     selector: 'app-flight-search',
@@ -10,7 +20,7 @@ import {AirportDto} from '../../services/dtos/Dtos';
 })
 export class FlightSearchComponent implements OnInit{
     @Input() airports !: Observable<AirportDto[]>;
-    @Input() searchValue: any;
+    @Input() searchValue !: SearchFormValue;
     @Output() search = new EventEmitter();
 
 
@@ -28,7 +38,10 @@ export class FlightSearchComponent implements OnInit{
 
     ngOnInit(): void {
         if (this.searchValue) {
-            this.searchForm.setValue(this.searchValue);
+            if (this.searchValue.type === '2') {
+                this.toggleDisableToDate({value: this.searchValue.type} as MatRadioChange);
+            }
+            this.searchForm.patchValue(this.searchValue);
         }
     }
 
@@ -40,5 +53,13 @@ export class FlightSearchComponent implements OnInit{
         if (this.searchForm.valid) {
             this.search.emit(this.searchForm.value);
         }
+    }
+
+    toggleDisableToDate(event: MatRadioChange) {
+        if (event.value === '2') {
+            this.searchForm.controls.toDate.disable();
+            return;
+        }
+        this.searchForm.controls.toDate.enable();
     }
 }
