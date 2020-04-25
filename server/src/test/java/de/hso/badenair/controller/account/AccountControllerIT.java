@@ -3,7 +3,7 @@ package de.hso.badenair.controller.account;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.hso.badenair.controller.dto.account.UpdateAccountDataDto;
-import de.hso.badenair.domain.booking.AccountData;
+import de.hso.badenair.domain.booking.account.AccountData;
 import de.hso.badenair.service.account.AccountDataRepository;
 import de.hso.badenair.service.account.AccountService;
 import org.junit.jupiter.api.BeforeEach;
