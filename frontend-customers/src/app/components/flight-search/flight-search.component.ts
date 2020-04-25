@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {AirportDto} from '../../services/dtos/Dtos';
@@ -8,9 +8,11 @@ import {AirportDto} from '../../services/dtos/Dtos';
     templateUrl: './flight-search.component.html',
     styleUrls: ['./flight-search.component.scss']
 })
-export class FlightSearchComponent {
+export class FlightSearchComponent implements OnInit{
     @Input() airports !: Observable<AirportDto[]>;
+    @Input() searchValue: any;
     @Output() search = new EventEmitter();
+
 
     searchForm: FormGroup = this.formBuilder.group({
         start: ['', Validators.required],
@@ -22,6 +24,12 @@ export class FlightSearchComponent {
     });
 
     constructor(private formBuilder: FormBuilder) {
+    }
+
+    ngOnInit(): void {
+        if (this.searchValue) {
+            this.searchForm.setValue(this.searchValue);
+        }
     }
 
     get now() {

@@ -11,7 +11,9 @@ import {BookingStateService} from '../../services/search/booking-state.service';
 })
 export class FlightsPageComponent implements OnInit {
 
-    flightsWithPrice: FlightDto[] = [];
+    shownFlights: FlightDto[] = [];
+    returnFlights: FlightDto[] = [];
+    toFlights: FlightDto[] = [];
     numberOfPassengers = 3;
 
     private bookedFlights: number[] = [];
@@ -20,25 +22,12 @@ export class FlightsPageComponent implements OnInit {
     }
 
     ngOnInit() {
-        // TODO: Replace with service
-        this.searchService.flightSearchData
-            .subscribe(data => this.flightsWithPrice = data);
-
-        /*
-        for (let i = 0; i < 10; i++) {
-            this.flightsWithPrice.push(
-                {
-                    flight: {
-                        id: i,
-                        start: 'Lorem ipsum dolor sit amet',
-                        destination: 'Lorem ipsum dolor sit amet',
-                        startTime: new Date(),
-                        arrivalTime: new Date(),
-                    },
-                    price: 50 + Math.random() * 100 + Math.random()
-                }
-            );
-        }*/
+        this.searchService.state
+            .subscribe(data => {
+                this.shownFlights = data.toFlights;
+                this.shownFlights = data.returnFlights;
+                this.numberOfPassengers = data.passengers;
+            });
     }
 
     onBookingStateChanged(newState: BookingState, flightId: number) {

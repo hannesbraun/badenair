@@ -13,28 +13,23 @@ import {BookingStateService} from '../../services/search/booking-state.service';
 })
 export class FlightSearchPageComponent implements OnInit {
     airports$ = new Observable<AirportDto[]>();
-
-    args = {
-        date: new Date().toISOString(),
-        start: 0,
-        destination: 1,
-        passengers: 3,
-    };
+    searchValue: any;
 
     constructor(
         private flightService: FlightService,
         private airportService: AirportService,
         private router: Router,
-        private searchService: BookingStateService,
+        private bookingStateService: BookingStateService,
     ) {
     }
 
     ngOnInit(): void {
         this.airports$ = this.airportService.getAirports();
+        this.bookingStateService.state
+            .subscribe(bookingState => this.searchValue = bookingState.searchValue);
     }
 
     search(value: any) {
-        console.log(value);
         if (value.type === '1') {
             const flightRequest1 = {
                 start: value.start,
@@ -49,13 +44,29 @@ export class FlightSearchPageComponent implements OnInit {
                 date: value.toDate.toISOString(),
             };
             this.flightService.searchFlights(flightRequest1)
-                .subscribe(data => {
-                    this.searchService.setFlightSearchData(data);
-                    this.router.navigate(['/flights']);
+                .subscribe(flights => {
+                    this.bookingStateService.setToFlights(flights);
                 });
 
             this.flightService.searchFlights(flightRequest2)
-                .subscribe(data => console.log(data));
+                .subscribe(flights => {
+                    this.bookingStateService.setReturnFlights(flights);
+                });
+
+        } else {
+            const flightRequest1 = {
+                start: value.start,
+                destination: value.destination,
+                passengers: value.passengers,
+                date: value.fromDate.toISOString(),
+            };
+            this.flightService.searchFlights(flightRequest1)
+                .subscribe(flights => {
+                    this.bookingStateService.setToFlights(flights);
+                });
         }
+        this.bookingStateService.setSearchValue(value);
+        this.bookingStateService.setPassengers(value.passengers);
+        this.router.navigate(['/flights']);
     }
 }
