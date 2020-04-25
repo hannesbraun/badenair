@@ -8,7 +8,7 @@ import {AirportDto} from '../dtos/Dtos';
     providedIn: 'root'
 })
 export class AirportService {
-    baseUrl = `${environment.backendApiRoot}/airport`;
+    baseUrl = `${environment.backendApiRoot}/public/airport`;
 
     constructor(private http: HttpClient) {
     }

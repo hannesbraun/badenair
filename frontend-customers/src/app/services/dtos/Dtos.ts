@@ -33,6 +33,7 @@ export interface FlightDto {
     destination: string;
     startTime: Date;
     arrivalTime: Date;
+    price: number;
 }
 
 export interface PassengerDto {

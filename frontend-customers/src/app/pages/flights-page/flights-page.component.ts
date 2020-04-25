@@ -1,11 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FlightDto} from '../../services/dtos/Dtos';
 import {BookingState} from '../../components/flight/check-button/check-button.component';
+import {SearchService} from '../../services/search/search.service';
 
-interface FlightWithPrice {
-    flight: FlightDto;
-    price: number;
-}
 
 @Component({
     selector: 'app-flights-page',
@@ -14,16 +11,20 @@ interface FlightWithPrice {
 })
 export class FlightsPageComponent implements OnInit {
 
-    flightsWithPrice: FlightWithPrice[] = [];
+    flightsWithPrice: FlightDto[] = [];
     numberOfPassengers = 3;
 
     private bookedFlights: number[] = [];
 
-    constructor() {
+    constructor(private searchService: SearchService) {
     }
 
     ngOnInit() {
         // TODO: Replace with service
+        this.searchService.flightSearchData
+            .subscribe(data => this.flightsWithPrice = data);
+
+        /*
         for (let i = 0; i < 10; i++) {
             this.flightsWithPrice.push(
                 {
@@ -37,7 +38,7 @@ export class FlightsPageComponent implements OnInit {
                     price: 50 + Math.random() * 100 + Math.random()
                 }
             );
-        }
+        }*/
     }
 
     onBookingStateChanged(newState: BookingState, flightId: number) {

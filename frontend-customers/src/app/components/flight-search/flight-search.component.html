@@ -1,74 +1,70 @@
 <h1>Flugsuche</h1>
-<form #searchForm="ngForm" (ngSubmit)="onSearch()">
+<form [formGroup]="searchForm" (ngSubmit)="onSearch()" *ngIf="(airports | async); else loading">
     <div gdColumns.gt-sm="3" gdColumns.sm="2" gdColumns.xs="1" gdGap="20px">
-        <mat-radio-group gdColumn.gt-sm="1/3" gdColumns="2" gdColumn.sm="1/3" gdColumn.xs="1" gdGap="10px" name="flight"
-                         #flightType="ngModel" ngModel required>
+        <mat-radio-group gdColumn.gt-sm="1/3" gdColumns="2" gdColumn.sm="1/3" gdColumn.xs="1" gdGap="10px"
+                         formControlName="type">
             <mat-radio-button gdColumn="1" gdColumn.xs="1" value="1">Hin- und Rückflug</mat-radio-button>
             <mat-radio-button gdColumn="2" gdColumn.xs="1" value="2">nur Hinflug</mat-radio-button>
         </mat-radio-group>
 
         <mat-form-field gdColumn.gt-sm="1" gdColumn.xs="1">
-            <input type="text" name="von" placeholder="Von" aria-label="Number" required matInput #fromInput="ngModel"
-                   ngModel
-                   [matAutocomplete]="auto">
-            <mat-autocomplete #auto="matAutocomplete">
-                <mat-option *ngFor="let option of options$ | async" [value]="option.name">
+            <mat-select formControlName="start" placeholder="Von">
+                <mat-option *ngFor="let option of airports | async" [value]="option.id">
                     {{option.name}}
                 </mat-option>
-            </mat-autocomplete>
-            <mat-error *ngIf="fromInput.hasError('required')">
+            </mat-select>
+            <mat-error *ngIf="searchForm?.get('start')?.errors?.required">
                 Start Flughafen wird <strong>benötigt</strong>
             </mat-error>
         </mat-form-field>
 
         <mat-form-field gdColumn.xs="1">
-            <input type="text" name="to" placeholder="Nach" required aria-label="Number" matInput #toInput="ngModel"
-                   ngModel
-                   [matAutocomplete]="auto">
-            <mat-autocomplete #auto="matAutocomplete">
-                <mat-option *ngFor="let option of options$ | async" [value]="option.name">
+            <mat-select formControlName="destination" placeholder="Nach">
+                <mat-option *ngFor="let option of airports | async" [value]="option.id">
                     {{option.name}}
                 </mat-option>
-            </mat-autocomplete>
-            <mat-error *ngIf="toInput.hasError('required')">
+            </mat-select>
+            <mat-error *ngIf="searchForm?.get('destination')?.errors?.required">
                 Ziel Flughafen wird <strong>benötigt</strong>
             </mat-error>
         </mat-form-field>
 
         <mat-form-field gdColumn.gt-sm="1" gdColumn.xs="1">
-            <input matInput name="fromDate" [matDatepicker]="pickerFromDate" required #fromDateInput="ngModel" ngModel
+            <input matInput formControlName="fromDate" [matDatepicker]="pickerFromDate"
                    placeholder="Hinreise Datum" [min]="now">
             <mat-datepicker-toggle matSuffix [for]="pickerFromDate"></mat-datepicker-toggle>
             <mat-datepicker #pickerFromDate></mat-datepicker>
 
-            <mat-error *ngIf="fromDateInput.hasError('required')">
+            <mat-error *ngIf="searchForm?.get('fromDate')?.errors?.required">
                 Hinreise Datum wird <strong>benötigt</strong>
             </mat-error>
         </mat-form-field>
 
         <mat-form-field gdColumn.xs="1">
-            <input matInput name="toDate" [matDatepicker]="pickerToDate" required #toDateInput="ngModel" ngModel
+            <input matInput formControlName="toDate" [matDatepicker]="pickerToDate"
                    placeholder="Rückreise Datum" [min]="now">
             <mat-datepicker-toggle matSuffix [for]="pickerToDate"></mat-datepicker-toggle>
             <mat-datepicker #pickerToDate></mat-datepicker>
-
-            <mat-error *ngIf="toDateInput.hasError('required')">
+            <mat-error *ngIf="searchForm?.get('toDate')?.errors?.required">
                 Rückreise Datum wird <strong>benötigt</strong>
             </mat-error>
         </mat-form-field>
 
         <mat-form-field gdColumn.gt-sm="3" gdColumn.xs="1">
-            <input name="personNumber" type="number" matInput required placeholder="Anzahl Passagiere"
-                   #personInput="ngModel" min="1"
-                   ngModel>
-            <mat-error *ngIf="personInput.hasError('required')">
+            <input type="number" name="passengers" formControlName="passengers" matInput placeholder="Anzahl Passagiere" min="1">
+            <mat-error *ngIf="searchForm?.get('passengers')?.errors?.required">
                 Anzahl Passagiere wird <strong>benötigt</strong>
+            </mat-error>
+            <mat-error *ngIf="searchForm?.get('passengers')?.errors?.min">
+                Es muss midestens ein Passagier vorhanden sein
             </mat-error>
         </mat-form-field>
 
         <div gdColumn.gt-sm="3" gdColumn.xs="1" class="submit-button">
-            <button type="submit" mat-raised-button>Suchen</button>
+            <button type="submit" mat-raised-button [disabled]="searchForm.invalid">Suchen</button>
         </div>
     </div>
-
 </form>
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>

@@ -1,9 +1,9 @@
 <h2>Verfügbare Flüge</h2>
 <app-flight *ngFor="let flightWithPrice of flightsWithPrice"
-            [flight]="flightWithPrice.flight"
+            [flight]="flightWithPrice"
             [price]="flightWithPrice.price"
             [numberOfPassengers]="numberOfPassengers"
-            (bookingStateChanged)="onBookingStateChanged($event, flightWithPrice.flight.id)">
+            (bookingStateChanged)="onBookingStateChanged($event, flightWithPrice.id)">
 </app-flight>
 <div class="actions">
     <button mat-raised-button color="primary" routerLink="">Zurück</button>

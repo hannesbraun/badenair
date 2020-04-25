@@ -1,28 +1,27 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {NgForm} from '@angular/forms';
-import {Router} from '@angular/router';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {AirportDto} from '../../services/dtos/Dtos';
-import {AirportService} from '../../services/airport/airport.service';
 
 @Component({
     selector: 'app-flight-search',
     templateUrl: './flight-search.component.html',
     styleUrls: ['./flight-search.component.scss']
 })
-export class FlightSearchComponent implements OnInit {
-    options$ = new Observable<AirportDto[]>();
+export class FlightSearchComponent {
+    @Input() airports !: Observable<AirportDto[]>;
+    @Output() search = new EventEmitter();
 
-    @ViewChild('searchForm', {static: true}) searchForm !: NgForm;
+    searchForm: FormGroup = this.formBuilder.group({
+        start: ['', Validators.required],
+        destination: ['', Validators.required],
+        fromDate: ['', Validators.required],
+        toDate: ['', Validators.required],
+        passengers: ['', [Validators.required, Validators.min(1)]],
+        type: ['', Validators.required],
+    });
 
-    constructor(
-        private router: Router,
-        private airportService: AirportService
-    ) {
-    }
-
-    ngOnInit(): void {
-        this.options$ = this.airportService.getAirports();
+    constructor(private formBuilder: FormBuilder) {
     }
 
     get now() {
@@ -31,7 +30,7 @@ export class FlightSearchComponent implements OnInit {
 
     onSearch() {
         if (this.searchForm.valid) {
-            this.router.navigate(['flights']);
+            this.search.emit(this.searchForm.value);
         }
     }
 }
