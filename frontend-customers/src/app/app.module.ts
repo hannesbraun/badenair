@@ -31,6 +31,7 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {environment} from '../environments/environment';
 import {SignupDialogComponent} from './components/signup-dialog/signup-dialog.component';
 import {DateInterceptor} from './services/util/date.interceptor';
+import {FlightSearchPageComponent} from './pages/flight-search-page/flight-search-page.component';
 
 @NgModule({
     declarations: [
@@ -54,7 +55,8 @@ import {DateInterceptor} from './services/util/date.interceptor';
         CheckInPageComponent,
         SuccessPageComponent,
         BookingOverviewComponent,
-        SignupDialogComponent
+        SignupDialogComponent,
+        FlightSearchPageComponent,
     ],
     imports: [
         AppRoutingModule,
