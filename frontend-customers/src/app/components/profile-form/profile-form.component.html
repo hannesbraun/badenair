@@ -1,4 +1,4 @@
-<div [formGroup]="profileForm">
+<div *ngIf="profileForm" [formGroup]="profileForm">
     <h3>Persönliche Daten</h3>
     <div>
         <mat-form-field>

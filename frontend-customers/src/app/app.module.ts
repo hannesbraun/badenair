@@ -3,7 +3,6 @@ import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {BrowserModule} from '@angular/platform-browser';
-import {ChangePasswordDialogComponent} from './components/profile/change-password-dialog/change-password-dialog.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {FlightSearchComponent} from './components/flight-search/flight-search.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -37,7 +36,6 @@ import {DateInterceptor} from './services/util/date.interceptor';
     declarations: [
         AccountSettingsPageComponent,
         AppComponent,
-        ChangePasswordDialogComponent,
         FlightSearchComponent,
         NavigationComponent,
         ProfileComponent,
