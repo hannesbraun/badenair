@@ -1,7 +1,7 @@
 package de.hso.badenair.service.account;
 
 import de.hso.badenair.controller.dto.account.AccountDataDto;
-import de.hso.badenair.controller.dto.account.FinishRegistrationDto;
+import de.hso.badenair.controller.dto.account.UpdateAccountDataDto;
 import de.hso.badenair.domain.booking.AccountData;
 import de.hso.badenair.util.mapper.AccountDataMapper;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class AccountService {
     }
 
     @Transactional
-    public void finishRegistration(String userId, FinishRegistrationDto dto) {
+    public void updateAccountData(String userId, UpdateAccountDataDto dto) {
         final AccountData accountData = accountDataRepository.findByCustomerUserId(userId)
             .orElseGet(this::getEmptyAccountData);
 

@@ -37,7 +37,7 @@ export class AppComponent implements OnInit, AfterContentChecked, OnDestroy {
                                 this.accountDataVerified = true;
                                 delete accountData.name;
                                 delete accountData.lastname;
-                                this.accountService.finishRegistration(accountData).subscribe();
+                                this.accountService.updateAccountData(accountData).subscribe();
                             });
                         }
                     });
