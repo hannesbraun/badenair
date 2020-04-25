@@ -5,7 +5,7 @@ import {FlightDto} from '../dtos/Dtos';
 @Injectable({
     providedIn: 'root'
 })
-export class SearchService {
+export class BookingStateService {
 
     private readonly searchData: ReplaySubject<FlightDto[]>;
 

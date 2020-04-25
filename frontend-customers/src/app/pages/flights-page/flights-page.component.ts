@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FlightDto} from '../../services/dtos/Dtos';
 import {BookingState} from '../../components/flight/check-button/check-button.component';
-import {SearchService} from '../../services/search/search.service';
+import {BookingStateService} from '../../services/search/booking-state.service';
 
 
 @Component({
@@ -16,7 +16,7 @@ export class FlightsPageComponent implements OnInit {
 
     private bookedFlights: number[] = [];
 
-    constructor(private searchService: SearchService) {
+    constructor(private searchService: BookingStateService) {
     }
 
     ngOnInit() {

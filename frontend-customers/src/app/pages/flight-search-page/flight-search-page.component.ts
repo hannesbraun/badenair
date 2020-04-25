@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 import {AirportDto} from '../../services/dtos/Dtos';
 import {AirportService} from '../../services/airport/airport.service';
 import {Router} from '@angular/router';
-import {SearchService} from '../../services/search/search.service';
+import {BookingStateService} from '../../services/search/booking-state.service';
 
 @Component({
     selector: 'app-flight-search-page',
@@ -25,7 +25,7 @@ export class FlightSearchPageComponent implements OnInit {
         private flightService: FlightService,
         private airportService: AirportService,
         private router: Router,
-        private searchService: SearchService,
+        private searchService: BookingStateService,
     ) {
     }
 
