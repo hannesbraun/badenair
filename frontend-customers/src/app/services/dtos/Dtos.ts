@@ -23,7 +23,6 @@ export interface FlightDto {
     destination: string;
     startTime: Date;
     arrivalTime: Date;
-    price: number;
 }
 
 export interface PassengerDto {
@@ -34,9 +33,4 @@ export interface PassengerDto {
     baggage2: number;
     baggage3: number;
     baggage4: number;
-}
-
-export interface AirportDto {
-    id: number;
-    name: string;
 }
