@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {AccountData, SignUpDto, UpdateProfileDto} from '../../services/dtos/Dtos';
+import {AccountData, UpdateAccountDataDto} from '../../services/dtos/Dtos';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {environment} from '../../../environments/environment';
 
@@ -11,7 +11,7 @@ import {environment} from '../../../environments/environment';
 export class ProfileComponent {
 
     @Input() initialData ?: AccountData;
-    @Output() saveProfileSettings: EventEmitter<UpdateProfileDto> = new EventEmitter();
+    @Output() saveProfileSettings: EventEmitter<UpdateAccountDataDto> = new EventEmitter();
 
     profileForm: FormGroup = this.formBuilder.group({
         profile: []
@@ -23,9 +23,8 @@ export class ProfileComponent {
     onSubmit() {
         if (this.profileForm.valid) {
             this.saveProfileSettings.emit({
-                ...this.profileForm.controls.profile.value,
-                email: this.profileForm.get('email')?.value,
-            } as SignUpDto);
+                ...this.profileForm.controls.profile.value
+            } as UpdateAccountDataDto);
         }
     }
 

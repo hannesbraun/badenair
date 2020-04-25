@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AccountData, UpdateProfileDto} from '../../services/dtos/Dtos';
+import {AccountData, UpdateAccountDataDto} from '../../services/dtos/Dtos';
 import {AccountService} from '../../services/account/account.service';
 
 @Component({
@@ -21,8 +21,7 @@ export class AccountSettingsPageComponent implements OnInit {
         });
     }
 
-    onSaveProfileSettings(profileDto: UpdateProfileDto) {
-        // TODO: Call service to handle updating profile
-        console.log(profileDto);
+    onSaveProfileSettings(updateAccountDataDto: UpdateAccountDataDto) {
+        this.accountService.updateAccountData(updateAccountDataDto).subscribe();
     }
 }

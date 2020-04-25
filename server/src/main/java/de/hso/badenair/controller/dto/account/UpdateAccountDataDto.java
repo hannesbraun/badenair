@@ -8,7 +8,7 @@ import javax.validation.constraints.Past;
 import java.time.OffsetDateTime;
 
 @Value
-public class FinishRegistrationDto {
+public class UpdateAccountDataDto {
     @Past
     OffsetDateTime birthDate;
 
