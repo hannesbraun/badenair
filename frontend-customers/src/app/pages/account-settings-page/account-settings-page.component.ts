@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AccountData, UpdateAccountDataDto} from '../../services/dtos/Dtos';
 import {AccountService} from '../../services/account/account.service';
+import {InfoService} from '../../services/info/info.service';
 
 @Component({
     selector: 'app-account-settings-page',
@@ -12,7 +13,7 @@ export class AccountSettingsPageComponent implements OnInit {
     accountData: AccountData | undefined;
 
 
-    constructor(private accountService: AccountService) {
+    constructor(private accountService: AccountService, private infoService: InfoService) {
     }
 
     ngOnInit(): void {
@@ -22,6 +23,7 @@ export class AccountSettingsPageComponent implements OnInit {
     }
 
     onSaveProfileSettings(updateAccountDataDto: UpdateAccountDataDto) {
-        this.accountService.updateAccountData(updateAccountDataDto).subscribe();
+        this.accountService.updateAccountData(updateAccountDataDto)
+            .subscribe(() => this.infoService.showMessage('Die Daten wurden aktualisiert'));
     }
 }
