@@ -1,4 +1,4 @@
-<h2>Verfügbare Flüge</h2>
+<h2>Verfügbare Flüge {{directionState ? '(Hinflug)' : '(Rückflug)'}}</h2>
 <app-flight *ngFor="let flight of shownFlights"
             [flight]="flight"
             [price]="flight.price"
@@ -6,6 +6,6 @@
             (bookingStateChanged)="onBookingStateChanged($event, flight.id)">
 </app-flight>
 <div class="actions">
-    <button mat-raised-button color="primary" routerLink="">Zurück</button>
-    <button mat-raised-button color="primary" [disabled]="bookedFlightsEmpty()" routerLink="/passengers">Weiter</button>
+    <button mat-raised-button color="primary" (click)="previous()" >Zurück</button>
+    <button mat-raised-button color="primary" [disabled]="bookedFlightsEmpty()"  (click)="next()">Weiter</button>
 </div>

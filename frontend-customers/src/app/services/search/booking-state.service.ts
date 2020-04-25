@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, ReplaySubject} from 'rxjs';
+import {BehaviorSubject} from 'rxjs';
 import {FlightDto} from '../dtos/Dtos';
 
 interface BookingState {
@@ -9,21 +9,16 @@ interface BookingState {
     toFlights: FlightDto[];
     selectedReturnFlight: FlightDto;
     selectedToFlight: FlightDto;
+    direction: boolean;
 }
 
 @Injectable({
     providedIn: 'root'
 })
 export class BookingStateService {
-
     private readonly bookingState: BehaviorSubject<BookingState>;
 
-
-    private readonly searchData: ReplaySubject<FlightDto[]>;
-
-
     constructor() {
-        this.searchData = new ReplaySubject<FlightDto[]>(1);
         this.bookingState = new BehaviorSubject<BookingState>({} as BookingState);
     }
 
@@ -66,18 +61,18 @@ export class BookingStateService {
         this.bookingState.next({
             ...this.bookingState.getValue(),
             searchValue: value,
+            direction: value.type,
+        });
+    }
+
+    setDirection(direction: boolean) {
+        this.bookingState.next({
+            ...this.bookingState.getValue(),
+            direction: direction,
         });
     }
 
     get state() {
         return this.bookingState;
-    }
-
-    setFlightSearchData(data: FlightDto[]) {
-        this.searchData.next(data);
-    }
-
-    get flightSearchData() {
-        return this.searchData;
     }
 }
