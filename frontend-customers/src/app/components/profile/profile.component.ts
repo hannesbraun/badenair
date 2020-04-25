@@ -1,11 +1,7 @@
-import {Component, EventEmitter, Output} from '@angular/core';
-import {SignUpDto, UpdateProfileDto} from '../../services/dtos/Dtos';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MatDialog} from '@angular/material/dialog';
-import {
-    ChangePasswordDialogComponent,
-    ChangePasswordDialogOutput
-} from './change-password-dialog/change-password-dialog.component';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {AccountData, SignUpDto, UpdateProfileDto} from '../../services/dtos/Dtos';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {environment} from '../../../environments/environment';
 
 @Component({
     selector: 'app-profile',
@@ -14,15 +10,14 @@ import {
 })
 export class ProfileComponent {
 
+    @Input() initialData ?: AccountData;
     @Output() saveProfileSettings: EventEmitter<UpdateProfileDto> = new EventEmitter();
-    @Output() changePassword: EventEmitter<ChangePasswordDialogOutput> = new EventEmitter();
 
     profileForm: FormGroup = this.formBuilder.group({
-        profile: [],
-        email: ['', [Validators.required, Validators.email]]
+        profile: []
     });
 
-    constructor(private formBuilder: FormBuilder, private dialog: MatDialog) {
+    constructor(private formBuilder: FormBuilder) {
     }
 
     onSubmit() {
@@ -34,11 +29,7 @@ export class ProfileComponent {
         }
     }
 
-    onClickChangePassword() {
-        this.dialog.open(ChangePasswordDialogComponent).afterClosed().subscribe((output: ChangePasswordDialogOutput) => {
-            if (output) {
-                this.changePassword.emit(output);
-            }
-        });
+    get accountUrl(): string {
+        return `${environment.authUrl}/account`;
     }
 }
