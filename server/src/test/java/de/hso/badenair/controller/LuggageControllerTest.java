@@ -6,6 +6,9 @@ import de.hso.badenair.controller.dto.luggage.LuggageStateDto;
 import de.hso.badenair.controller.luggage.LuggageController;
 import de.hso.badenair.domain.booking.Luggage;
 import de.hso.badenair.domain.booking.LuggageState;
+import de.hso.badenair.domain.booking.Traveler;
+import de.hso.badenair.domain.flight.Flight;
+import de.hso.badenair.domain.plane.Plane;
 import de.hso.badenair.service.luggage.LuggageRepository;
 import de.hso.badenair.service.luggage.LuggageService;
 import org.junit.jupiter.api.BeforeEach;
@@ -88,7 +91,7 @@ class LuggageControllerTest {
 
 	@Configuration
 	@EnableJpaRepositories(basePackageClasses = {LuggageRepository.class})
-	@EntityScan(basePackageClasses = {Luggage.class})
+	@EntityScan(basePackageClasses = {Luggage.class, Flight.class, Plane.class})
 	@ComponentScan(basePackageClasses = {LuggageService.class})
 	@Import({LuggageController.class})
 	static class TestConfig {

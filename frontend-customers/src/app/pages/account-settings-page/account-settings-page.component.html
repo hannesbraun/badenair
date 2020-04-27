@@ -5,8 +5,9 @@
         </mat-card-title>
     </mat-card-header>
     <mat-card-content>
-        <app-profile (saveProfileSettings)="onSaveProfileSettings($event)"
-                     (changePassword)="onChangePassword($event)">
+        <app-profile *ngIf="accountData"
+                     [initialData]="accountData"
+                     (saveProfileSettings)="onSaveProfileSettings($event)">
         </app-profile>
     </mat-card-content>
 </mat-card>

@@ -1,4 +1,4 @@
-import {Component, forwardRef, OnDestroy} from '@angular/core';
+import {Component, forwardRef, Input, OnDestroy, OnInit} from '@angular/core';
 import {
     ControlValueAccessor,
     FormBuilder,
@@ -9,6 +9,7 @@ import {
     Validators
 } from '@angular/forms';
 import {Subscription} from 'rxjs';
+import {AccountData} from '../../services/dtos/Dtos';
 
 export interface ProfileFormValue {
     lastname: string;
@@ -40,22 +41,13 @@ export interface ProfileFormValue {
         }
     ]
 })
-export class ProfileFormComponent implements ControlValueAccessor, OnDestroy {
+export class ProfileFormComponent implements ControlValueAccessor, OnInit, OnDestroy {
 
     private static readonly DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
 
-    profileForm: FormGroup = this.formBuilder.group({
-        lastname: ['', Validators.required],
-        name: ['', Validators.required],
-        birthDate: ['', Validators.required],
-        street: ['', Validators.required],
-        zipCode: ['', [Validators.required, Validators.pattern('[0-9]{5}')]],
-        placeOfResidence: ['', Validators.required],
-        cardOwner: ['', Validators.required],
-        cardNumber: ['', Validators.required],
-        check: ['', Validators.required],
-        invalidationDate: ['', Validators.required]
-    });
+    @Input() initialData ?: AccountData;
+
+    profileForm: FormGroup | undefined;
 
     maxDateBirthDate: Date | undefined;
     minDateBirthDate: Date | undefined;
@@ -66,6 +58,19 @@ export class ProfileFormComponent implements ControlValueAccessor, OnDestroy {
 
     constructor(private formBuilder: FormBuilder) {
         this.initDateBoundaries();
+    }
+
+    ngOnInit(): void {
+        this.profileForm = this.formBuilder.group({
+            birthDate: [this.initialValue('birthDate'), Validators.required],
+            street: [this.initialValue('street'), Validators.required],
+            zipCode: [this.initialValue('zipCode'), [Validators.required, Validators.pattern('[0-9]{5}')]],
+            placeOfResidence: [this.initialValue('placeOfResidence'), Validators.required],
+            cardOwner: [this.initialValue('cardOwner'), Validators.required],
+            cardNumber: [this.initialValue('cardNumber'), Validators.required],
+            check: [this.initialValue('check'), Validators.required],
+            invalidationDate: [this.initialValue('invalidationDate'), Validators.required]
+        });
 
         this.subscriptions.push(
             this.profileForm.valueChanges.subscribe(value => {
@@ -91,24 +96,28 @@ export class ProfileFormComponent implements ControlValueAccessor, OnDestroy {
         if (value) {
             this.value = value;
         }
-
-        if (value === null) {
-            this.profileForm.reset();
-        }
     }
 
     validate(_: FormControl) {
-        return this.profileForm.valid ? null : {profileForm: {valid: false}};
+        return this.profileForm?.valid ? null : {profileForm: {valid: false}};
     }
 
     get value(): ProfileFormValue {
-        return this.profileForm.value;
+        return this.profileForm?.value;
     }
 
     set value(value: ProfileFormValue) {
-        this.profileForm.setValue(value);
+        this.profileForm?.setValue(value);
         this.onChange(value);
         this.onTouched();
+    }
+
+    private initialValue(key: string): string | Date {
+        if (!this.initialData) {
+            return '';
+        }
+
+        return this.initialData[key] ?? '';
     }
 
     private initDateBoundaries() {

@@ -32,6 +32,7 @@ export class BookedFlightsComponent implements OnInit {
                             destination: 'Lorem ipsum dolor sit amet',
                             startTime: new Date(),
                             arrivalTime: new Date(),
+                            price: 200
                         },
                     persons: [
                         {name: 'Peter Hase', id: 1},

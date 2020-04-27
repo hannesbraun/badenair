@@ -1,20 +1,6 @@
-<div [formGroup]="profileForm">
+<div *ngIf="profileForm" [formGroup]="profileForm">
     <h3>Persönliche Daten</h3>
     <div>
-        <mat-form-field>
-            <input matInput placeholder="Nachname" formControlName="lastname">
-            <mat-error *ngIf="profileForm?.get('lastname')?.errors?.required">
-                Dieses Feld muss ausgefüllt sein.
-            </mat-error>
-        </mat-form-field>
-
-        <mat-form-field>
-            <input matInput placeholder="Vorname" formControlName="name">
-            <mat-error *ngIf="profileForm?.get('name')?.errors?.required">
-                Dieses Feld muss ausgefüllt sein.
-            </mat-error>
-        </mat-form-field>
-
         <mat-form-field>
             <input matInput placeholder="Geburtsdatum" [min]="minDateBirthDate" [max]="maxDateBirthDate"
                    [matDatepicker]="pickerBirthDate" formControlName="birthDate">

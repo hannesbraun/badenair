@@ -1,3 +1,4 @@
+public class FlightController {
 package de.hso.badenair.controller.flight;
 
 
