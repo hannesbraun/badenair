@@ -15,24 +15,25 @@ public class FlightService {
 
     private final FlightRepository flightRepository;
 
-    public boolean updateFlightTracking(Long flightId, String action) {
+    public OffsetDateTime updateFlightTracking(Long flightId, String action) {
         Optional<Flight> flight = flightRepository.findById(flightId);
 
         final OffsetDateTime currentTime = OffsetDateTime.now();
 
         if (!flight.isPresent()) {
-            return false;
+            return null;
         }
 
-        if (action.equals(FlightAction.START)) {
+        if (action.equals(FlightAction.START.getName())) {
             flight.get().setActualStartTime(currentTime);
             flightRepository.save(flight.get());
-        }
-        else if (action.equals(FlightAction.LANDING)) {
+        } else if (action.equals(FlightAction.LANDING.getName())) {
             flight.get().setActualLandingTime(currentTime);
             flightRepository.save(flight.get());
+        } else {
+            return null;
         }
 
-        return true;
+        return currentTime;
     }
 }
