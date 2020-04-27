@@ -1,3 +1,4 @@
+public class FlightController {
 package de.hso.badenair.controller.flight;
 
 
@@ -16,14 +17,12 @@ public class FlightController {
     private final FlightService flightService;
 
     @PatchMapping("/tracking/{id}")
-    public ResponseEntity<?>  updateFlightTracking (@PathVariable long id, @RequestBody String action){
+    public ResponseEntity<Object>  updateFlightTracking (@PathVariable Long id, @RequestBody String action){
         boolean updateSuccess = flightService.updateFlightTracking(id, action);
 
         if (updateSuccess) {
             return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
         } else {
-            // The only possible failure is probably that the luggage id isn't
-            // present in the database
             return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
         }
     }

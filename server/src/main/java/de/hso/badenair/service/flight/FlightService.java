@@ -15,8 +15,8 @@ public class FlightService {
 
     private final FlightRepository flightRepository;
 
-    public boolean updateFlightTracking(Long FlightId, String action) {
-        Optional<Flight> flight = flightRepository.findById(FlightId);
+    public boolean updateFlightTracking(Long flightId, String action) {
+        Optional<Flight> flight = flightRepository.findById(flightId);
 
         final OffsetDateTime currentTime = OffsetDateTime.now();
 
@@ -27,7 +27,8 @@ public class FlightService {
         if (action.equals(FlightAction.START)) {
             flight.get().setActualStartTime(currentTime);
             flightRepository.save(flight.get());
-        } else if (action.equals(FlightAction.LANDING)) {
+        }
+        else if (action.equals(FlightAction.LANDING)) {
             flight.get().setActualLandingTime(currentTime);
             flightRepository.save(flight.get());
         }
