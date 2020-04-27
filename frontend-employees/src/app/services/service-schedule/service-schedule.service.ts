@@ -1,46 +1,35 @@
 import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {ServiceScheduleDto} from '../dtos/Dtos';
+import {HttpClient} from '@angular/common/http';
+import {environment} from '../../../environments/environment';
+import {map} from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ServiceScheduleService {
+    apiUrl = `${environment.backendApiRoot}/plan/standby`;
 
-    constructor() {
+    constructor(private http: HttpClient) {
     }
 
+    private mapToServiceSchedule = (schedules: any) => schedules.map(
+        (entry: any) => {
+            return {
+                schedule: {
+                    start: entry.startTime,
+                    end: entry.endTime,
+
+                },
+                employee: entry.employeeUserId
+            };
+        })
+
     getServiceSchedule(): Observable<ServiceScheduleDto[]> {
-        // TODO: Replace with API call
-        return of([
-            {
-                schedule: {
-                    start: new Date(),
-                    end: new Date()
-                },
-                employee: 'Max Mustermann'
-            },
-            {
-                schedule: {
-                    start: new Date(),
-                    end: new Date()
-                },
-                employee: 'Max Mustermann'
-            },
-            {
-                schedule: {
-                    start: new Date(),
-                    end: new Date()
-                },
-                employee: 'Max Mustermann'
-            },
-            {
-                schedule: {
-                    start: new Date(),
-                    end: new Date()
-                },
-                employee: 'Max Mustermann'
-            }
-        ]);
+        return this.http.get<any>(this.apiUrl)
+            .pipe(
+                map(this.mapToServiceSchedule),
+            );
     }
 }

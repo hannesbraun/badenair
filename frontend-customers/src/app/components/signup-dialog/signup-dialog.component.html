@@ -1,0 +1,7 @@
+<h3>Registrierung abschließen</h3>
+<mat-dialog-content>
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+        <app-profile-form formControlName="profile"></app-profile-form>
+        <button mat-raised-button type="submit" color="primary" [disabled]="profileForm.invalid">Registrierung abschließen</button>
+    </form>
+</mat-dialog-content>

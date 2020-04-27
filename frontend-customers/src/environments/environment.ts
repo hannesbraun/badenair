@@ -4,7 +4,8 @@
 
 export const environment = {
     production: false,
-    backendApiRoot: 'http://localhost:8081/api/customer'
+    backendApiRoot: 'http://localhost:8081/api/customer',
+    authUrl: 'http://localhost:8080/auth/realms/badenair',
 };
 
 /*

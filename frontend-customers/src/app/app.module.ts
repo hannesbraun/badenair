@@ -3,7 +3,6 @@ import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {BrowserModule} from '@angular/platform-browser';
-import {ChangePasswordDialogComponent} from './components/profile/change-password-dialog/change-password-dialog.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {FlightSearchComponent} from './components/flight-search/flight-search.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -28,14 +27,16 @@ import {SuccessPageComponent} from './pages/success-page/success-page.component'
 import {BookingOverviewComponent} from './components/booking-overview/booking-overview.component';
 import {AuthModule} from './auth/auth.module';
 import {OAuthModule} from 'angular-oauth2-oidc';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {environment} from '../environments/environment';
+import {SignupDialogComponent} from './components/signup-dialog/signup-dialog.component';
+import {DateInterceptor} from './services/util/date.interceptor';
+import {FlightSearchPageComponent} from './pages/flight-search-page/flight-search-page.component';
 
 @NgModule({
     declarations: [
         AccountSettingsPageComponent,
         AppComponent,
-        ChangePasswordDialogComponent,
         FlightSearchComponent,
         NavigationComponent,
         ProfileComponent,
@@ -54,6 +55,8 @@ import {environment} from '../environments/environment';
         CheckInPageComponent,
         SuccessPageComponent,
         BookingOverviewComponent,
+        SignupDialogComponent,
+        FlightSearchPageComponent,
     ],
     imports: [
         AppRoutingModule,
@@ -73,7 +76,13 @@ import {environment} from '../environments/environment';
             }
         })
     ],
-    providers: [],
+    providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: DateInterceptor,
+            multi: true
+        }
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule {

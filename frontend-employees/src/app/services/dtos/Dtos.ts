@@ -38,12 +38,15 @@ export enum ScheduleConfigSolution {
 }
 
 export enum BaggageState {
-    ON_FLIGHT,
-    READY_TO_GET
+    AT_TRAVELLER,
+    ON_BAGGAGE_CAROUSEL,
+    IN_LUGGAGE_HALL,
+    ON_LUGGAGE_CART,
+    ON_PLANE,
+    READY_FOR_PICK_UP
 }
 
 export interface ChangeBaggageStateDto {
-    flightId: number;
     baggageId: string;
     state: BaggageState;
 }
@@ -56,4 +59,20 @@ export interface ServiceScheduleDto {
 export interface Schedule {
     start: Date;
     end: Date;
+}
+
+export interface VacationDto {
+    startDate: Date;
+    endDate: Date;
+}
+
+export interface RequestVacationDto {
+    startDate: Date;
+    endDate: Date;
+}
+
+export interface PlaneMaintenance {
+    id: number;
+    state: string;
+    traveledDistance: number;
 }
