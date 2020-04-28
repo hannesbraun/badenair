@@ -4,7 +4,7 @@
   grid-gap: 30px;
   justify-content: center;
   align-content: center;
-  height: 80vh;
+  height: 24vh;
 }
 
 .start-button, .stop-button {
@@ -19,4 +19,8 @@
 
 .elapsed-time {
   text-align: end;
+}
+
+mat-spinner {
+    margin: auto;
 }
