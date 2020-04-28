@@ -76,3 +76,8 @@ export interface PlaneMaintenance {
     state: string;
     traveledDistance: number;
 }
+
+export interface WorkingHoursDto {
+    startTime: Date;
+    endTime: Date;
+}
