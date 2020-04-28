@@ -1,61 +1,19 @@
 import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {PlaneScheduleDto} from '../dtos/Dtos';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root'
 })
 export class FlightService {
 
-    constructor() {
-    }
+    private _url: string = "/assets/test.json";
 
-    // TODO: Remove when getPlaneSchedules is implemented
-    private static getStartDate(): Date {
-        const date = new Date();
-        date.setHours(date.getHours() + (Math.random() * 10));
-        date.setMinutes(Math.random() * 60);
-        return date;
-    }
-
-    // TODO: Remove when getPlaneSchedules is implemented
-    private static getArrivalDate(d: Date): Date {
-        const date = new Date();
-        date.setHours(d.getHours() + 1 + (Math.random() * 10));
-        date.setMinutes(Math.random() * 60);
-        return date;
-    }
-
-    // TODO: Remove when getPlaneSchedules is implemented
-    private static getSchedules(i: number): PlaneScheduleDto {
-        const startDate = FlightService.getStartDate();
-        const arrivalDate = FlightService.getArrivalDate(startDate);
-
-        return {
-            id: i,
-            plane: 'Plane ' + i,
-            status: 'OK',
-            hasConflict: false,
-            flights: [
-                {
-                    id: i,
-                    start: 'Lorem ipsum dolor sit amet',
-                    destination: 'Lorem ipsum dolor sit amet',
-                    startTime: startDate,
-                    arrivalTime: arrivalDate,
-                }
-            ]
-        } as PlaneScheduleDto;
+    constructor(private http:HttpClient) {
     }
 
     getPlaneSchedules(): Observable<PlaneScheduleDto[]> {
-        // TODO: Get flights from API
-        const flights: PlaneScheduleDto[] = [];
-
-        for (let i = 0; i < 10; i++) {
-            flights.push(FlightService.getSchedules(i));
-        }
-
-        return of(flights);
+        return this.http.get<PlaneScheduleDto[]>(this._url);
     }
 }

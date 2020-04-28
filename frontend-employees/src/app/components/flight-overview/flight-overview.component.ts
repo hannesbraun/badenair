@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
     calculateDurationLength,
     calculateHeight,
@@ -10,8 +10,8 @@ import {
     lineHeight,
     totalWidth
 } from '../../services/util/SVGUtil';
-import {FlightDto, PlaneScheduleDto} from '../../services/dtos/Dtos';
-import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+import { FlightDto, PlaneScheduleDto, ScheduleConflictDto } from '../../services/dtos/Dtos';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import {
     FlightInfoDialogComponent,
     FlightInfoDialogInput
@@ -20,8 +20,9 @@ import {
     ScheduleConflictDialogComponent,
     ScheduleConflictDialogInput
 } from './dialogs/schedule-conflict-dialog/schedule-conflict-dialog.component';
-import {ScheduleConflictServiceService} from '../../services/conflicts/schedule-conflict-service.service';
-import {FlightService} from '../../services/flights/flight.service';
+import { ScheduleConflictService } from '../../services/conflicts/schedule-conflict-service.service';
+import { FlightService } from '../../services/flights/flight.service';
+import { timer } from 'rxjs';
 
 interface LengthData {
     start: number;
@@ -38,19 +39,29 @@ export class FlightOverviewComponent implements OnInit {
 
     @Input()
     schedules: PlaneScheduleDto[] = [];
+    conflicts: ScheduleConflictDto[] = [];
 
     calculatedLengths: LengthData[][] = [];
 
     constructor(private dialog: MatDialog,
-                private scheduleConflictServiceService: ScheduleConflictServiceService,
-                private flightService: FlightService) {
+        private scheduleConflictServiceService: ScheduleConflictService,
+        private flightService: FlightService) {
     }
 
     ngOnInit() {
         // TODO remove subscription to Service
+
+        const refreshTimer = timer(0, 120000);
+        refreshTimer.subscribe(this.updateFlightPlan);
+    }
+
+    updateFlightPlan = () => {
+        let needToUpdateconflicts: boolean = false;
+
         this.flightService.getPlaneSchedules()
             .subscribe(schedules => {
                 this.schedules = schedules;
+
                 this.schedules
                     .map(schedule => schedule.flights)
                     .forEach((flights: FlightDto[], index: number) => {
@@ -62,7 +73,23 @@ export class FlightOverviewComponent implements OnInit {
                             };
                         });
                     });
+
+                this.schedules.forEach((schedule: PlaneScheduleDto, index: number) => {
+                    if (schedule.hasConflict == true)
+                        needToUpdateconflicts = true;
+                })
+
+
+
+                if (needToUpdateconflicts) {
+                    this.scheduleConflictServiceService.getConflicts()
+                        .subscribe(conflicts => {
+                            this.conflicts = conflicts;
+                        })
+                }
             });
+
+        this.flightService.getPlaneSchedules();
     }
 
     getTimeToDisplay(i: number): string {
@@ -92,18 +119,23 @@ export class FlightOverviewComponent implements OnInit {
     }
 
     onClickConflict(id: number) {
-        this.scheduleConflictServiceService.getConflictForSchedule(id).subscribe(scheduleConflict => {
-            const config: MatDialogConfig = {
-                data: {
-                    conflict: scheduleConflict
-                } as ScheduleConflictDialogInput
-            };
-            this.dialog.open(ScheduleConflictDialogComponent, config).afterClosed().subscribe(output => {
-                if (output) {
-                    // TODO: Handle selected solution and refresh overview
-                    console.log(output);
-                }
-            });
+
+        let temp: ScheduleConflictDto | undefined;
+
+        temp = this.conflicts.find(value => (id == value.scheduleId))
+
+        console.log(temp);
+
+        const config: MatDialogConfig = {
+            data: {
+                conflict: temp
+            } as ScheduleConflictDialogInput
+        };
+        this.dialog.open(ScheduleConflictDialogComponent, config).afterClosed().subscribe(output => {
+            if (output) {
+                // TODO: Handle selected solution and refresh overview
+                console.log(output);
+            }
         });
     }
 

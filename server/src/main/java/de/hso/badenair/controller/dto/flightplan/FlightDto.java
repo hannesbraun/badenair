@@ -7,10 +7,10 @@ import java.time.OffsetDateTime;
 
 @Data
 @Builder
-public class PlaneScheduleDto {
+public class FlightDto {
     private long id;
-    private String plane;
-    private String status;
-    private boolean hasConflict;
-    private FlightDto[] flights;
+    private String start;
+    private String destination;
+    private OffsetDateTime startTime;
+    private OffsetDateTime arrivalTime;
 }

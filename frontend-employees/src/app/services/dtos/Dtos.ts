@@ -28,13 +28,17 @@ export interface PlaneScheduleDto {
 
 export interface ScheduleConflictDto {
     flight: FlightDto;
+    scheduleId: number;
     cause: string;
+    //0: verspätung aktzeptieren; 1: flug ausfallen lassen; 2: ersatzpersonal einsetzen; 3: ersatzflugzeug
+    possibleSolutions: number[];
 }
 
 export enum ScheduleConfigSolution {
     CANCEL_FLIGHT,
     DO_NOTHING,
-    USE_BACKUP_PLANE
+    USE_BACKUP_PLANE,
+    USE_BACKUP_PERSONAL
 }
 
 export enum BaggageState {
