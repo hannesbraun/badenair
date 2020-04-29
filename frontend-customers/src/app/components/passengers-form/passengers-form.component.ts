@@ -1,8 +1,8 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PassengerDto} from 'src/app/services/dtos/Dtos';
 import { Router } from '@angular/router';
-import {BookingStateService} from '../../services/search/booking-state.service';
+import {Observable} from 'rxjs';
 
 @Component({
     selector: 'app-passenger-form',
@@ -12,30 +12,27 @@ import {BookingStateService} from '../../services/search/booking-state.service';
 export class PassengersFormComponent implements OnInit {
 
     form!: FormGroup;
-    passengerCount!: number;
+    @Input() passenger!: Observable<number>;
     baggageCapacity = [15, 23, 30];
 
     @Output() onPassengersSubmit = new EventEmitter<PassengerDto[]>();
 
     constructor(private formBuilder: FormBuilder,
                 private router: Router,
-                private bookingStateService: BookingStateService,
                 ) {
     }
 
     ngOnInit() {
-        this.bookingStateService.state
-            .subscribe(value => {
-                this.passengerCount = value.passengers;
+        this.passenger.subscribe(value => {
                 this.form = this.formBuilder.group({
                     items: this.formBuilder.array([])
                 });
-                this.createFormArray();
+                this.createFormArray(value);
             });
     }
 
-    createFormArray() {
-        for (let i = 0; i < this.passengerCount; i++) {
+    createFormArray(count: number) {
+        for (let i = 0; i < count; i++) {
             this.appendPassenger();
         }
     }
@@ -71,9 +68,5 @@ export class PassengersFormComponent implements OnInit {
             baggage3: [0],
             baggage4: [0]
         }));
-    }
-
-    removePassenger(index: number) {
-        this.formArray.removeAt(index);
     }
 }
