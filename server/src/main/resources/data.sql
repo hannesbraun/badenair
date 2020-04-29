@@ -8,6 +8,16 @@ insert into airport (id, distance, name) values
     (6, 1203, 'Palma de Mallorca'),
     (7, 2126, 'Moskau');
 
+insert into standby_schedule (id, end_time, start_time, employee_user_id) values
+    (0, NOW(), NOW(), 'Max Musterman'),
+    (1, NOW(), NOW(), 'Lukas Has'),
+    (2, NOW(), NOW(), 'Lena Peter'),
+    (3, NOW(), NOW(), 'Alexander Schmied'),
+    (4, NOW(), NOW(), 'Max Müller'),
+    (5, NOW(), NOW(), 'Hans Gauß'),
+    (6, NOW(), NOW(), 'Laura Muserman'),
+    (7, NOW(), NOW(), 'Max Lustig');
+
 insert into scheduled_flight (id, base_price, duration_in_hours, start_time, destination_airport_id, starting_airport_id) values
     (0, 120, 3, NOW(), 1, 0),
     (1, 130, 1, NOW(), 0, 1),

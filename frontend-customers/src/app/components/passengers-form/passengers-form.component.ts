@@ -2,6 +2,7 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PassengerDto} from 'src/app/services/dtos/Dtos';
 import { Router } from '@angular/router';
+import {BookingStateService} from '../../services/search/booking-state.service';
 
 @Component({
     selector: 'app-passenger-form',
@@ -16,15 +17,21 @@ export class PassengersFormComponent implements OnInit {
 
     @Output() onPassengersSubmit = new EventEmitter<PassengerDto[]>();
 
-    constructor(private formBuilder: FormBuilder, private router: Router) {
+    constructor(private formBuilder: FormBuilder,
+                private router: Router,
+                private bookingStateService: BookingStateService,
+                ) {
     }
 
     ngOnInit() {
-        this.passengerCount = 1; // TODO: Get passengers count from flightsearch
-        this.form = this.formBuilder.group({
-            items: this.formBuilder.array([])
-        });
-        this.createFormArray();
+        this.bookingStateService.state
+            .subscribe(value => {
+                this.passengerCount = value.passengers;
+                this.form = this.formBuilder.group({
+                    items: this.formBuilder.array([])
+                });
+                this.createFormArray();
+            });
     }
 
     createFormArray() {

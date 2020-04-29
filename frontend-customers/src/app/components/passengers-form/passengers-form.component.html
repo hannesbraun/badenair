@@ -2,8 +2,8 @@
 <form [formGroup]="form" (ngSubmit)="submit()">
     <div class="card-layout" formArrayName="items" *ngFor="let item of forms; let index = index">
         <mat-card [formGroupName]="index">
-            <mat-card-header (click)="removePassenger(index)">
-                <mat-card-title>- Mitreisender {{ index + 1 }}</mat-card-title>
+            <mat-card-header>
+                <mat-card-title>Mitreisender {{ index + 1 }}</mat-card-title>
             </mat-card-header>
             <mat-card-content fxLayout="row" fxLayoutGap="20px">
                 <div fxLayout="column" fxFlex>
@@ -28,11 +28,6 @@
             </mat-card-content>
         </mat-card>
     </div>
-    <mat-card (click)="appendPassenger()">
-        <mat-card-header>
-            <mat-card-title>+ Mitreisender {{ formArray.length + 1 }}</mat-card-title>
-        </mat-card-header>
-    </mat-card>
 
     <div fxLayoutAlign="space-between" class="navigation-buttons">
         <button mat-raised-button routerLink="/flights">Zurück</button>
