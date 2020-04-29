@@ -1,3 +1,5 @@
 <app-passenger-form
-    [passenger]="passengers"
+    [passengerCount]="passengersCount"
+    [passengers]="passengers"
+    (passengersSubmit)="onFromSubmit($event)"
 ></app-passenger-form>

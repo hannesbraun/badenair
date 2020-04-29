@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import {FlightDto} from '../dtos/Dtos';
+import {FlightDto, PassengerDto} from '../dtos/Dtos';
 import {SearchFormValue} from '../../components/flight-search/flight-search.component';
 
 interface BookingState {
@@ -11,6 +11,7 @@ interface BookingState {
     selectedReturnFlight: FlightDto;
     selectedToFlight: FlightDto;
     direction: boolean;
+    passengersDto: PassengerDto[];
 }
 
 @Injectable({
@@ -70,6 +71,13 @@ export class BookingStateService {
         this.bookingState.next({
             ...this.bookingState.getValue(),
             direction: direction,
+        });
+    }
+
+    setPassengersDto(value: PassengerDto[]) {
+        this.state.next({
+            ...this.bookingState.getValue(),
+            passengersDto: value,
         });
     }
 

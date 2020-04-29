@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PassengerDto} from 'src/app/services/dtos/Dtos';
-import { Router } from '@angular/router';
 import {Observable} from 'rxjs';
 
 @Component({
@@ -10,25 +9,30 @@ import {Observable} from 'rxjs';
     styleUrls: ['./passengers-form.component.scss']
 })
 export class PassengersFormComponent implements OnInit {
-
-    form!: FormGroup;
-    @Input() passenger!: Observable<number>;
     baggageCapacity = [15, 23, 30];
+    form!: FormGroup;
 
-    @Output() onPassengersSubmit = new EventEmitter<PassengerDto[]>();
+    @Input() passengers!: Observable<PassengerDto[]>;
+    @Input() passengerCount!: Observable<number>;
+    @Output() passengersSubmit = new EventEmitter<PassengerDto[]>();
 
     constructor(private formBuilder: FormBuilder,
-                private router: Router,
-                ) {
+    ) {
     }
 
     ngOnInit() {
-        this.passenger.subscribe(value => {
-                this.form = this.formBuilder.group({
-                    items: this.formBuilder.array([])
-                });
-                this.createFormArray(value);
+        this.passengerCount.subscribe(value => {
+            this.form = this.formBuilder.group({
+                items: this.formBuilder.array([])
             });
+            this.createFormArray(value);
+        });
+        this.passengers.subscribe(value => {
+            if (!value) {
+                return;
+            }
+            this.form.controls.items.patchValue(value);
+        });
     }
 
     createFormArray(count: number) {
@@ -38,17 +42,15 @@ export class PassengersFormComponent implements OnInit {
     }
 
     submit() {
+        if (this.form.invalid) {
+            return;
+        }
         const formModel = this.form.controls.items.value;
-
         const passengers: PassengerDto[] = formModel.map(
             (passenger: PassengerDto) => Object.assign({}, passenger)
         );
 
-        this.onPassengersSubmit.emit(passengers);
-        
-        if (this.form.controls.items.valid) {
-            this.router.navigate(['overview']);
-        }
+        this.passengersSubmit.emit(passengers);
     }
 
     get formArray(): FormArray {
