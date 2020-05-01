@@ -2,33 +2,38 @@
     <form [formGroup]="seatForm" (ngSubmit)="submit()">
 
         <h1>Sitzplatzauswahl</h1>
+        <div formArrayName="items" *ngFor="let item of forms; let index = index">
+            <div [formGroupName]="index">
+                <mat-label>Mitreisender {{index + 1}}</mat-label>
+                <mat-form-field>
+                    <mat-label>Reihe</mat-label>
+                    <mat-select formControlName="row" placeholder="row">
+                        <mat-option *ngFor="let row of rows" [value]="row">
+                            {{row}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="formArray.controls[index].get('row')?.errors?.required">
+                        Die Zeile muss ausgefüllt sein.
+                    </mat-error>
+                </mat-form-field>
 
-        <mat-form-field>
-            <mat-label>Rows</mat-label>
-            <mat-select formControlName="row" placeholder="row">
-                <mat-option *ngFor="let row of rows" [value]="row">
-                    {{row}}
-                </mat-option>
-            </mat-select>
-            <mat-error *ngIf="seatForm.get('row')?.errors?.required">
-                Die Zeile muss ausgefüllt sein.
-            </mat-error>
-        </mat-form-field>
-
-        <mat-form-field>
-            <mat-label>Columns</mat-label>
-            <mat-select formControlName="column" placeholder="column">
-                <mat-option *ngFor="let column of columns" [value]="column">
-                    {{column}}
-                </mat-option>
-            </mat-select>
-            <mat-error *ngIf="seatForm.get('column')?.errors?.required">
-                Die Spalte muss ausgefüllt sein.
-            </mat-error>
-        </mat-form-field>
-
-        <button mat-button mat-raised-button type="submit">Bestätigen</button>
-        <button mat-button mat-raised-button routerLink="/passengers">Zurück</button>
+                <mat-form-field>
+                    <mat-label>Spalte</mat-label>
+                    <mat-select formControlName="column" placeholder="column">
+                        <mat-option *ngFor="let column of columns" [value]="column">
+                            {{column}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="formArray.controls[index].get('column')?.errors?.required">
+                        Die Spalte muss ausgefüllt sein.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="buttons">
+            <button mat-button mat-raised-button routerLink="/passengers">Zurück</button>
+            <button mat-button mat-raised-button type="submit" [disabled]="seatForm.invalid" class="mat-primary">Bestätigen</button>
+        </div>
     </form>
 </div>
 <div>
@@ -39,7 +44,8 @@
         </g>
         <g fill="#00F" *ngFor="let row of rows; let y = index">
             <text [attr.x]="0" [attr.y]="y * 30 + 15 + 30" fill="#000">{{row}}</text>
-            <rect *ngFor="let column of columns; let x = index;" [attr.x]="x * 30 + 30" [attr.y]="y * 30 + 30" width="20"
+            <rect *ngFor="let column of columns; let x = index;" [attr.x]="x * 30 + 30" [attr.y]="y * 30 + 30"
+                  width="20"
                   height="20" class="quad">
             </rect>
         </g>
