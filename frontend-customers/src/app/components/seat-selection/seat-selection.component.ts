@@ -1,5 +1,11 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, Validators} from '@angular/forms';
+import {Observable} from 'rxjs';
+
+export interface Seat {
+    row: number;
+    column: string;
+}
 
 @Component({
     selector: 'app-seat-selection',
@@ -15,7 +21,9 @@ export class SeatSelectionComponent implements OnInit{
         column: ['', Validators.required],
     });
 
-    @Output() seatSelected = new EventEmitter<any>();
+    @Input() selectedSeats!: Observable<Seat[]>;
+    @Input() passengers!: Observable<number>;
+    @Output() seatSelected = new EventEmitter<Seat[]>();
 
     constructor(private formBuilder: FormBuilder) {
         for (let i = 0; i < 29; i++) {
@@ -27,14 +35,23 @@ export class SeatSelectionComponent implements OnInit{
         this.seatForm = this.formBuilder.group({
             items: this.formBuilder.array([])
         });
-        this.createFormArray(3);
+        this.passengers.subscribe(count => {
+            this.createFormArray(count);
+        });
+        this.selectedSeats.subscribe(seats => {
+            if (!seats) {
+                return;
+            }
+            this.seatForm.controls.items.patchValue(seats);
+        });
     }
 
     submit() {
         if (this.seatForm.invalid) {
             return;
         }
-        this.seatSelected.emit(this.seatForm.value);
+        const value: Seat[] = Object.values(this.seatForm.controls.items.value);
+        this.seatSelected.emit(value);
     }
 
     get formArray(): FormArray {

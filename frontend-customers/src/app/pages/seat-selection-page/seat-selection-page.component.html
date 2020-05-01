@@ -1,1 +1,5 @@
-<app-seat-selection (seatSelected)="seatSelected()"></app-seat-selection>
+<app-seat-selection
+    (seatSelected)="seatSelected($event)"
+    [passengers]="passengers"
+    [selectedSeats]="selectedSeats"
+></app-seat-selection>

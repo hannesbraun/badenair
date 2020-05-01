@@ -13,7 +13,7 @@
                         </mat-option>
                     </mat-select>
                     <mat-error *ngIf="formArray.controls[index].get('row')?.errors?.required">
-                        Die Zeile muss ausgefüllt sein.
+                        Dieses Feld wird benötigt.
                     </mat-error>
                 </mat-form-field>
 
@@ -25,7 +25,7 @@
                         </mat-option>
                     </mat-select>
                     <mat-error *ngIf="formArray.controls[index].get('column')?.errors?.required">
-                        Die Spalte muss ausgefüllt sein.
+                        Dieses Feld wird benötigt.
                     </mat-error>
                 </mat-form-field>
             </div>

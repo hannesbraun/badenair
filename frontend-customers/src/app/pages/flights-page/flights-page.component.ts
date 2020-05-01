@@ -36,7 +36,7 @@ export class FlightsPageComponent implements OnInit {
                 this.directionState = data.direction;
                 this.numberOfPassengers = data.passengers;
 
-                if (this.directionState) {
+                if (!this.directionState) {
                     this.shownFlights = data.toFlights;
                 } else {
                     this.shownFlights = data.returnFlights;
