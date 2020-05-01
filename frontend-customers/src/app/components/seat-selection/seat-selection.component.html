@@ -1,0 +1,36 @@
+<div>
+    <form [formGroup]="seatForm" (ngSubmit)="submit()">
+
+        <h1>Sitzplatzauswahl</h1>
+
+        <mat-form-field>
+            <mat-label>Rows</mat-label>
+            <mat-select formControlName="row" placeholder="row">
+                <mat-option *ngFor="let row of rows" [value]="row">
+                    {{row}}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="seatForm.get('row')?.errors?.required">
+                Die Zeile muss ausgefüllt sein.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Columns</mat-label>
+            <mat-select formControlName="column" placeholder="column">
+                <mat-option *ngFor="let column of columns" [value]="column">
+                    {{column}}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="seatForm.get('column')?.errors?.required">
+                Die Spalte muss ausgefüllt sein.
+            </mat-error>
+        </mat-form-field>
+
+        <button mat-button mat-raised-button type="submit">Bestätigen</button>
+        <button mat-button mat-raised-button routerLink="/passengers">Zurück</button>
+    </form>
+</div>
+<div>
+    <h1>Some SVG</h1>
+</div>

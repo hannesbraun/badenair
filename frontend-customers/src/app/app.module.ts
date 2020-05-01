@@ -33,6 +33,8 @@ import {SignupDialogComponent} from './components/signup-dialog/signup-dialog.co
 import {DateInterceptor} from './services/util/date.interceptor';
 import {FlightSearchPageComponent} from './pages/flight-search-page/flight-search-page.component';
 import { PassengersPageComponent } from './pages/passengers-page/passengers-page.component';
+import { SeatSelectionPageComponent } from './pages/seat-selection-page/seat-selection-page.component';
+import { SeatSelectionComponent } from './components/seat-selection/seat-selection.component';
 
 @NgModule({
     declarations: [
@@ -59,6 +61,8 @@ import { PassengersPageComponent } from './pages/passengers-page/passengers-page
         SignupDialogComponent,
         FlightSearchPageComponent,
         PassengersPageComponent,
+        SeatSelectionPageComponent,
+        SeatSelectionComponent,
     ],
     imports: [
         AppRoutingModule,

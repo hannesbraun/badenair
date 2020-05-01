@@ -11,6 +11,7 @@ import {BookingOverviewComponent} from './components/booking-overview/booking-ov
 import {AuthGuard} from './auth/auth.guard';
 import {FlightSearchPageComponent} from './pages/flight-search-page/flight-search-page.component';
 import {PassengersPageComponent} from './pages/passengers-page/passengers-page.component';
+import {SeatSelectionPageComponent} from './pages/seat-selection-page/seat-selection-page.component';
 
 
 export const appRoutes: Routes = [
@@ -20,6 +21,7 @@ export const appRoutes: Routes = [
     {path: 'signup', component: SignUpPageComponent},
     {path: 'booked', component: BookedFlightsComponent, canActivate: [AuthGuard]},
     {path: 'passengers', component: PassengersPageComponent, canActivate: [AuthGuard]},
+    {path: 'seat', component: SeatSelectionPageComponent, canActivate: [AuthGuard]},
     {path: 'checkin', component: CheckInPageComponent, canActivate: [AuthGuard]},
     {path: 'success', component: SuccessPageComponent, canActivate: [AuthGuard]},
     {path: 'overview', component: BookingOverviewComponent, canActivate: [AuthGuard]},

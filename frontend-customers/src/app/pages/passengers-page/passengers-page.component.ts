@@ -31,6 +31,6 @@ export class PassengersPageComponent implements OnInit {
 
     onFromSubmit(value: PassengerDto[]) {
         this.bookingStateService.setPassengersDto(value);
-        this.router.navigate(['overview']);
+        this.router.navigate(['seat']);
     }
 }

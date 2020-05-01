@@ -9,16 +9,16 @@
                 <div fxLayout="column" fxFlex>
                     <mat-form-field>
                         <input matInput type="text" placeholder="Vorname" formControlName="name">
+                        <mat-error *ngIf="formArray.controls[index].get('name')?.errors?.required">
+                            Dieses Feld wird benötigt
+                        </mat-error>
                     </mat-form-field>
-                    <mat-error *ngIf="formArray.controls[index].get('name')?.errors?.required">
-                        Dieses Feld wird benötigt
-                    </mat-error>
                     <mat-form-field>
                         <input matInput type="text" placeholder="Nachname" formControlName="surname">
+                        <mat-error *ngIf="formArray.controls[index].get('surname')?.errors?.required">
+                            Dieses Feld wird benötigt
+                        </mat-error>
                     </mat-form-field>
-                    <mat-error *ngIf="formArray.controls[index].get('surname')?.errors?.required">
-                        Dieses Feld wird benötigt
-                    </mat-error>
                 </div>
                 <div fxLayout="column" fxFlex>
                     <mat-form-field *ngFor="let baggage of [0, 1, 2, 3]">

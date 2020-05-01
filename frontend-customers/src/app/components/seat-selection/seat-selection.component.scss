@@ -1,0 +1,16 @@
+:host {
+  display: flex;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+
+  .mat-form-field {
+    padding: 10px;
+  }
+
+  button {
+    padding: 10px;
+  }
+}
