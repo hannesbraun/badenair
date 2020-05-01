@@ -32,5 +32,16 @@
     </form>
 </div>
 <div>
-    <h1>Some SVG</h1>
+    <h1>Sitzplätze</h1>
+    <svg height="1000" width="500">
+        <g fill="#000">
+            <text *ngFor="let column of columns; let x = index;" [attr.x]="x * 30 + 30" [attr.y]="15">{{column}}</text>
+        </g>
+        <g fill="#00F" *ngFor="let row of rows; let y = index">
+            <text [attr.x]="0" [attr.y]="y * 30 + 15 + 30" fill="#000">{{row}}</text>
+            <rect *ngFor="let column of columns; let x = index;" [attr.x]="x * 30 + 30" [attr.y]="y * 30 + 30" width="20"
+                  height="20" class="quad">
+            </rect>
+        </g>
+    </svg>
 </div>

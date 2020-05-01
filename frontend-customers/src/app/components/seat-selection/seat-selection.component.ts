@@ -7,8 +7,8 @@ import {FormBuilder, Validators} from '@angular/forms';
     styleUrls: ['./seat-selection.component.scss']
 })
 export class SeatSelectionComponent {
-    rows = ['A', 'B'];
-    columns = [3, 4, 7, 5];
+    columns = ['A', 'B', 'C', 'D', 'E', 'F'];
+    rows: number[] = [];
 
     seatForm = this.formBuilder.group({
         row: ['', Validators.required],
@@ -18,6 +18,9 @@ export class SeatSelectionComponent {
     @Output() seatSelected = new EventEmitter<any>();
 
     constructor(private formBuilder: FormBuilder) {
+        for (let i = 0; i < 29; i++) {
+            this.rows.push(i + 1);
+        }
     }
 
     submit() {
