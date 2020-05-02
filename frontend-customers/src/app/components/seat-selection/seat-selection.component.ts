@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
+import {SeatDto} from '../../services/dtos/Dtos';
 
 export interface Seat {
     row: number;
@@ -12,23 +13,23 @@ export interface Seat {
     templateUrl: './seat-selection.component.html',
     styleUrls: ['./seat-selection.component.scss']
 })
-export class SeatSelectionComponent implements OnInit{
+export class SeatSelectionComponent implements OnInit {
     columns = ['A', 'B', 'C', 'D', 'E', 'F'];
-    rows: number[] = [];
+    planeType = '';
+    seats: boolean[][] = [];
 
     seatForm = this.formBuilder.group({
         row: ['', Validators.required],
         column: ['', Validators.required],
     });
 
+    @Input() freeSeats!: Observable<SeatDto>;
     @Input() selectedSeats!: Observable<Seat[]>;
     @Input() passengers!: Observable<number>;
+    @Input() flightId!: number;
     @Output() seatSelected = new EventEmitter<Seat[]>();
 
     constructor(private formBuilder: FormBuilder) {
-        for (let i = 0; i < 29; i++) {
-            this.rows.push(i + 1);
-        }
     }
 
     ngOnInit(): void {
@@ -43,6 +44,10 @@ export class SeatSelectionComponent implements OnInit{
                 return;
             }
             this.seatForm.controls.items.patchValue(seats);
+        });
+        this.freeSeats.subscribe(seats => {
+            this.seats = seats.freeSeats;
+            this.planeType = seats.type;
         });
     }
 

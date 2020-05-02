@@ -8,8 +8,8 @@
                 <mat-form-field>
                     <mat-label>Reihe</mat-label>
                     <mat-select formControlName="row" placeholder="row">
-                        <mat-option *ngFor="let row of rows" [value]="row">
-                            {{row}}
+                        <mat-option *ngFor="let row of seats; let index = index" [value]="row">
+                            {{index + 1}}
                         </mat-option>
                     </mat-select>
                     <mat-error *ngIf="formArray.controls[index].get('row')?.errors?.required">
@@ -20,8 +20,8 @@
                 <mat-form-field>
                     <mat-label>Spalte</mat-label>
                     <mat-select formControlName="column" placeholder="column">
-                        <mat-option *ngFor="let column of columns" [value]="column">
-                            {{column}}
+                        <mat-option *ngFor="let column of seats[0]; let index = index" [value]="column">
+                            {{columns[index]}}
                         </mat-option>
                     </mat-select>
                     <mat-error *ngIf="formArray.controls[index].get('column')?.errors?.required">
@@ -37,14 +37,14 @@
     </form>
 </div>
 <div>
-    <h1>Sitzplätze</h1>
+    <h1>Sitzplätze ({{planeType}})</h1>
     <svg height="1000" width="500">
         <g fill="#000">
-            <text *ngFor="let column of columns; let x = index;" [attr.x]="x * 30 + 30" [attr.y]="15">{{column}}</text>
+            <text *ngFor="let column of seats[0]; let x = index;" [attr.x]="x * 30 + 30" [attr.y]="15">{{columns[x]}}</text>
         </g>
-        <g fill="#00F" *ngFor="let row of rows; let y = index">
-            <text [attr.x]="0" [attr.y]="y * 30 + 15 + 30" fill="#000">{{row}}</text>
-            <rect *ngFor="let column of columns; let x = index;" [attr.x]="x * 30 + 30" [attr.y]="y * 30 + 30"
+        <g fill="#00F" *ngFor="let row of seats; let y = index">
+            <text [attr.x]="0" [attr.y]="y * 30 + 15 + 30" fill="#000">{{y + 1}}</text>
+            <rect *ngFor="let column of seats[y]; let x = index;" [attr.x]="x * 30 + 30" [attr.y]="y * 30 + 30"
                   width="20"
                   height="20" class="quad">
             </rect>
