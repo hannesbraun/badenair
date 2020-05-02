@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.io.File;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,32 +16,23 @@ public class MailService {
 
     private final JavaMailSender mailSender;
 
-    public void sendMail(List<String> recipients, String messageContent) {
+    public void sendMail(String recipient, String subject, String messageContent) {
         try {
-            final MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message);
-            setProperties(mimeMessageHelper, recipients, messageContent);
+            final MimeMessage message = createMessage(recipient, subject, messageContent);
             mailSender.send(message);
         } catch (MessagingException e) {
             log.error("An error occured while sending a mail: {}", e.getMessage());
         }
     }
 
-    public void sendMailWithAttachment(List<String> recipients, String messageContent, File file) {
-        try {
-            final MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message);
-            setProperties(mimeMessageHelper, recipients, messageContent);
-            mimeMessageHelper.addAttachment(file.getName(), file);
-            mailSender.send(message);
-        } catch (MessagingException e) {
-            log.error("An error occured while sending a mail: {}", e.getMessage());
-        }
-    }
-
-    private void setProperties(MimeMessageHelper mimeMessageHelper, List<String> recipients, String messageContent) throws MessagingException {
-        mimeMessageHelper.setTo(recipients.toArray(new String[0]));
-        mimeMessageHelper.setFrom(""); // TODO: Get from address
+    private MimeMessage createMessage(String recipient, String subject, String messageContent) throws MessagingException {
+        final MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message);
+        mimeMessageHelper.setSubject(subject);
+        mimeMessageHelper.setTo(recipient);
+        mimeMessageHelper.setSubject(subject);
+        mimeMessageHelper.setFrom("info@badenair.de");
         mimeMessageHelper.setText(messageContent, true);
+        return message;
     }
 }
