@@ -7,7 +7,7 @@
             <p class="large">Personen: {{numberOfPassengers}}</p>
             <div>
                 <p class="large">Preis: {{price | currency:'EUR'}}</p>
-                <app-check-button (bookingStateChanged)="onBookingStateChanged($event)"></app-check-button>
+                <button mat-raised-button color="primary" mat-button (click)="onBooking()">Buchen</button>
             </div>
         </ng-container>
         <ng-container *ngIf="persons">

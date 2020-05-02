@@ -4,6 +4,8 @@ import {BookingStateService} from '../../services/search/booking-state.service';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Seat} from '../../components/seat-selection/seat-selection.component';
+import {SeatService} from '../../services/seat/seat.service';
+import {SeatDto} from '../../services/dtos/Dtos';
 
 @Component({
     selector: 'app-seat-selection-page',
@@ -14,11 +16,13 @@ export class SeatSelectionPageComponent implements OnInit {
 
     passengers = new Observable<number>();
     selectedSeats = new Observable<Seat[]>();
+    seats = new Observable<SeatDto>();
 
     constructor(
         private route: Router,
         private bookingStateService: BookingStateService,
-        ) {
+        private seatService: SeatService,
+    ) {
     }
 
     ngOnInit(): void {
@@ -28,6 +32,9 @@ export class SeatSelectionPageComponent implements OnInit {
         this.selectedSeats = this.bookingStateService.state.pipe(
             map(state => state.seats)
         );
+        this.bookingStateService.state.subscribe(state => {
+            this.seats = this.seatService.getSeats(state.selectedToFlight.id);
+        });
     }
 
     seatSelected(value: Seat[]) {

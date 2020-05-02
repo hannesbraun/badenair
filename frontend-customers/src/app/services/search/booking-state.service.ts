@@ -40,14 +40,14 @@ export class BookingStateService {
         });
     }
 
-    setSelectedReturnFlights(flight: FlightDto) {
+    setSelectedReturnFlight(flight: FlightDto) {
         this.bookingState.next({
             ...this.bookingState.getValue(),
             selectedReturnFlight: flight,
         });
     }
 
-    setSelectedToFlights(flight: FlightDto) {
+    setSelectedToFlight(flight: FlightDto) {
         this.bookingState.next({
             ...this.bookingState.getValue(),
             selectedToFlight: flight,
@@ -93,5 +93,4 @@ export class BookingStateService {
     get state() {
         return this.bookingState;
     }
-
 }
