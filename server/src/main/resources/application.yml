@@ -14,5 +14,10 @@ spring:
         jwt:
           jwk-set-uri: http://localhost:8080/auth/realms/badenair/protocol/openid-connect/certs
           issuer-uri: http://localhost:8080/auth/realms/badenair
+  mail:
+    host: localhost
+    port: 25
+    username:
+    password:
 server:
   port: 8081
