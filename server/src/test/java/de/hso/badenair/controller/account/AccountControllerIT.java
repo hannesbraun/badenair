@@ -2,8 +2,8 @@ package de.hso.badenair.controller.account;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import de.hso.badenair.controller.dto.account.FinishRegistrationDto;
-import de.hso.badenair.domain.booking.AccountData;
+import de.hso.badenair.controller.dto.account.UpdateAccountDataDto;
+import de.hso.badenair.domain.booking.account.AccountData;
 import de.hso.badenair.service.account.AccountDataRepository;
 import de.hso.badenair.service.account.AccountService;
 import org.junit.jupiter.api.BeforeEach;
@@ -82,7 +82,7 @@ class AccountControllerIT {
         Principal principal = Mockito.mock(Principal.class);
         when(principal.getName()).thenReturn("user");
 
-        final FinishRegistrationDto dto = new FinishRegistrationDto(
+        final UpdateAccountDataDto dto = new UpdateAccountDataDto(
             OffsetDateTime.now().minusDays(10),
             "1234",
             "12344",

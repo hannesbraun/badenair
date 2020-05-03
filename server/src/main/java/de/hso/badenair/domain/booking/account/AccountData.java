@@ -1,4 +1,4 @@
-package de.hso.badenair.domain.booking;
+package de.hso.badenair.domain.booking.account;
 
 import de.hso.badenair.domain.base.BaseEntity;
 import lombok.*;

@@ -1,7 +1,7 @@
 package de.hso.badenair.controller.account;
 
 import de.hso.badenair.controller.dto.account.AccountDataDto;
-import de.hso.badenair.controller.dto.account.FinishRegistrationDto;
+import de.hso.badenair.controller.dto.account.UpdateAccountDataDto;
 import de.hso.badenair.service.account.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +23,8 @@ public class AccountController {
     }
 
     @PutMapping
-    public ResponseEntity<?> finishRegistration(Principal user, @RequestBody @Valid FinishRegistrationDto dto) {
-        accountService.finishRegistration(user.getName(), dto);
+    public ResponseEntity<?> updateAccountData(Principal user, @RequestBody @Valid UpdateAccountDataDto dto) {
+        accountService.updateAccountData(user.getName(), dto);
         return ResponseEntity.ok().build();
     }
 }

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {AccountData, FinishRegistrationDto} from '../dtos/Dtos';
+import {AccountData, UpdateAccountDataDto} from '../dtos/Dtos';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 
@@ -16,8 +16,7 @@ export class AccountService {
         return this.http.get<AccountData>(`${environment.backendApiRoot}/account`);
     }
 
-    finishRegistration(dto: FinishRegistrationDto): Observable<void> {
-        console.log('DTO', dto);
+    updateAccountData(dto: UpdateAccountDataDto): Observable<void> {
         return this.http.put<void>(`${environment.backendApiRoot}/account`, dto);
     }
 

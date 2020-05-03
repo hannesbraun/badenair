@@ -1,6 +1,6 @@
 package de.hso.badenair.service.account;
 
-import de.hso.badenair.domain.booking.AccountData;
+import de.hso.badenair.domain.booking.account.AccountData;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
