@@ -5,6 +5,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -52,7 +53,7 @@ public class AccountController {
 		List<BookingDto> bookingDtos = new ArrayList<BookingDto>();
 
 		for (Booking booking : bookings) {
-			// Travelers and luggage
+			// Travelers
 			List<TravelerDto> travelerDtos = new ArrayList<TravelerDto>();
 			List<LuggageStateDto> luggageDtos = new ArrayList<LuggageStateDto>();
 			for (Traveler traveler : booking.getTravelers()) {
@@ -60,9 +61,13 @@ public class AccountController {
 						traveler.getFirstName() + " " + traveler.getLastName(),
 						traveler.getId(), traveler.isCheckedIn()));
 
-				for (Luggage luggage : traveler.getLuggage()) {
-					luggageDtos.add(new LuggageStateDto(luggage.getId(),
-							luggage.getState()));
+				// Luggage
+				Set<Luggage> luggageSet = traveler.getLuggage();
+				if (luggageSet != null) {
+					for (Luggage luggage : luggageSet) {
+						luggageDtos.add(new LuggageStateDto(luggage.getId(),
+								luggage.getState()));
+					}
 				}
 			}
 
@@ -87,15 +92,15 @@ public class AccountController {
 							.of(booking.getFlight().getScheduledFlight()
 									.getDestinationAirport().getTimezone()));
 
-			BookingDto bookingDto = new BookingDto(
+			// Create final booking dto
+			bookingDtos.add(new BookingDto(
 					new FlightDto(booking.getFlight().getId(),
 							booking.getFlight().getScheduledFlight()
 									.getStartingAirport().getName(),
 							booking.getFlight().getScheduledFlight()
 									.getDestinationAirport().getName(),
 							startDate, arrivalDate, -1337.0),
-					travelerDtos, luggageDtos);
-			bookingDtos.add(bookingDto);
+					travelerDtos, luggageDtos));
 		}
 
 		return ResponseEntity.ok(bookingDtos);
