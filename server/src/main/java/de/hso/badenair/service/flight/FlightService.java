@@ -13,25 +13,25 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FlightService {
 
-    private final FlightRepository flightRepository;
+	private final FlightRepository flightRepository;
 
-    public boolean updateFlightTracking(Long FlightId, String action) {
-        Optional<Flight> flight = flightRepository.findById(FlightId);
+	public boolean updateFlightTracking(Long FlightId, String action) {
+		Optional<Flight> flight = flightRepository.findById(FlightId);
 
-        final OffsetDateTime currentTime = OffsetDateTime.now();
+		final OffsetDateTime currentTime = OffsetDateTime.now();
 
-        if (!flight.isPresent()) {
-            return false;
-        }
+		if (!flight.isPresent()) {
+			return false;
+		}
 
-        if (action.equals(FlightAction.START)) {
-            flight.get().setActualStartTime(currentTime);
-            flightRepository.save(flight.get());
-        } else if (action.equals(FlightAction.LANDING)) {
-            flight.get().setActualLandingTime(currentTime);
-            flightRepository.save(flight.get());
-        }
+		if (action.equals(FlightAction.START)) {
+			flight.get().setActualStartTime(currentTime);
+			flightRepository.save(flight.get());
+		} else if (action.equals(FlightAction.LANDING)) {
+			flight.get().setActualLandingTime(currentTime);
+			flightRepository.save(flight.get());
+		}
 
-        return true;
-    }
+		return true;
+	}
 }
