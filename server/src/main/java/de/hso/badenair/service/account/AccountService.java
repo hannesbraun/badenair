@@ -1,6 +1,7 @@
 package de.hso.badenair.service.account;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -29,12 +30,13 @@ public class AccountService {
 				.orElse(AccountDataDto.builder().build());
 	}
 
-    @Transactional
-    public void updateAccountData(String userId, UpdateAccountDataDto dto) {
-        final AccountData accountData = accountDataRepository.findByCustomerUserId(userId)
-            .orElseGet(this::getEmptyAccountData);
+	@Transactional
+	public void updateAccountData(String userId, UpdateAccountDataDto dto) {
+		final AccountData accountData = accountDataRepository
+				.findByCustomerUserId(userId)
+				.orElseGet(this::getEmptyAccountData);
 
-        accountData.setCustomerUserId(userId);
+		accountData.setCustomerUserId(userId);
 		accountData.setBirthday(dto.getBirthDate());
 		accountData.setStreet(dto.getStreet());
 		accountData.setZipCode(dto.getZipCode());
@@ -52,14 +54,17 @@ public class AccountService {
 	public List<Booking> getBookings(String customerUserId) {
 		List<Booking> bookings = bookingRepository
 				.findAllByCustomerUserId(customerUserId);
+		List<Booking> bookingsFiltered = new ArrayList<Booking>();
+
+		// Filter out bookings of the past
 		for (Booking booking : bookings) {
 			if (booking.getFlight().getStartDate()
 					.plusHours(booking.getFlight().getScheduledFlight()
 							.getStartTime().getHour())
 					.plusMinutes(booking.getFlight().getScheduledFlight()
 							.getStartTime().getMinute())
-					.isBefore(OffsetDateTime.now())) {
-				bookings.remove(booking);
+					.isAfter(OffsetDateTime.now())) {
+				bookingsFiltered.add(booking);
 			}
 		}
 
