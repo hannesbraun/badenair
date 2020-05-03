@@ -28,6 +28,7 @@ export class SeatSelectionComponent implements OnInit {
     @Input() passengers!: Observable<number>;
     @Input() flightId!: number;
     @Output() seatSelected = new EventEmitter<Seat[]>();
+    @Output() previous = new EventEmitter();
 
     constructor(private formBuilder: FormBuilder) {
     }
@@ -37,6 +38,9 @@ export class SeatSelectionComponent implements OnInit {
             items: this.formBuilder.array([])
         });
         this.passengers.subscribe(count => {
+            if (this.formArray.length === count) {
+                return;
+            }
             this.createFormArray(count);
         });
         this.selectedSeats.subscribe(seats => {
@@ -78,5 +82,9 @@ export class SeatSelectionComponent implements OnInit {
             row: ['', Validators.required],
             column: ['', Validators.required],
         }));
+    }
+
+    back() {
+        this.previous.emit();
     }
 }

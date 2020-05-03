@@ -35,6 +35,7 @@ import {FlightSearchPageComponent} from './pages/flight-search-page/flight-searc
 import { PassengersPageComponent } from './pages/passengers-page/passengers-page.component';
 import { SeatSelectionPageComponent } from './pages/seat-selection-page/seat-selection-page.component';
 import { SeatSelectionComponent } from './components/seat-selection/seat-selection.component';
+import {BookingOverviewPageComponent} from './pages/booking-overview-page/booking-overview-page.component';
 
 @NgModule({
     declarations: [
@@ -63,6 +64,7 @@ import { SeatSelectionComponent } from './components/seat-selection/seat-selecti
         PassengersPageComponent,
         SeatSelectionPageComponent,
         SeatSelectionComponent,
+        BookingOverviewPageComponent
     ],
     imports: [
         AppRoutingModule,

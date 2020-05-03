@@ -1,6 +1,8 @@
+<h1>Sitzplatzauswahl {{ directionState ? '(Hinflug)' : '(Rückflug)'}}</h1>
 <app-seat-selection
     (seatSelected)="seatSelected($event)"
     [passengers]="passengers"
     [selectedSeats]="selectedSeats"
     [freeSeats]="seats"
+    (previous)="previous()"
 ></app-seat-selection>

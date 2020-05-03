@@ -12,8 +12,10 @@ interface BookingState {
     selectedReturnFlight: FlightDto;
     selectedToFlight: FlightDto;
     direction: boolean;
+    seatDirection: boolean;
     passengersDto: PassengerDto[];
-    seats: Seat[];
+    toSeats: Seat[];
+    returnSeats: Seat[];
 }
 
 @Injectable({
@@ -65,7 +67,7 @@ export class BookingStateService {
         this.bookingState.next({
             ...this.bookingState.getValue(),
             searchValue: value,
-            direction: value.type === '1',
+            direction: true,
         });
     }
 
@@ -83,10 +85,24 @@ export class BookingStateService {
         });
     }
 
-    setSeats(value: Seat[]) {
+    setToSeats(value: Seat[]) {
         this.state.next({
             ...this.bookingState.getValue(),
-            seats: value,
+            toSeats: value,
+        });
+    }
+
+    setReturnSeats(value: Seat[]) {
+        this.state.next({
+            ...this.bookingState.getValue(),
+            returnSeats: value,
+        });
+    }
+
+    setSeatDirection(direction: boolean) {
+        this.bookingState.next({
+            ...this.bookingState.getValue(),
+            seatDirection: direction,
         });
     }
 

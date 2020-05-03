@@ -16,3 +16,9 @@ form {
     justify-content: space-between;
   }
 }
+
+.svg-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}

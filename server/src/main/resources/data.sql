@@ -29,7 +29,7 @@ insert into scheduled_flight (id, base_price, duration_in_hours, start_time, des
 
 insert into plane_type_data (id, flight_range, number_of_passengers, type, number_of_rows, number_of_columns) values
     (4, 2500, 120, 'B737_400', 31, 6),
-    (5, 2500, 50, 'B737_400', 20, 4);
+    (5, 2500, 50, 'Dash_8_400', 20, 4);
 
 insert into plane (id, state, traveled_distance, type_data_id) values
     (0, 'WAITING', 0, 4),
