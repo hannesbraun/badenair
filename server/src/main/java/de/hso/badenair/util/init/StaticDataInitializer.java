@@ -14,7 +14,7 @@ import de.hso.badenair.domain.plane.Plane;
 import de.hso.badenair.domain.plane.PlaneState;
 import de.hso.badenair.domain.plane.PlaneType;
 import de.hso.badenair.domain.plane.PlaneTypeData;
-import de.hso.badenair.service.AirportRepository;
+import de.hso.badenair.service.airport.AirportRepository;
 import de.hso.badenair.service.plane.repository.PlaneRepository;
 import de.hso.badenair.service.plane.repository.PlaneTypeDataRepository;
 import de.hso.badenair.util.csv.CsvHelper;
