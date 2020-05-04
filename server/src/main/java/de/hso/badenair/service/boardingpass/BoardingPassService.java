@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.List;
@@ -32,6 +31,7 @@ import de.hso.badenair.domain.booking.Luggage;
 import de.hso.badenair.domain.booking.Traveler;
 import de.hso.badenair.service.luggage.LuggageRepository;
 import de.hso.badenair.service.traveler.TravelerRepository;
+import de.hso.badenair.util.time.DateFusioner;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -78,26 +78,26 @@ public class BoardingPassService {
 				+ " Minuten";
 
 		// Start date
-		String timezoneStart = traveler.getBooking().getFlight()
-				.getScheduledFlight().getStartingAirport().getTimezone();
-		OffsetDateTime startTime = traveler.getBooking().getFlight()
-				.getScheduledFlight().getStartTime();
-		OffsetDateTime startDate = traveler.getBooking().getFlight()
-				.getStartDate().withHour(startTime.getHour())
-				.withMinute(startTime.getMinute())
-				.withOffsetSameInstant(ZoneOffset.of(timezoneStart));
+		OffsetDateTime startDate = DateFusioner.fusionStartDate(
+				traveler.getBooking().getFlight().getStartDate(),
+				traveler.getBooking().getFlight().getScheduledFlight()
+						.getStartTime(),
+				traveler.getBooking().getFlight().getScheduledFlight()
+						.getStartingAirport().getTimezone());
 		String startDateString = startDate
 				.format(DateTimeFormatter.ofPattern("dd. MMMM yyyy, HH:mm"))
-				+ " Uhr (" + startTime.getOffset()
+				+ " Uhr (" + startDate.getOffset()
 						.getDisplayName(TextStyle.SHORT, Locale.GERMAN)
 				+ ")";
 
 		// Arrival date
-		String timezoneDestination = traveler.getBooking().getFlight()
-				.getScheduledFlight().getDestinationAirport().getTimezone();
-		OffsetDateTime arrivalDate = startDate
-				.plusHours(durationInHours.intValue()).plusMinutes(minutes)
-				.withOffsetSameInstant(ZoneOffset.of(timezoneDestination));
+		OffsetDateTime arrivalDate = DateFusioner.fusionArrivalDate(
+				traveler.getBooking().getFlight().getStartDate(),
+				traveler.getBooking().getFlight().getScheduledFlight()
+						.getStartTime(),
+				durationInHours,
+				traveler.getBooking().getFlight().getScheduledFlight()
+						.getStartingAirport().getTimezone());
 		String arrivalDateString = arrivalDate
 				.format(DateTimeFormatter.ofPattern("dd. MMMM yyyy, HH:mm"))
 				+ " Uhr (" + arrivalDate.getOffset()
