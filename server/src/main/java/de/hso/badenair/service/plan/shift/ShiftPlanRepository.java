@@ -11,5 +11,5 @@ import java.util.List;
 
 @Repository
 public interface ShiftPlanRepository extends CrudRepository<ShiftSchedule, Long> {
-    List<ShiftSchedule> findByEmployeeUserIDOrderByStartTimeAsc(String employeeUserId);
+    List<ShiftSchedule> findByEmployeeUserIdOrderByStartTimeAsc(String employeeUserId);
 }

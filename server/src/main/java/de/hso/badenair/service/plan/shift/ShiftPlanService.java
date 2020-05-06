@@ -20,6 +20,6 @@ public class ShiftPlanService {
     private final ShiftPlanRepository shiftPlanRepository;
 
     public List<ShiftSchedule> getShiftPlan(String employeeUserId) {
-        return shiftPlanRepository.findByEmployeeUserIDOrderByStartTimeAsc(employeeUserId);
+        return shiftPlanRepository.findByEmployeeUserIdOrderByStartTimeAsc(employeeUserId);
     }
 }
