@@ -2,7 +2,6 @@ package de.hso.badenair.controller.flight;
 
 
 import de.hso.badenair.service.flight.FlightService;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
