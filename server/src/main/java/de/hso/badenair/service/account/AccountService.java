@@ -68,6 +68,6 @@ public class AccountService {
 			}
 		}
 
-		return bookings;
+		return bookingsFiltered;
 	}
 }
