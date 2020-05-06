@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import {FlightDto} from '../dtos/Dtos';
+import {FlightDto, PassengerDto} from '../dtos/Dtos';
 import {SearchFormValue} from '../../components/flight-search/flight-search.component';
+import {Seat} from '../../components/seat-selection/seat-selection.component';
 
 interface BookingState {
     searchValue: SearchFormValue;
@@ -11,6 +12,10 @@ interface BookingState {
     selectedReturnFlight: FlightDto;
     selectedToFlight: FlightDto;
     direction: boolean;
+    seatDirection: boolean;
+    passengersDto: PassengerDto[];
+    toSeats: Seat[];
+    returnSeats: Seat[];
 }
 
 @Injectable({
@@ -37,14 +42,14 @@ export class BookingStateService {
         });
     }
 
-    setSelectedReturnFlights(flight: FlightDto) {
+    setSelectedReturnFlight(flight: FlightDto) {
         this.bookingState.next({
             ...this.bookingState.getValue(),
             selectedReturnFlight: flight,
         });
     }
 
-    setSelectedToFlights(flight: FlightDto) {
+    setSelectedToFlight(flight: FlightDto) {
         this.bookingState.next({
             ...this.bookingState.getValue(),
             selectedToFlight: flight,
@@ -62,7 +67,7 @@ export class BookingStateService {
         this.bookingState.next({
             ...this.bookingState.getValue(),
             searchValue: value,
-            direction: value.type === '1',
+            direction: true,
         });
     }
 
@@ -70,6 +75,34 @@ export class BookingStateService {
         this.bookingState.next({
             ...this.bookingState.getValue(),
             direction: direction,
+        });
+    }
+
+    setPassengersDto(value: PassengerDto[]) {
+        this.state.next({
+            ...this.bookingState.getValue(),
+            passengersDto: value,
+        });
+    }
+
+    setToSeats(value: Seat[]) {
+        this.state.next({
+            ...this.bookingState.getValue(),
+            toSeats: value,
+        });
+    }
+
+    setReturnSeats(value: Seat[]) {
+        this.state.next({
+            ...this.bookingState.getValue(),
+            returnSeats: value,
+        });
+    }
+
+    setSeatDirection(direction: boolean) {
+        this.bookingState.next({
+            ...this.bookingState.getValue(),
+            seatDirection: direction,
         });
     }
 

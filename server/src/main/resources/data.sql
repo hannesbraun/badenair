@@ -8,6 +8,16 @@ insert into airport (id, distance, name) values
     (6, 1203, 'Palma de Mallorca'),
     (7, 2126, 'Moskau');
 
+insert into standby_schedule (id, end_time, start_time, employee_user_id) values
+    (0, NOW(), NOW(), 'Max Musterman'),
+    (1, NOW(), NOW(), 'Lukas Has'),
+    (2, NOW(), NOW(), 'Lena Peter'),
+    (3, NOW(), NOW(), 'Alexander Schmied'),
+    (4, NOW(), NOW(), 'Max Müller'),
+    (5, NOW(), NOW(), 'Hans Gauß'),
+    (6, NOW(), NOW(), 'Laura Muserman'),
+    (7, NOW(), NOW(), 'Max Lustig');
+
 insert into scheduled_flight (id, base_price, duration_in_hours, start_time, destination_airport_id, starting_airport_id) values
     (0, 120, 3, NOW(), 1, 0),
     (1, 130, 1, NOW(), 0, 1),
@@ -17,9 +27,9 @@ insert into scheduled_flight (id, base_price, duration_in_hours, start_time, des
     (5, 23, 1, NOW(), 1, 3);
 
 
-insert into plane_type_data (id, flight_range, number_of_passengers, type) values
-    (4, 2500, 120, 'B737_400'),
-    (5, 2500, 50, 'B737_400');
+insert into plane_type_data (id, flight_range, number_of_passengers, type, number_of_rows, number_of_columns) values
+    (4, 2500, 120, 'B737_400', 31, 6),
+    (5, 2500, 50, 'Dash_8_400', 20, 4);
 
 insert into plane (id, state, traveled_distance, type_data_id) values
     (0, 'WAITING', 0, 4),

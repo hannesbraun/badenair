@@ -3,9 +3,8 @@
             [flight]="flight"
             [price]="flight.price"
             [numberOfPassengers]="numberOfPassengers"
-            (bookingStateChanged)="onBookingStateChanged($event, flight.id)">
+            (booking)="onBookingStateChanged($event)">
 </app-flight>
 <div class="actions">
     <button mat-raised-button color="primary" (click)="previous()" >Zurück</button>
-    <button mat-raised-button color="primary" [disabled]="bookedFlightsEmpty()"  (click)="next()">Weiter</button>
 </div>

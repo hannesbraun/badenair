@@ -13,12 +13,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FlightService {
 
-    private final FlightRepository flightRepository;
+	private final FlightRepository flightRepository;
 
     public OffsetDateTime updateFlightTracking(Long flightId, String action) {
         Optional<Flight> flight = flightRepository.findById(flightId);
 
-        final OffsetDateTime currentTime = OffsetDateTime.now();
+		final OffsetDateTime currentTime = OffsetDateTime.now();
 
         if (!flight.isPresent()) {
             return null;

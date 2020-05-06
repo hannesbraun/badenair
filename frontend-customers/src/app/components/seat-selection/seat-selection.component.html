@@ -1,0 +1,55 @@
+<div>
+    <form [formGroup]="seatForm">
+
+        <div formArrayName="items" *ngFor="let item of forms; let index = index">
+            <div [formGroupName]="index">
+                <mat-label>Mitreisender {{index + 1}}</mat-label>
+                <mat-form-field>
+                    <mat-label>Reihe</mat-label>
+                    <mat-select formControlName="row" placeholder="row">
+                        <mat-option *ngFor="let row of seats; let index = index" [value]="row">
+                            {{index + 1}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="formArray.controls[index].get('row')?.errors?.required">
+                        Dieses Feld wird benötigt.
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Spalte</mat-label>
+                    <mat-select formControlName="column" placeholder="column">
+                        <mat-option *ngFor="let column of seats[0]; let index = index" [value]="column">
+                            {{columns[index]}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="formArray.controls[index].get('column')?.errors?.required">
+                        Dieses Feld wird benötigt.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="buttons">
+            <button mat-button mat-raised-button (click)="back()">Zurück</button>
+            <button mat-button mat-raised-button (click)="submit()" [disabled]="seatForm.invalid" class="mat-primary">Weiter</button>
+        </div>
+    </form>
+</div>
+<div class="svg-container" *ngIf="freeSeats | async; else loading">
+    <h1>Sitzplätze ({{(freeSeats | async)?.type}})</h1>
+    <svg height="1000" width="300">
+        <g fill="#000">
+            <text *ngFor="let column of (freeSeats | async)?.freeSeats[0]; let x = index;" [attr.x]="x * 30 + 30" [attr.y]="15">{{columns[x]}}</text>
+        </g>
+        <g fill="#00F" *ngFor="let row of (freeSeats | async)?.freeSeats; let y = index">
+            <text [attr.x]="0" [attr.y]="y * 30 + 15 + 30" fill="#000">{{y + 1}}</text>
+            <rect *ngFor="let column of (freeSeats | async)?.freeSeats[y]; let x = index;" [attr.x]="x * 30 + 30" [attr.y]="y * 30 + 30"
+                  width="20"
+                  height="20" class="quad">
+            </rect>
+        </g>
+    </svg>
+</div>
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>

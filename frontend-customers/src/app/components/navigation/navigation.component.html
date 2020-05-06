@@ -18,7 +18,9 @@
                 *ngIf="isHandset$ | async">
                 <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
             </button>
-            <button mat-button routerLink="/" class="logo">Baden Air</button>
+            <button mat-button routerLink="/" class="logo">
+                <img  class="logo" src="../../../assets/logo.png" alt="BadenAir" /> BadenAir
+            </button>
             <span class="fill-space"></span>
             <span
                 *ngIf="!(isHandset$ | async)">

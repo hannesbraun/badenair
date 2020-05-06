@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FlightDto} from '../../services/dtos/Dtos';
-import {BookingState} from './check-button/check-button.component';
 
 export interface Person {
     name: string;
     id: number;
+    checkedIn: boolean;
 }
 
 export interface Baggage {
@@ -13,8 +13,12 @@ export interface Baggage {
 }
 
 export enum BaggageState {
+    atTraveler = 'Beim Reisenden',
+    onBaggageCarousel = 'Auf dem Gepäckband',
+    inLuggageHall = 'In der Gepäckhalle',
+    onLuggageCart = 'Auf dem Gepäckwagen',
     inPlane = 'Im Flugzeug',
-    onLoad = 'Verladen'
+    readyForPickUp = 'Bereit zum Abholen'
 }
 
 @Component({
@@ -31,12 +35,11 @@ export class FlightComponent {
     @Input() checkInState !: boolean;
     @Input() baggages !: Baggage[];
 
-    @Output() bookingStateChanged = new EventEmitter<BookingState>();
+    @Output() booking = new EventEmitter<FlightDto>();
     @Output() onCheckInButtonClick = new EventEmitter<FlightDto>();
 
-
-    onBookingStateChanged(newState: BookingState) {
-        this.bookingStateChanged.emit(newState);
+    onBooking() {
+        this.booking.emit(this.flight);
     }
 
     checkIn() {

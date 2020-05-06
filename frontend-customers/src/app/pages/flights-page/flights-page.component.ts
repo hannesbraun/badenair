@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {FlightDto} from '../../services/dtos/Dtos';
-import {BookingState} from '../../components/flight/check-button/check-button.component';
 import {BookingStateService} from '../../services/search/booking-state.service';
 import {Router} from '@angular/router';
 
@@ -19,8 +18,6 @@ export class FlightsPageComponent implements OnInit {
     directionState = true;
     type = '1';
 
-    private bookedFlights: number[] = [];
-
     constructor(
         private bookingStateService: BookingStateService,
         private router: Router,
@@ -33,8 +30,11 @@ export class FlightsPageComponent implements OnInit {
                 this.toFlights = data.toFlights;
                 this.returnFlights = data.returnFlights;
                 this.type = data.searchValue.type;
-                this.directionState = data.direction;
                 this.numberOfPassengers = data.passengers;
+
+                if (this.directionState !== undefined) {
+                    this.directionState = data.direction;
+                }
 
                 if (this.directionState) {
                     this.shownFlights = data.toFlights;
@@ -44,16 +44,13 @@ export class FlightsPageComponent implements OnInit {
             });
     }
 
-    onBookingStateChanged(newState: BookingState, flightId: number) {
-        if (newState === BookingState.BOOKED) {
-            this.bookedFlights.push(flightId);
+    onBookingStateChanged(flight: FlightDto) {
+        if (this.directionState) {
+            this.bookingStateService.setSelectedToFlight(flight);
         } else {
-            this.bookedFlights = this.bookedFlights.filter(id => id !== flightId);
+            this.bookingStateService.setSelectedReturnFlight(flight);
         }
-    }
-
-    bookedFlightsEmpty(): boolean {
-        return this.bookedFlights.length === 0;
+        this.next();
     }
 
     next() {
