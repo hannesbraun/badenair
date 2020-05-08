@@ -4,7 +4,7 @@ import {Subscription, forkJoin} from 'rxjs';
 import { FlightDto, PassengerDto, BookingDto } from 'src/app/services/dtos/Dtos';
 import { BookingService } from 'src/app/services/booking/booking.service';
 import { Router } from '@angular/router';
-import { Seat, SeatSelectionComponent } from 'src/app/components/seat-selection/seat-selection.component';
+import { Seat } from 'src/app/components/seat-selection/seat-selection.component';
 
 
 @Component({
