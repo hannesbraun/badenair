@@ -35,19 +35,19 @@
         </div>
     </form>
 </div>
-<div class="svg-container" *ngIf="freeSeats | async; else loading">
-    <h1>Sitzplätze ({{(freeSeats | async)!.type}})</h1>
+<div class="svg-container" *ngIf="freeSeats | async as seats; else loading">
+    <h1>Sitzplätze ({{seats!.type}})</h1>
     <svg height="1000" width="300">
-        <g fill="#000">
-            <text *ngFor="let column of (freeSeats | async)!.freeSeats[0]; let x = index;" [attr.x]="x * 30 + 30" [attr.y]="15">{{columns[x]}}</text>
-        </g>
-        <g fill="#00F" *ngFor="let row of (freeSeats | async)!.freeSeats; let y = index">
-            <text [attr.x]="0" [attr.y]="y * 30 + 15 + 30" fill="#000">{{y + 1}}</text>
-            <rect *ngFor="let column of (freeSeats | async)!.freeSeats[y]; let x = index;" [attr.x]="x * 30 + 30" [attr.y]="y * 30 + 30"
-                  width="20"
-                  height="20" class="quad">
-            </rect>
-        </g>
+            <g fill="#000">
+                <text *ngFor="let column of seats!.freeSeats[0]; let x = index;" [attr.x]="x * 30 + 30" [attr.y]="15">{{columns[x]}}</text>
+            </g>
+            <g fill="#00F" *ngFor="let row of seats!.freeSeats; let y = index">
+                <text [attr.x]="0" [attr.y]="y * 30 + 15 + 30" fill="#000">{{y + 1}}</text>
+                <rect *ngFor="let column of seats!.freeSeats[y]; let x = index;" [attr.x]="x * 30 + 30" [attr.y]="y * 30 + 30"
+                      width="20"
+                      height="20" class="quad">
+                </rect>
+            </g>
     </svg>
 </div>
 <ng-template #loading>
