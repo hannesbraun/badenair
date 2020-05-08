@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { FlightService } from 'src/app/services/flight/flight.service';
+import { Component, OnInit, Input } from '@angular/core';
+
 import { FlightDto, PassengerDto } from 'src/app/services/dtos/Dtos';
-import { PassengerService } from 'src/app/services/passenger/passenger.service';
+import { Seat } from '../seat-selection/seat-selection.component';
 
 @Component({
   selector: 'app-booking-overview',
@@ -9,25 +9,39 @@ import { PassengerService } from 'src/app/services/passenger/passenger.service';
   styleUrls: ['./booking-overview.component.scss']
 })
 export class BookingOverviewComponent implements OnInit {
-  flight !: FlightDto;
-  passengers!: PassengerDto[]
-  constructor(private flightService: FlightService, private passengerService: PassengerService) { }
+  @Input() toFlight !: FlightDto;
+  @Input() returnFlight !: FlightDto;
+  @Input() passengers!: PassengerDto[];
+  @Input() toSeats !: Seat[];
+  @Input() returnSeats !: Seat[];
+  constructor() { }
 
   ngOnInit(): void {
-    this.flightService.getFlight(1).subscribe(dto => {
-      this.flight = dto;
-    });
-    this.passengerService.getPassengersForFlight(1).subscribe(
-      dto => {this.passengers = dto;}
-    );
+    console.log(this.toSeats);
   }
 
-  getDuration() {
-    if (this.flight) {
-        return this.flight.arrivalTime.getTime() - this.flight.startTime.getTime();
+  getDuration(flight: FlightDto) {
+    if (flight) {
+      return flight.arrivalTime.getTime() - flight.startTime.getTime();
     }
 
     return 0;
-}
+  }
+
+  calculatePrice(){
+    let price = 0;
+    if(this.toFlight && this.returnFlight){
+      price += this.toFlight.price + this.returnFlight.price;
+    }
+    else if (this.toFlight){
+      price += this.toFlight.price;
+    }
+    this.passengers.forEach(passenger => {
+      price += passenger.baggage1 + passenger.baggage2 + passenger.baggage3 + passenger.baggage4;
+    })
+
+    return price;
+  }
+  
 
 }

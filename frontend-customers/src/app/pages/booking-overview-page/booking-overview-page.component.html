@@ -1,11 +1,9 @@
+<h1>Buchungsübersicht</h1>
 <mat-card>
-    <mat-card-header>
-        <mat-card-title>
-            Flugdatenübersicht
-        </mat-card-title>
-    </mat-card-header>
     <mat-card-content>
-        <app-booking-overview></app-booking-overview>
+        <app-booking-overview [toFlight]="toFlight" [returnFlight]="returnFlight" [passengers]="passengers"
+            [toSeats]="toSeats" [returnSeats]="returnSeats">
+        </app-booking-overview>
     </mat-card-content>
 </mat-card>
 <div fxLayoutAlign="space-between" class="navigation-buttons">

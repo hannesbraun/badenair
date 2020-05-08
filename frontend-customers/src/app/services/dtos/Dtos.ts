@@ -46,3 +46,8 @@ export interface SeatDto {
     type: string;
     freeSeats: boolean[][];
 }
+
+export interface BookingDto{
+    flightId: number,
+    passengers: PassengerDto[]
+}
