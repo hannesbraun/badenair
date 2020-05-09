@@ -1,40 +1,21 @@
 import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
-import {Schedule} from '../dtos/Dtos';
+import { HttpClient } from '@angular/common/http';
+import {Observable} from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { Schedule } from '../dtos/Dtos';
+
 
 @Injectable({
     providedIn: 'root'
 })
+
 export class ShiftScheduleService {
 
-    constructor() {
-    }
+    apiUrl = environment.backendApiRoot;
 
-    getScheduleForEmployee(id: number): Observable<Schedule[]> {
-        // TODO: Replace with API call
-        return of(
-            [
-                {
-                    start: new Date(),
-                    end: new Date()
-                },
-                {
-                    start: new Date(),
-                    end: new Date()
-                },
-                {
-                    start: new Date(),
-                    end: new Date()
-                },
-                {
-                    start: new Date(),
-                    end: new Date()
-                },
-                {
-                    start: new Date(),
-                    end: new Date()
-                }
-            ]
-        );
+    constructor(private http : HttpClient) { }
+
+    getScheduleForEmployee(): Observable<Schedule[]> {
+        return this.http.get<Schedule[]>(`${this.apiUrl}/plan/shift`);
     }
 }
