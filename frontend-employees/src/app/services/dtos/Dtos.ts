@@ -61,6 +61,11 @@ export interface Schedule {
     end: Date;
 }
 
+export interface VacationPlanDto {
+    vacations: VacationDto[];
+    remainingVacationDays: number;
+}
+
 export interface VacationDto {
     startDate: Date;
     endDate: Date;

@@ -25,9 +25,7 @@ export class VacationPlanningComponent {
     calendar2: Date;
     calendar3: Date;
 
-    vacationDays = 13;
-    vacationDaysLeft = 9;
-
+    @Input() vacationDaysLeft !: number;
     @Input() tableData !: VacationPlanTableData[];
     @Input() approvedDates !: number[][];
     @Input() pendingDates !: number[][];
@@ -75,11 +73,37 @@ export class VacationPlanningComponent {
     onSubmit() {
         if (this.requestVacationForm.valid) {
             const dto: RequestVacationDto = {
-                startDate: this.requestVacationForm.get('fromDate')?.value,
-                endDate: this.requestVacationForm.get('toDate')?.value
+                startDate: this.setFromDateToTimeOfDay(this.requestVacationForm.get('fromDate')?.value),
+                endDate: this.setToDateToTimeOfDay(this.requestVacationForm.get('toDate')?.value)
             };
 
             this.requestSubmit.emit(dto);
         }
+    }
+
+    private setFromDateToTimeOfDay(date: Date): Date {
+        if (this.requestVacationForm.get('fromTimeOfDay')?.value === 'morning') {
+            return this.setToStartOfDay(date);
+        }
+
+        return this.setToEndOfDay(date);
+    }
+
+    private setToDateToTimeOfDay(date: Date): Date {
+        if (this.requestVacationForm.get('toTimeOfDay')?.value === 'morning') {
+            return this.setToStartOfDay(date);
+        }
+
+        return this.setToEndOfDay(date);
+    }
+
+    private setToStartOfDay(date: Date): Date {
+        date.setHours(0, 0, 0);
+        return date;
+    }
+
+    private setToEndOfDay(date: Date): Date {
+        date.setHours(23, 59, 59);
+        return date;
     }
 }
