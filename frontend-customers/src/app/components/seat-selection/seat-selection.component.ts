@@ -5,7 +5,7 @@ import {SeatDto} from '../../services/dtos/Dtos';
 
 export interface Seat {
     row: number;
-    column: string;
+    column: number;
 }
 
 @Component({
