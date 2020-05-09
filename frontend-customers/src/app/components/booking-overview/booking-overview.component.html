@@ -1,6 +1,6 @@
 <h2>Flüge</h2>
-<div fxLayout="column">
 
+<div fxLayout="column">
     <h3 *ngIf="toFlight">Hinflug</h3>
     <div fxLayout="row" fxLayoutAlign="space-between center" *ngIf="toFlight">
         <app-flight-info [time]="toFlight.startTime" [location]="toFlight.start"></app-flight-info>
@@ -13,6 +13,7 @@
             </div>
         </ng-container>
     </div>
+    <mat-divider *ngIf="returnFlight"></mat-divider>
     <h3 *ngIf="returnFlight">Rückflug</h3>
     <div fxLayout="row" fxLayoutAlign="space-between center" *ngIf="returnFlight">
         <app-flight-info [time]="returnFlight.startTime" [location]="returnFlight.start"></app-flight-info>
@@ -25,35 +26,55 @@
             </div>
         </ng-container>
     </div>
-
 </div>
+
 <mat-divider></mat-divider>
 <h2>Passagiere und Gepäck</h2>
 <div *ngFor="let passenger of passengers; let index = index">
     <h3>{{passenger.name}} {{passenger.surname}}</h3>
+    <div>
+        <p *ngIf="toSeats[index]">Sitzplatz Hinflug: Reihe {{toSeats[index].row}}, Sitz:
+            {{convertToSeatNumber(toSeats[index].column)}}</p>
+        <p *ngIf="returnSeats[index]">Sitzplatz Rückflug: Reihe {{returnSeats[index].row}}, Sitz:
+            {{convertToSeatNumber(returnSeats[index].column)}}</p>
+    </div>
     <div fxLayoutAlign="space-between" *ngIf="passenger.baggage1 !== 0">
-        <p class="medium">1x Gepäckstück ({{passenger.baggage1}}kg)</p>
+        <p class="medium">1x Gepäckstück (Hinflug) ({{passenger.baggage1}}kg)</p>
         <p class="medium">{{passenger.baggage1 | currency:'EUR'}}</p>
     </div>
+    <div fxLayoutAlign="space-between" *ngIf="passenger.baggage1 !== 0">
+        <p *ngIf="returnFlight" class="medium">1x Gepäckstück (Rückflug) ({{passenger.baggage1}}kg)</p>
+        <p class="medium">{{passenger.baggage1 | currency:'EUR'}}</p>
+    </div>
+
     <div fxLayoutAlign="space-between" *ngIf="passenger.baggage2 !== 0">
-        <p class="medium">1x Gepäckstück ({{passenger.baggage2}}kg)</p>
+        <p class="medium">1x Gepäckstück (Hinflug) ({{passenger.baggage2}}kg)</p>
+        <p class="medium">{{passenger.baggage2 | currency:'EUR'}}</p>
+    </div>
+    <div fxLayoutAlign="space-between" *ngIf="passenger.baggage2 !== 0">
+        <p *ngIf="returnFlight" class="medium">1x Gepäckstück (Rückflug) ({{passenger.baggage2}}kg)</p>
         <p class="medium">{{passenger.baggage2 | currency:'EUR'}}</p>
     </div>
     <div fxLayoutAlign="space-between" *ngIf="passenger.baggage3 !== 0">
-        <p class="medium">1x Gepäckstück ({{passenger.baggage3}}kg)</p>
+        <p class="medium">1x Gepäckstück (Hinflug) ({{passenger.baggage3}}kg)</p>
+        <p class="medium">{{passenger.baggage3 | currency:'EUR'}}</p>
+    </div>
+    <div fxLayoutAlign="space-between" *ngIf="passenger.baggage3 !== 0">
+        <p *ngIf="returnFlight" class="medium">1x Gepäckstück (Rückflug) ({{passenger.baggage3}}kg)</p>
         <p class="medium">{{passenger.baggage3 | currency:'EUR'}}</p>
     </div>
     <div fxLayoutAlign="space-between" *ngIf="passenger.baggage4 !== 0">
-        <p class="medium">1x Gepäckstück ({{passenger.baggage4}}kg)</p>
+        <p class="medium">1x Gepäckstück (Hinflug) ({{passenger.baggage4}}kg)</p>
         <p class="medium">{{passenger.baggage4 | currency:'EUR'}}</p>
     </div>
-    <div>
-        <p *ngIf="toSeats[index]">Sitzplatz Hinflug: Reihe {{toSeats[index].row}}, Sitz: {{toSeats[index].column}}</p>
-        <p *ngIf="returnSeats[index]">Sitzplatz Rückflug: Reihe {{returnSeats[index].row}}, Sitz:
-            {{returnSeats[index].column}}</p>
+    <div fxLayoutAlign="space-between" *ngIf="passenger.baggage4 !== 0">
+        <p *ngIf="returnFlight" class="medium">1x Gepäckstück (Rückflug) ({{passenger.baggage4}}kg)</p>
+        <p class="medium">{{passenger.baggage4 | currency:'EUR'}}</p>
     </div>
-    <mat-divider></mat-divider>
-    <div fxLayoutAlign="end" class="large">
-        <p>Zu zahlender Betrag: {{calculatePrice() | currency: 'EUR'}}*</p>
-    </div>
-    <p class="small">*Der Betrag wird von der im Profil hinterlegten Zahlungsmethode abgebucht.</p>
+</div>
+
+<mat-divider></mat-divider>
+<div fxLayoutAlign="end" class="large">
+    <p>Zu zahlender Betrag: {{price | currency: 'EUR'}}*</p>
+</div>
+<p class="small">*Der Betrag wird von der im Profil hinterlegten Zahlungsmethode abgebucht.</p>

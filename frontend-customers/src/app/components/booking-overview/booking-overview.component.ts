@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { FlightDto, PassengerDto } from 'src/app/services/dtos/Dtos';
 import { Seat } from '../seat-selection/seat-selection.component';
@@ -8,17 +8,13 @@ import { Seat } from '../seat-selection/seat-selection.component';
   templateUrl: './booking-overview.component.html',
   styleUrls: ['./booking-overview.component.scss']
 })
-export class BookingOverviewComponent implements OnInit {
+export class BookingOverviewComponent {
   @Input() toFlight !: FlightDto;
   @Input() returnFlight !: FlightDto;
   @Input() passengers!: PassengerDto[];
   @Input() toSeats !: Seat[];
   @Input() returnSeats !: Seat[];
-  constructor() { }
-
-  ngOnInit(): void {
-    console.log(this.toSeats);
-  }
+  @Input() price!: number;
 
   getDuration(flight: FlightDto) {
     if (flight) {
@@ -27,21 +23,9 @@ export class BookingOverviewComponent implements OnInit {
 
     return 0;
   }
-
-  calculatePrice(){
-    let price = 0;
-    if(this.toFlight && this.returnFlight){
-      price += this.toFlight.price + this.returnFlight.price;
-    }
-    else if (this.toFlight){
-      price += this.toFlight.price;
-    }
-    this.passengers.forEach(passenger => {
-      price += passenger.baggage1 + passenger.baggage2 + passenger.baggage3 + passenger.baggage4;
-    })
-
-    return price;
-  }
   
+  convertToSeatNumber(column: number): string{
+    return String.fromCharCode(65+column);
+  }
 
 }

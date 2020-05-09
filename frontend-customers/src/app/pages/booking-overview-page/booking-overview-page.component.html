@@ -2,13 +2,13 @@
 <mat-card>
     <mat-card-content>
         <app-booking-overview [toFlight]="toFlight" [returnFlight]="returnFlight" [passengers]="passengers"
-            [toSeats]="toSeats" [returnSeats]="returnSeats">
+            [toSeats]="toSeats" [returnSeats]="returnSeats" [price]="price">
         </app-booking-overview>
     </mat-card-content>
 </mat-card>
 <div fxLayoutAlign="space-between" class="navigation-buttons">
     <button mat-raised-button routerLink="/flights">Zurück</button>
-    <button mat-raised-button color="primary" type="submit" routerLink="/overview">Buchung bestätigen</button>
+    <button mat-raised-button color="primary" type="submit" (click)="bookFlights()">Buchung bestätigen</button>
 </div>
 
 <ng-template #loading>
