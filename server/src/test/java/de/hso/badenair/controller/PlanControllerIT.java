@@ -81,7 +81,7 @@ class PlanControllerIT {
         mvc.perform(get(API_URL)
             .principal(principal))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(1)));
+            .andExpect(jsonPath("$.vacations", hasSize(1)));
     }
 
     @Test
@@ -118,6 +118,50 @@ class PlanControllerIT {
         final List<Vacation> vacations = vacationRepository.findByEmployeeUserIdOrderByStartTimeAsc("user");
 
         assertThat(vacations.size()).isEqualTo(0);
+    }
+
+    @Test
+    void testThatRequestVacationDoesntAllowMoreThan30Days() throws Exception {
+        Principal principal = Mockito.mock(Principal.class);
+        when(principal.getName()).thenReturn("user");
+
+        final RequestVacationDto dto = new RequestVacationDto(OffsetDateTime.now().plusDays(1), OffsetDateTime.now().plusDays(32));
+
+        mvc.perform(post(API_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(dto))
+            .principal(principal))
+            .andExpect(status().isCreated());
+
+        final List<Vacation> vacations = vacationRepository.findByEmployeeUserIdOrderByStartTimeAsc("user");
+
+        assertThat(vacations.size()).isEqualTo(0);
+    }
+
+    @Test
+    void testThatRequestVacationModifiesExistingWhenOverlapping() throws Exception {
+        Principal principal = Mockito.mock(Principal.class);
+        when(principal.getName()).thenReturn("user");
+
+        final Vacation vacation = Vacation.builder()
+            .employeeUserId("user")
+            .startTime(OffsetDateTime.now().plusDays(2))
+            .endTime(OffsetDateTime.now().plusDays(10))
+            .build();
+
+        vacationRepository.save(vacation);
+
+        final RequestVacationDto dto = new RequestVacationDto(OffsetDateTime.now().plusDays(1), OffsetDateTime.now().plusDays(12));
+
+        mvc.perform(post(API_URL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(dto))
+            .principal(principal))
+            .andExpect(status().isCreated());
+
+        final List<Vacation> vacations = vacationRepository.findByEmployeeUserIdOrderByStartTimeAsc("user");
+
+        assertThat(vacations.size()).isEqualTo(1);
     }
 
     @Configuration
