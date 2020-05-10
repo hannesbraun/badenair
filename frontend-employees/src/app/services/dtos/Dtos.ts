@@ -30,8 +30,7 @@ export interface ScheduleConflictDto {
     flight: FlightDto;
     scheduleId: number;
     cause: string;
-    //0: verspätung aktzeptieren; 1: flug ausfallen lassen; 2: ersatzpersonal einsetzen; 3: ersatzflugzeug
-    possibleSolutions: number[];
+    possibleSolutions: ScheduleConfigSolution[];
 }
 
 export enum ScheduleConfigSolution {

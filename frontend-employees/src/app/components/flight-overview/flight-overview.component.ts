@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {
     calculateDurationLength,
     calculateHeight,
@@ -10,8 +10,8 @@ import {
     lineHeight,
     totalWidth
 } from '../../services/util/SVGUtil';
-import { FlightDto, PlaneScheduleDto, ScheduleConflictDto } from '../../services/dtos/Dtos';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import {FlightDto, PlaneScheduleDto, ScheduleConflictDto} from '../../services/dtos/Dtos';
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {
     FlightInfoDialogComponent,
     FlightInfoDialogInput
@@ -20,9 +20,9 @@ import {
     ScheduleConflictDialogComponent,
     ScheduleConflictDialogInput
 } from './dialogs/schedule-conflict-dialog/schedule-conflict-dialog.component';
-import { ScheduleConflictService } from '../../services/conflicts/schedule-conflict-service.service';
-import { FlightService } from '../../services/flights/flight.service';
-import { timer } from 'rxjs';
+import {ScheduleConflictService} from '../../services/conflicts/schedule-conflict-service.service';
+import {FlightService} from '../../services/flights/flight.service';
+import {timer} from 'rxjs';
 
 interface LengthData {
     start: number;
@@ -44,8 +44,8 @@ export class FlightOverviewComponent implements OnInit {
     calculatedLengths: LengthData[][] = [];
 
     constructor(private dialog: MatDialog,
-        private scheduleConflictServiceService: ScheduleConflictService,
-        private flightService: FlightService) {
+                private scheduleConflictServiceService: ScheduleConflictService,
+                private flightService: FlightService) {
     }
 
     ngOnInit() {
@@ -56,7 +56,7 @@ export class FlightOverviewComponent implements OnInit {
     }
 
     updateFlightPlan = () => {
-        let needToUpdateconflicts: boolean = false;
+        let needToUpdateConflicts = false;
 
         this.flightService.getPlaneSchedules()
             .subscribe(schedules => {
@@ -74,18 +74,18 @@ export class FlightOverviewComponent implements OnInit {
                         });
                     });
 
-                this.schedules.forEach((schedule: PlaneScheduleDto, index: number) => {
-                    if (schedule.hasConflict == true)
-                        needToUpdateconflicts = true;
-                })
+                this.schedules.forEach((schedule: PlaneScheduleDto) => {
+                    if (schedule.hasConflict) {
+                        needToUpdateConflicts = true;
+                    }
+                });
 
 
-
-                if (needToUpdateconflicts) {
+                if (needToUpdateConflicts) {
                     this.scheduleConflictServiceService.getConflicts()
                         .subscribe(conflicts => {
                             this.conflicts = conflicts;
-                        })
+                        });
                 }
             });
 
@@ -119,16 +119,11 @@ export class FlightOverviewComponent implements OnInit {
     }
 
     onClickConflict(id: number) {
-
-        let temp: ScheduleConflictDto | undefined;
-
-        temp = this.conflicts.find(value => (id == value.scheduleId))
-
-        console.log(temp);
+        const conflictDto = this.conflicts.find(value => (id === value.scheduleId));
 
         const config: MatDialogConfig = {
             data: {
-                conflict: temp
+                conflict: conflictDto
             } as ScheduleConflictDialogInput
         };
         this.dialog.open(ScheduleConflictDialogComponent, config).afterClosed().subscribe(output => {

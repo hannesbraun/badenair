@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
 })
 export class FlightService {
 
-    constructor(private http:HttpClient) {
+    constructor(private http: HttpClient) {
     }
 
     getPlaneSchedules(): Observable<PlaneScheduleDto[]> {
