@@ -1,36 +1,41 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import { BookingStateService } from 'src/app/services/search/booking-state.service';
+import { FlightDto } from 'src/app/services/dtos/Dtos';
+import { Subscription } from 'rxjs';
 
-export interface Flight {
-    start: string;
-    destination: string;
-    departureDate: Date;
-    arrivalDate: Date;
-}
+
 
 @Component({
     selector: 'app-success-page',
     templateUrl: './success-page.component.html',
     styleUrls: ['./success-page.component.scss']
 })
-export class SuccessPageComponent {
+export class SuccessPageComponent implements OnInit{
+    
+    private bookingStateSubscription !: Subscription;
+    flights!: FlightDto[];
 
-    flights: Flight[] | undefined;
+    constructor(private bookingStateService: BookingStateService) {}
+    
+    ngOnInit(){
+        this.flights = [];
+        this.bookingStateSubscription = this.bookingStateService.state
+        .subscribe(state => {
+            if(state.selectedToFlight){
+                this.flights.push(state.selectedToFlight);
+            }
 
-    constructor() {
-        this.flights = [{
-            start: "Basel",
-            destination: "Porto",
-            departureDate: new Date(),
-            arrivalDate: new Date()
-        }, {
-            start: "Porto",
-            destination: "Basel",
-            departureDate: new Date(),
-            arrivalDate: new Date()
-        }]
+            if (state.selectedReturnFlight){
+                this.flights.push(state.selectedReturnFlight);
+            }
+        });
     }
 
-    getDuration(flight: Flight): number {
-        return flight.arrivalDate.getTime() - flight.departureDate.getTime();
+    getDuration(flight: FlightDto): number {
+        return flight.arrivalTime.getTime() - flight.startTime.getTime();
     } 
+
+    ngOnDestroy(): void {
+        this.bookingStateSubscription.unsubscribe();
+    }
 }
