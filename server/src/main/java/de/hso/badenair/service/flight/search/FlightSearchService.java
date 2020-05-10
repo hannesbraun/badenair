@@ -20,15 +20,12 @@ public class FlightSearchService {
     private final int BOOKING_TIME_LIMIT = 45;
     private final FlightRepository flightRepository;
 
-    public List<Flight> getFlights(int start, int destination, int passengers, Date date) {
+    public List<Flight> getFlights(int start, int destination, int passengers, OffsetDateTime date) {
         List<Flight> flights = (List<Flight>) flightRepository.findAll();
-
-        OffsetDateTime selectedDate = date.toInstant()
-            .atOffset(ZoneOffset.UTC);
 
         return flights.stream()
             .filter(flight -> this.hasSameAirports(flight, start, destination))
-            .filter(flight -> this.isSameDay(flight.getScheduledFlight().getStartTime(), selectedDate))
+            .filter(flight -> this.isSameDay(flight.getScheduledFlight().getStartTime(), date))
             .filter(flight -> this.hasFreeSeats(flight, passengers))
             .filter(this::isAfterBookingTimeLimit)
             .collect(Collectors.toList());
