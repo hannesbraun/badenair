@@ -6,6 +6,7 @@ import de.hso.badenair.controller.dto.plan.RequestVacationDto;
 import de.hso.badenair.controller.plan.PlanController;
 import de.hso.badenair.domain.schedule.Vacation;
 import de.hso.badenair.service.plan.PlanService;
+import de.hso.badenair.service.plan.shift.ShiftPlanService;
 import de.hso.badenair.service.plan.vacation.VacationRepository;
 import de.hso.badenair.service.plan.vacation.VacationService;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,6 +49,9 @@ class PlanControllerIT {
 
     @MockBean
     private PlanService planService;
+
+    @MockBean
+    private ShiftPlanService shiftPlanService;
 
     @Autowired
     private VacationRepository vacationRepository;
