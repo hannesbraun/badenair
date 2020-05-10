@@ -37,9 +37,13 @@ export class FlightsPageComponent implements OnInit {
                 }
 
                 if (this.directionState) {
-                    this.shownFlights = data.toFlights;
+                    if (data.toFlights) {
+                        this.shownFlights = data.toFlights;
+                    }
                 } else {
-                    this.shownFlights = data.returnFlights;
+                    if (data.returnFlights) {
+                        this.shownFlights = data.returnFlights;
+                    }
                 }
             });
     }

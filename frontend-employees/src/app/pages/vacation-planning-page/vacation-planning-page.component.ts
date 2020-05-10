@@ -15,6 +15,7 @@ export class VacationPlanningPageComponent implements OnInit {
     tableData: VacationPlanTableData[] = [];
     approvedDates: number[][] = [];
     pendingDates: number[][] = [];
+    remainingVacationDays = 0;
     loading = false;
 
     constructor(private vacationService: VacationService) {
@@ -22,7 +23,8 @@ export class VacationPlanningPageComponent implements OnInit {
 
     ngOnInit(): void {
         this.vacationService.getVacationPlan().subscribe(vacationPlan => {
-            this.tableData = vacationPlan.map(vacation => {
+            this.remainingVacationDays = vacationPlan.remainingVacationDays;
+            this.tableData = vacationPlan.vacations.map(vacation => {
                 return {
                     duration: [vacation.startDate, vacation.endDate],
                     days: Math.ceil((vacation.endDate.getTime() - vacation.startDate.getTime()) / this.DAY_IN_MS),
@@ -30,9 +32,9 @@ export class VacationPlanningPageComponent implements OnInit {
                 } as VacationPlanTableData;
             });
 
-            if (vacationPlan.length > 0) {
-                const startMonth = vacationPlan[0].startDate.getMonth();
-                const dates = vacationPlan
+            if (vacationPlan.vacations.length > 0) {
+                const startMonth = vacationPlan.vacations[0].startDate.getMonth();
+                const dates = vacationPlan.vacations
                     .map(vacation => {
                         let temp = vacation.startDate;
                         const dateRange: Date[] = [];
