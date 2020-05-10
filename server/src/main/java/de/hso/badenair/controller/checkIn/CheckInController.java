@@ -15,8 +15,8 @@ public class CheckInController {
     private final TravelerService travelerService;
 
     @PatchMapping("/checkin/{id}")
-    public ResponseEntity<Object> updateCheckIn(@PathVariable long id, @RequestBody Integer seatNumber) {
-        boolean updateSuccess = travelerService.updateCheckIn(id, seatNumber);
+    public ResponseEntity<Object> updateCheckIn(@PathVariable long id) {
+        boolean updateSuccess = travelerService.updateCheckIn(id);
 
         if (updateSuccess) {
             return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);

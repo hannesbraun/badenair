@@ -43,7 +43,7 @@ export class CheckInPageComponent implements OnInit {
     checkIn() {
         this.passengers.forEach(passenger => {
             if(passenger.checkedIn){
-                this.checkInService.updateCheckIn(passenger.id, 10).subscribe(result=> console.log);
+                this.checkInService.updateCheckIn(passenger.id).subscribe(result=> console.log);
                 // Seatnumber is still const
             }
         });

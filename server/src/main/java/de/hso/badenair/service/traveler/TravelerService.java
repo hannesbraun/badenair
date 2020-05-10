@@ -3,30 +3,26 @@ package de.hso.badenair.service.traveler;
 
 import de.hso.badenair.domain.booking.Traveler;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
+@Repository
 @Service
 @RequiredArgsConstructor
 public class TravelerService {
     private final TravelerRepository travelerRepository;
 
-    public Optional<Traveler> getTravelerById(Long TravelerId){
-        return travelerRepository.findById(TravelerId);
-    }
-
-    public boolean updateCheckIn(Long TravelerId, Integer seatNumber){
+    public boolean updateCheckIn(Long TravelerId){
         Optional<Traveler> traveler = travelerRepository.findById(TravelerId);
 
         if (!traveler.isPresent()) {
             return false;
         }
 
-        Traveler realTaveler = traveler.get();
-        realTaveler.setCheckedIn(true);
-        realTaveler.setSeatNumber(seatNumber);
+        Traveler realTraveler = traveler.get();
+        realTraveler.setCheckedIn(true);
 
         // Update state
         travelerRepository.save(traveler.get());
