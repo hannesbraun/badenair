@@ -5,6 +5,9 @@
             [numberOfPassengers]="numberOfPassengers"
             (booking)="onBookingStateChanged($event)">
 </app-flight>
+<div *ngIf="shownFlights.length === 0" class="fallback">
+    <h2>Es wurden leider keine Flüge gefunden</h2>
+</div>
 <div class="actions">
-    <button mat-raised-button color="primary" (click)="previous()" >Zurück</button>
+    <button mat-raised-button color="primary" (click)="previous()">Zurück</button>
 </div>
