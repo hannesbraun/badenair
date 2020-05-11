@@ -3,7 +3,6 @@ import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {BrowserModule} from '@angular/platform-browser';
-import {ChangePasswordDialogComponent} from './components/profile/change-password-dialog/change-password-dialog.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {FlightSearchComponent} from './components/flight-search/flight-search.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -32,12 +31,16 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {environment} from '../environments/environment';
 import {SignupDialogComponent} from './components/signup-dialog/signup-dialog.component';
 import {DateInterceptor} from './services/util/date.interceptor';
+import {FlightSearchPageComponent} from './pages/flight-search-page/flight-search-page.component';
+import { PassengersPageComponent } from './pages/passengers-page/passengers-page.component';
+import { SeatSelectionPageComponent } from './pages/seat-selection-page/seat-selection-page.component';
+import { SeatSelectionComponent } from './components/seat-selection/seat-selection.component';
+import {BookingOverviewPageComponent} from './pages/booking-overview-page/booking-overview-page.component';
 
 @NgModule({
     declarations: [
         AccountSettingsPageComponent,
         AppComponent,
-        ChangePasswordDialogComponent,
         FlightSearchComponent,
         NavigationComponent,
         ProfileComponent,
@@ -56,7 +59,12 @@ import {DateInterceptor} from './services/util/date.interceptor';
         CheckInPageComponent,
         SuccessPageComponent,
         BookingOverviewComponent,
-        SignupDialogComponent
+        SignupDialogComponent,
+        FlightSearchPageComponent,
+        PassengersPageComponent,
+        SeatSelectionPageComponent,
+        SeatSelectionComponent,
+        BookingOverviewPageComponent
     ],
     imports: [
         AppRoutingModule,

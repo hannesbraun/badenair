@@ -2,16 +2,22 @@
 <form [formGroup]="form" (ngSubmit)="submit()">
     <div class="card-layout" formArrayName="items" *ngFor="let item of forms; let index = index">
         <mat-card [formGroupName]="index">
-            <mat-card-header (click)="removePassenger(index)">
-                <mat-card-title>- Mitreisender {{ index + 1 }}</mat-card-title>
+            <mat-card-header>
+                <mat-card-title>Mitreisender {{ index + 1 }}</mat-card-title>
             </mat-card-header>
             <mat-card-content fxLayout="row" fxLayoutGap="20px">
                 <div fxLayout="column" fxFlex>
                     <mat-form-field>
-                        <input matInput type="text" placeholder="Vorname" formControlName='name'>
+                        <input matInput type="text" placeholder="Vorname" formControlName="name">
+                        <mat-error *ngIf="formArray.controls[index].get('name')?.errors?.required">
+                            Dieses Feld wird benötigt
+                        </mat-error>
                     </mat-form-field>
                     <mat-form-field>
-                        <input matInput type="text" placeholder="Nachname" formControlName='surname'>
+                        <input matInput type="text" placeholder="Nachname" formControlName="surname">
+                        <mat-error *ngIf="formArray.controls[index].get('surname')?.errors?.required">
+                            Dieses Feld wird benötigt
+                        </mat-error>
                     </mat-form-field>
                 </div>
                 <div fxLayout="column" fxFlex>
@@ -28,14 +34,9 @@
             </mat-card-content>
         </mat-card>
     </div>
-    <mat-card (click)="appendPassenger()">
-        <mat-card-header>
-            <mat-card-title>+ Mitreisender {{ formArray.length + 1 }}</mat-card-title>
-        </mat-card-header>
-    </mat-card>
 
     <div fxLayoutAlign="space-between" class="navigation-buttons">
         <button mat-raised-button routerLink="/flights">Zurück</button>
-        <button mat-raised-button color="primary" type="submit" routerLink="/overview">Weiter</button>
+        <button mat-raised-button color="primary" type="submit">Weiter</button>
     </div>
 </form>

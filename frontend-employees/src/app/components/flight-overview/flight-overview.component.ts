@@ -10,7 +10,7 @@ import {
     lineHeight,
     totalWidth
 } from '../../services/util/SVGUtil';
-import {FlightDto, PlaneScheduleDto} from '../../services/dtos/Dtos';
+import {FlightDto, PlaneScheduleDto, ScheduleConflictDto} from '../../services/dtos/Dtos';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {
     FlightInfoDialogComponent,
@@ -20,8 +20,9 @@ import {
     ScheduleConflictDialogComponent,
     ScheduleConflictDialogInput
 } from './dialogs/schedule-conflict-dialog/schedule-conflict-dialog.component';
-import {ScheduleConflictServiceService} from '../../services/conflicts/schedule-conflict-service.service';
+import {ScheduleConflictService} from '../../services/conflicts/schedule-conflict-service.service';
 import {FlightService} from '../../services/flights/flight.service';
+import {timer} from 'rxjs';
 
 interface LengthData {
     start: number;
@@ -38,19 +39,29 @@ export class FlightOverviewComponent implements OnInit {
 
     @Input()
     schedules: PlaneScheduleDto[] = [];
+    conflicts: ScheduleConflictDto[] = [];
 
     calculatedLengths: LengthData[][] = [];
 
     constructor(private dialog: MatDialog,
-                private scheduleConflictServiceService: ScheduleConflictServiceService,
+                private scheduleConflictServiceService: ScheduleConflictService,
                 private flightService: FlightService) {
     }
 
     ngOnInit() {
         // TODO remove subscription to Service
+
+        const refreshTimer = timer(0, 120000);
+        refreshTimer.subscribe(this.updateFlightPlan);
+    }
+
+    updateFlightPlan = () => {
+        let needToUpdateConflicts = false;
+
         this.flightService.getPlaneSchedules()
             .subscribe(schedules => {
                 this.schedules = schedules;
+
                 this.schedules
                     .map(schedule => schedule.flights)
                     .forEach((flights: FlightDto[], index: number) => {
@@ -62,7 +73,23 @@ export class FlightOverviewComponent implements OnInit {
                             };
                         });
                     });
+
+                this.schedules.forEach((schedule: PlaneScheduleDto) => {
+                    if (schedule.hasConflict) {
+                        needToUpdateConflicts = true;
+                    }
+                });
+
+
+                if (needToUpdateConflicts) {
+                    this.scheduleConflictServiceService.getConflicts()
+                        .subscribe(conflicts => {
+                            this.conflicts = conflicts;
+                        });
+                }
             });
+
+        this.flightService.getPlaneSchedules();
     }
 
     getTimeToDisplay(i: number): string {
@@ -92,18 +119,18 @@ export class FlightOverviewComponent implements OnInit {
     }
 
     onClickConflict(id: number) {
-        this.scheduleConflictServiceService.getConflictForSchedule(id).subscribe(scheduleConflict => {
-            const config: MatDialogConfig = {
-                data: {
-                    conflict: scheduleConflict
-                } as ScheduleConflictDialogInput
-            };
-            this.dialog.open(ScheduleConflictDialogComponent, config).afterClosed().subscribe(output => {
-                if (output) {
-                    // TODO: Handle selected solution and refresh overview
-                    console.log(output);
-                }
-            });
+        const conflictDto = this.conflicts.find(value => (id === value.scheduleId));
+
+        const config: MatDialogConfig = {
+            data: {
+                conflict: conflictDto
+            } as ScheduleConflictDialogInput
+        };
+        this.dialog.open(ScheduleConflictDialogComponent, config).afterClosed().subscribe(output => {
+            if (output) {
+                // TODO: Handle selected solution and refresh overview
+                console.log(output);
+            }
         });
     }
 

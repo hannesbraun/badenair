@@ -11,24 +11,12 @@ export interface SignUpDto {
     invalidationDate: Date;
     email: string;
     password: string;
+
+    [key: string]: string | Date;
 }
 
-export type FinishRegistrationDto = Omit<SignUpDto, 'password' | 'email' | 'lastname' | 'name'>;
-export type AccountData = Partial<FinishRegistrationDto>;
-
-export interface UpdateProfileDto {
-    lastname: string;
-    name: string;
-    birthDate: Date;
-    street: string;
-    zipCode: string;
-    placeOfResidence: string;
-    cardOwner: string;
-    cardNumber: string;
-    check: string;
-    invalidationDate: Date;
-    email: string;
-}
+export type UpdateAccountDataDto = Omit<SignUpDto, 'password' | 'email' | 'lastname' | 'name'>;
+export type AccountData = Partial<UpdateAccountDataDto>;
 
 export interface FlightDto {
     id: number;
@@ -36,6 +24,7 @@ export interface FlightDto {
     destination: string;
     startTime: Date;
     arrivalTime: Date;
+    price: number;
 }
 
 export interface PassengerDto {
@@ -47,4 +36,14 @@ export interface PassengerDto {
     baggage2: number;
     baggage3: number;
     baggage4: number;
+}
+
+export interface AirportDto {
+    id: number;
+    name: string;
+}
+
+export interface SeatDto {
+    type: string;
+    freeSeats: boolean[][];
 }

@@ -17,6 +17,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBarModule} from '@angular/material/snack-bar';
 
 @NgModule({
     imports: [
@@ -36,7 +37,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
         MatSidenavModule,
         MatToolbarModule,
         MatProgressSpinnerModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        MatSnackBarModule
     ],
     exports: [
         MatAutocompleteModule,
@@ -55,10 +57,12 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
         MatSidenavModule,
         MatToolbarModule,
         MatProgressSpinnerModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        MatSnackBarModule
     ],
     providers: [
-        {provide: MAT_DATE_LOCALE, useValue: 'de-DE'}
+        {provide: MAT_DATE_LOCALE, useValue: 'de-DE'},
+        {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 2500}}
     ]
 })
 export class MaterialModule {

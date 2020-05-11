@@ -1,11 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FlightDto} from '../../services/dtos/Dtos';
-import {BookingState} from '../../components/flight/check-button/check-button.component';
+import {BookingStateService} from '../../services/search/booking-state.service';
+import {Router} from '@angular/router';
 
-interface FlightWithPrice {
-    flight: FlightDto;
-    price: number;
-}
 
 @Component({
     selector: 'app-flights-page',
@@ -14,41 +11,77 @@ interface FlightWithPrice {
 })
 export class FlightsPageComponent implements OnInit {
 
-    flightsWithPrice: FlightWithPrice[] = [];
+    shownFlights: FlightDto[] = [];
+    returnFlights: FlightDto[] = [];
+    toFlights: FlightDto[] = [];
     numberOfPassengers = 3;
+    directionState = true;
+    type = '1';
 
-    private bookedFlights: number[] = [];
-
-    constructor() {
+    constructor(
+        private bookingStateService: BookingStateService,
+        private router: Router,
+    ) {
     }
 
     ngOnInit() {
-        // TODO: Replace with service
-        for (let i = 0; i < 10; i++) {
-            this.flightsWithPrice.push(
-                {
-                    flight: {
-                        id: i,
-                        start: 'Lorem ipsum dolor sit amet',
-                        destination: 'Lorem ipsum dolor sit amet',
-                        startTime: new Date(),
-                        arrivalTime: new Date(),
-                    },
-                    price: 50 + Math.random() * 100 + Math.random()
+        this.bookingStateService.state
+            .subscribe(data => {
+                this.toFlights = data.toFlights;
+                this.returnFlights = data.returnFlights;
+                this.type = data.searchValue.type;
+                this.numberOfPassengers = data.passengers;
+
+                if (this.directionState !== undefined) {
+                    this.directionState = data.direction;
                 }
-            );
-        }
+
+                if (this.directionState) {
+                    if (data.toFlights) {
+                        this.shownFlights = data.toFlights;
+                    }
+                } else {
+                    if (data.returnFlights) {
+                        this.shownFlights = data.returnFlights;
+                    }
+                }
+            });
     }
 
-    onBookingStateChanged(newState: BookingState, flightId: number) {
-        if (newState === BookingState.BOOKED) {
-            this.bookedFlights.push(flightId);
+    onBookingStateChanged(flight: FlightDto) {
+        if (this.directionState) {
+            this.bookingStateService.setSelectedToFlight(flight);
         } else {
-            this.bookedFlights = this.bookedFlights.filter(id => id !== flightId);
+            this.bookingStateService.setSelectedReturnFlight(flight);
+        }
+        this.next();
+    }
+
+    next() {
+        if (this.type === '2') {
+            this.router.navigate(['/passengers']);
+            return;
+        }
+        if (this.directionState) {
+            this.directionState = false;
+            this.bookingStateService.setDirection(false);
+            this.shownFlights = this.returnFlights;
+        } else {
+            this.router.navigate(['/passengers']);
         }
     }
 
-    bookedFlightsEmpty(): boolean {
-        return this.bookedFlights.length === 0;
+    previous() {
+        if (this.type === '2') {
+            this.router.navigate(['/']);
+            return;
+        }
+        if (this.directionState) {
+            this.router.navigate(['/']);
+        } else {
+            this.directionState = true;
+            this.bookingStateService.setDirection(true);
+            this.shownFlights = this.toFlights;
+        }
     }
 }

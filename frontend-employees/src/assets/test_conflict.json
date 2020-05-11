@@ -1,0 +1,12 @@
+[{
+    "flight": {
+        "id": 1,
+        "start": "Lorem ipsum dolor sit amet",
+        "destination": "Lorem ipsum dolor sit amet",
+		"startTime": "2020-04-26T15:00:00Z",
+		"arrivalTime": "2020-04-26T18:00:00Z"
+    },
+    "scheduleId": 1,
+    "cause": "Flug wird sich aufgrund eines Sturms um 2 Stunden verzögern.",
+    "possibleSolutions": [0, 1, 2]
+}]

@@ -1,7 +1,7 @@
 package de.hso.badenair.util.mapper;
 
 import de.hso.badenair.controller.dto.account.AccountDataDto;
-import de.hso.badenair.domain.booking.AccountData;
+import de.hso.badenair.domain.booking.account.AccountData;
 
 public abstract class AccountDataMapper {
 
