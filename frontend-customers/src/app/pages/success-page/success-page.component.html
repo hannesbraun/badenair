@@ -8,8 +8,8 @@
         <p>Ihr Flug von <b>{{flight.start}}</b> nach <b>{{flight.destination}}</b></p>
     </mat-card-header>
     <mat-card-content>
-        <p>Start: {{flight.departureDate | date:'dd.MM.yyyy'}}, {{flight.departureDate | date:'HH:mm:ss'}} Uhr</p>
-        <p>Landung: {{flight.arrivalDate | date:'dd.MM.yyyy'}}, {{flight.arrivalDate | date:'HH:mm:ss'}} Uhr</p>
+        <p>Start: {{flight.startTime | date:'dd.MM.yyyy'}}, {{flight.startTime | date:'HH:mm:ss'}} Uhr</p>
+        <p>Landung: {{flight.arrivalTime | date:'dd.MM.yyyy'}}, {{flight.arrivalTime | date:'HH:mm:ss'}} Uhr</p>
         <p>Flugdauer: {{getDuration(flight)}}</p>
     </mat-card-content>
 </mat-card>

@@ -36,4 +36,14 @@ public class FlightService {
 
         return currentTime;
     }
+
+    public Flight getFlightById(Long id){
+        Optional<Flight> flight = flightRepository.findById(id);
+
+        if (!flight.isPresent()) {
+            return null;
+        }
+
+        return flight.get();
+    }
 }
