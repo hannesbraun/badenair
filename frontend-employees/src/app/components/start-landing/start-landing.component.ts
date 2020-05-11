@@ -1,36 +1,37 @@
-import {Component} from '@angular/core';
-
-interface Plane {
-    name: string;
-    pilotName: string;
-    startTime: Date;
-    landingTime: Date;
-}
+import {Component, OnInit} from '@angular/core';
+import { FlightService } from 'src/app/services/flights/flight.service';
+import { FlightDto } from 'src/app/services/dtos/Dtos';
 
 @Component({
     selector: 'app-start-landing',
     templateUrl: './start-landing.component.html',
     styleUrls: ['./start-landing.component.scss']
 })
-export class StartLandingComponent {
+export class StartLandingComponent implements OnInit{
     isStarted = false;
     hasDelay = false;
-    private plane = {
-        name: 'Flugzeug 3',
-        pilotName: 'Max Musterman'
-    } as Plane;
+    name = "Max Mustermann"; //TODO: get Pilot's Name
 
-    start() {
+    dummyFlight!: FlightDto;
+
+    constructor(private flightService: FlightService){}
+
+
+    ngOnInit(){
+        this.dummyFlight = { id: 1, start: "Baden-Baden", destination: "Frankfurt"} as FlightDto;
+    }
+
+    start(flight: FlightDto) {
         this.isStarted = true;
-        this.plane.startTime = new Date();
+        this.flightService.updateFlightTracking(flight.id, "Start").subscribe((res) => flight.startTime = res as Date);
     }
 
-    land() {
+    land(flight: FlightDto) {
         this.isStarted = false;
-        this.plane.landingTime = new Date();
+        this.flightService.updateFlightTracking(flight.id, "Landung").subscribe(res => flight.arrivalTime = res as Date);
     }
 
-    get name() {
+    /* get name() {
         return this.plane.pilotName;
     }
 
@@ -44,5 +45,5 @@ export class StartLandingComponent {
 
     get landingTime(): Date {
         return this.plane.landingTime;
-    }
+    } */
 }

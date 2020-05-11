@@ -16,7 +16,7 @@ export class ShiftSchedulePageComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.shiftScheduleService.getScheduleForEmployee(1).subscribe(dto => {
+        this.shiftScheduleService.getScheduleForEmployee().subscribe(dto => {
             this.shiftScheduleData = dto;
         });
     }

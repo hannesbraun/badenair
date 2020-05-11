@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {FlightDto} from '../../services/dtos/Dtos';
-import {Baggage, BaggageState, Person} from '../flight/flight.component';
+import {Baggage, Person} from '../flight/flight.component';
+import { AccountService } from 'src/app/services/account/account.service';
 
-interface BookedFlight {
-    flights: FlightDto;
-    persons: Person[];
+export interface BookedFlight {
+    flight: FlightDto;
+    travelers: Person[];
     baggages: Baggage[];
 }
 
@@ -17,34 +18,20 @@ export class BookedFlightsComponent implements OnInit {
 
     bookedFlights: BookedFlight[] = [];
 
-    constructor() {
+    constructor(private accountService: AccountService) {
     }
 
     ngOnInit() {
-        // TODO: Replace with service
-        for (let i = 0; i < 3; i++) {
-            this.bookedFlights.push(
-                {
-                    flights:
-                        {
-                            id: i,
-                            start: 'Lorem ipsum dolor sit amet',
-                            destination: 'Lorem ipsum dolor sit amet',
-                            startTime: new Date(),
-                            arrivalTime: new Date(),
-                            price: 200
-                        },
-                    persons: [
-                        {name: 'Peter Hase', id: 1},
-                        {name: 'Klaus Kleber', id: 1},
-                        {name: 'Max Mustermann', id: 1}
-                    ],
-                    baggages: [
-                        {id: 9231, state: BaggageState.inPlane},
-                        {id: 4782, state: BaggageState.onLoad}
-                    ]
-                }
-            );
+        this.accountService.getBookings()
+            .subscribe((data: BookedFlight[]) => this.bookedFlights = data);
+    }
+
+    checkInPossible(bookedFlight: BookedFlight): boolean {
+        // Check in only possible until 30 minutes before departure
+        if (bookedFlight.flight.startTime <= new Date(Date.now() + 30 * 60000)) {
+            return false;
         }
+        // Check in only possible if at least one person is not checked in yet
+        return bookedFlight.travelers.some(person => !person.checkedIn);
     }
 }
