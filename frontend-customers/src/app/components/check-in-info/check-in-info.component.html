@@ -3,7 +3,7 @@
         <mat-card-title>
             <mat-checkbox
                 *ngIf="!isCheckInComplete; else normal"
-                [checked]="isPassengerSelected">{{passenger.name}} {{passenger.surname}}</mat-checkbox>
+                [(ngModel)]="passenger.checkedIn">{{passenger.name}} {{passenger.surname}}</mat-checkbox>
             <ng-template #normal>{{passenger.name}} {{passenger.surname}}</ng-template>
         </mat-card-title>
     </mat-card-header>
@@ -15,8 +15,11 @@
             <p *ngIf="passenger.baggage3 !== 0">1x Gepäckstück ({{passenger.baggage3}}kg)</p>
             <p *ngIf="passenger.baggage4 !== 0">1x Gepäckstück ({{passenger.baggage4}}kg)</p>
         </div>
-        <div *ngIf="isCheckInComplete">
+        <div *ngIf="isCheckInComplete && passenger.checkedIn">
             <button mat-raised-button color="primary" (click)="onDownload()">Download PDF</button>
+        </div>
+        <div *ngIf="isCheckInComplete && !passenger.checkedIn">
+            <p >Passagier nicht eingecheckt</p>
         </div>
     </mat-card-content>
 </mat-card>
