@@ -33,7 +33,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class StaticDataInitializer {
 
-    private final PlaneTypeDataRepository planeTypeDataRepository;
+	private final PlaneTypeDataRepository planeTypeDataRepository;
 
 	private final PlaneRepository planeRepository;
 
@@ -178,8 +178,8 @@ public class StaticDataInitializer {
 
 			// Dates stored for consistency
 			OffsetDateTime now = OffsetDateTime.now()
-					.withOffsetSameLocal(ZoneOffset.of("+1"));;
-			OffsetDateTime endOfPlanDate = now.plusMonths(12);
+					.withOffsetSameLocal(ZoneOffset.of("+1"));
+			OffsetDateTime endOfPlanDate = now.plusMonths(12l);
 
 			// Get all (valid) scheduled flights
 			for (String[] flightData : data) {
@@ -213,9 +213,8 @@ public class StaticDataInitializer {
 								.scheduledFlight(scheduledFlight)
 								.state(FlightState.OK).plane(plane)
 								.startDate(startDate).build());
-						startDate.plusDays(7l);
+						startDate = startDate.plusDays(7l);
 					} while (startDate.isBefore(endOfPlanDate));
-
 				}
 			}
 		} catch (FileNotFoundException e) {
