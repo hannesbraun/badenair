@@ -9,10 +9,18 @@ import { environment } from 'src/environments/environment';
 })
 export class FlightService {
 
+    apiUrl = environment.backendApiRoot;
+    
     constructor(private http: HttpClient) {
     }
 
     getPlaneSchedules(): Observable<PlaneScheduleDto[]> {
         return this.http.get<PlaneScheduleDto[]>(`${environment.backendApiRoot}/flightplan`);
     }
+
+    updateFlightTracking(flightId: number, action : string){
+        return this.http.patch(`${this.apiUrl}/flight/tracking/${flightId}`, action);
+        //Todo: Error-handling
+    }
+    
 }

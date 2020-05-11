@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {AccountData, UpdateAccountDataDto} from '../dtos/Dtos';
+import {BookedFlight} from '../../components/booked-flights/booked-flights.component';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 
@@ -18,6 +19,10 @@ export class AccountService {
 
     updateAccountData(dto: UpdateAccountDataDto): Observable<void> {
         return this.http.put<void>(`${environment.backendApiRoot}/account`, dto);
+    }
+
+    getBookings(): Observable<BookedFlight[]> {
+        return this.http.get<BookedFlight[]>(`${environment.backendApiRoot}/account/flights`);
     }
 
 }

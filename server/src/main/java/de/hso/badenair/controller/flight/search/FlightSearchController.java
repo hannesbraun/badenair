@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +26,7 @@ public class FlightSearchController {
         @RequestParam int start,
         @RequestParam int destination,
         @RequestParam int passengers,
-        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime date) {
 
         final List<FlightDto> flights = this.flightService.getFlights(start, destination, passengers, date)
             .stream()

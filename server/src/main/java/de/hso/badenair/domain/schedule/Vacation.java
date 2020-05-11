@@ -23,6 +23,8 @@ public class Vacation extends BaseEntity {
     @Column(name = "EMPLOYEE_USER_ID")
     private String employeeUserId;
 
+
+
     @Column(name = "START_TIME")
     private OffsetDateTime startTime;
 
