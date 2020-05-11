@@ -11,6 +11,7 @@ export interface SignUpDto {
     invalidationDate: Date;
     email: string;
     password: string;
+
     [key: string]: string | Date;
 }
 
@@ -27,6 +28,7 @@ export interface FlightDto {
 }
 
 export interface PassengerDto {
+    id: number;
     name: string;
     surname: string;
     checkedIn: boolean;
@@ -39,4 +41,9 @@ export interface PassengerDto {
 export interface AirportDto {
     id: number;
     name: string;
+}
+
+export interface SeatDto {
+    type: string;
+    freeSeats: boolean[][];
 }

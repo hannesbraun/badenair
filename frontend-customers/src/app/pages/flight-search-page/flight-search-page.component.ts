@@ -35,13 +35,13 @@ export class FlightSearchPageComponent implements OnInit {
                 start: value.start,
                 destination: value.destination,
                 passengers: value.passengers,
-                date: value.fromDate.toISOString(),
+                date: this.toISOStringWithTimezone(value.fromDate),
             };
             const flightRequest2 = {
                 destination: value.start,
                 start: value.destination,
                 passengers: value.passengers,
-                date: value.toDate.toISOString(),
+                date: this.toISOStringWithTimezone(value.toDate),
             };
             this.flightService.searchFlights(flightRequest1)
                 .subscribe(flights => {
@@ -58,7 +58,7 @@ export class FlightSearchPageComponent implements OnInit {
                 start: value.start,
                 destination: value.destination,
                 passengers: value.passengers,
-                date: value.fromDate.toISOString(),
+                date: this.toISOStringWithTimezone(value.fromDate)
             };
             this.flightService.searchFlights(flightRequest1)
                 .subscribe(flights => {
@@ -68,5 +68,10 @@ export class FlightSearchPageComponent implements OnInit {
         this.bookingStateService.setSearchValue(value);
         this.bookingStateService.setPassengers(value.passengers);
         this.router.navigate(['/flights']);
+    }
+
+    private toISOStringWithTimezone(date: Date): string {
+        const timezoneOffsetInMilliseconds = (new Date()).getTimezoneOffset() * 60000;
+        return (new Date(date.getTime() - timezoneOffsetInMilliseconds)).toISOString();
     }
 }

@@ -28,13 +28,16 @@ export interface PlaneScheduleDto {
 
 export interface ScheduleConflictDto {
     flight: FlightDto;
+    scheduleId: number;
     cause: string;
+    possibleSolutions: ScheduleConfigSolution[];
 }
 
 export enum ScheduleConfigSolution {
     CANCEL_FLIGHT,
     DO_NOTHING,
-    USE_BACKUP_PLANE
+    USE_BACKUP_PLANE,
+    USE_BACKUP_PERSONAL
 }
 
 export enum BaggageState {
@@ -61,6 +64,11 @@ export interface Schedule {
     end: Date;
 }
 
+export interface VacationPlanDto {
+    vacations: VacationDto[];
+    remainingVacationDays: number;
+}
+
 export interface VacationDto {
     startDate: Date;
     endDate: Date;
@@ -75,4 +83,9 @@ export interface PlaneMaintenance {
     id: number;
     state: string;
     traveledDistance: number;
+}
+
+export interface WorkingHoursDto {
+    startTime: Date;
+    endTime: Date;
 }

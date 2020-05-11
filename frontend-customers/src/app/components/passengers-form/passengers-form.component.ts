@@ -1,7 +1,7 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PassengerDto} from 'src/app/services/dtos/Dtos';
-import { Router } from '@angular/router';
+import {Observable} from 'rxjs';
 
 @Component({
     selector: 'app-passenger-form',
@@ -9,42 +9,48 @@ import { Router } from '@angular/router';
     styleUrls: ['./passengers-form.component.scss']
 })
 export class PassengersFormComponent implements OnInit {
-
-    form!: FormGroup;
-    passengerCount!: number;
     baggageCapacity = [15, 23, 30];
+    form!: FormGroup;
 
-    @Output() onPassengersSubmit = new EventEmitter<PassengerDto[]>();
+    @Input() passengers!: Observable<PassengerDto[]>;
+    @Input() passengerCount!: Observable<number>;
+    @Output() passengersSubmit = new EventEmitter<PassengerDto[]>();
 
-    constructor(private formBuilder: FormBuilder, private router: Router) {
+    constructor(private formBuilder: FormBuilder,
+    ) {
     }
 
     ngOnInit() {
-        this.passengerCount = 1; // TODO: Get passengers count from flightsearch
-        this.form = this.formBuilder.group({
-            items: this.formBuilder.array([])
+        this.passengerCount.subscribe(value => {
+            this.form = this.formBuilder.group({
+                items: this.formBuilder.array([])
+            });
+            this.createFormArray(value);
         });
-        this.createFormArray();
+        this.passengers.subscribe(value => {
+            if (!value) {
+                return;
+            }
+            this.form.controls.items.patchValue(value);
+        });
     }
 
-    createFormArray() {
-        for (let i = 0; i < this.passengerCount; i++) {
+    createFormArray(count: number) {
+        for (let i = 0; i < count; i++) {
             this.appendPassenger();
         }
     }
 
     submit() {
+        if (this.form.invalid) {
+            return;
+        }
         const formModel = this.form.controls.items.value;
-
         const passengers: PassengerDto[] = formModel.map(
             (passenger: PassengerDto) => Object.assign({}, passenger)
         );
 
-        this.onPassengersSubmit.emit(passengers);
-        
-        if (this.form.controls.items.valid) {
-            this.router.navigate(['overview']);
-        }
+        this.passengersSubmit.emit(passengers);
     }
 
     get formArray(): FormArray {
@@ -64,9 +70,5 @@ export class PassengersFormComponent implements OnInit {
             baggage3: [0],
             baggage4: [0]
         }));
-    }
-
-    removePassenger(index: number) {
-        this.formArray.removeAt(index);
     }
 }

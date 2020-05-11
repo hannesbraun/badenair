@@ -36,6 +36,9 @@ public class Booking extends BaseEntity {
 	@SequenceGenerator(name = "GEN_BOOKING", sequenceName = "SEQ_BOOKING")
 	private Long id;
 
+	@Column(name = "CUSTOMER_USER_ID")
+	private String customerUserId;
+
 	@OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Traveler> travelers;
 

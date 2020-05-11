@@ -1,20 +1,20 @@
 <h1>Flugbericht - {{ name }}</h1>
 
 <div class="start-landing-container">
-    <h3>{{ planeName }}:</h3>
+    <h3>Von {{ dummyFlight.start }} nach {{ dummyFlight.destination }}</h3>
     <mat-card>
         <div>Start:</div>
-        <button mat-raised-button (click)="start()" [disabled]="isStarted">Starten</button>
+        <button mat-raised-button (click)="start(dummyFlight)" [disabled]="isStarted">Starten</button>
         <div>
-            <div *ngIf="startTime">Gestartet am: {{startTime | date: 'dd.MM.yyyy'}} um {{startTime | date: 'HH:mm'}}Uhr
+            <div *ngIf="dummyFlight.startTime">Gestartet am: {{dummyFlight.startTime | date: 'dd.MM.yyyy'}} um {{dummyFlight.startTime | date: 'HH:mm'}}Uhr
 
             </div>
         </div>
         <div>Landung:</div>
-        <button mat-raised-button (click)="land()" [disabled]="!isStarted">Landen</button>
+        <button mat-raised-button (click)="land(dummyFlight)" [disabled]="!isStarted">Landen</button>
         <div>
-            <div *ngIf="landingTime">Gelandet am: {{landingTime | date: 'dd.MM.yyyy'}}
-                um {{landingTime | date: 'HH:mm'}}
+            <div *ngIf="dummyFlight.arrivalTime">Gelandet am: {{dummyFlight.arrivalTime | date: 'dd.MM.yyyy'}}
+                um {{dummyFlight.arrivalTime | date: 'HH:mm'}}
                 Uhr
             </div>
         </div>

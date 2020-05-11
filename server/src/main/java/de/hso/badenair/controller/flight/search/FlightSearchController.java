@@ -12,12 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.hso.badenair.controller.dto.flight.FlightDto;
-import de.hso.badenair.controller.flight.PriceCalculator;
-import de.hso.badenair.domain.booking.Booking;
-import de.hso.badenair.service.flight.search.FlightSearchService;
-import de.hso.badenair.util.time.DateFusioner;
-import lombok.RequiredArgsConstructor;
+import java.time.OffsetDateTime;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/customer/public/flight")
@@ -25,10 +23,12 @@ import lombok.RequiredArgsConstructor;
 public class FlightSearchController {
 	private final FlightSearchService flightService;
 
-	@GetMapping("/search")
-	public ResponseEntity<List<FlightDto>> getFlights(@RequestParam int start,
-			@RequestParam int destination, @RequestParam int passengers,
-			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
+    @GetMapping("/search")
+    public ResponseEntity<List<FlightDto>> getFlights(
+        @RequestParam int start,
+        @RequestParam int destination,
+        @RequestParam int passengers,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime date) {
 
 		final List<FlightDto> flights = this.flightService
 				.getFlights(start, destination, passengers, date).stream()

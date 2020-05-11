@@ -32,6 +32,10 @@ import {environment} from '../environments/environment';
 import {SignupDialogComponent} from './components/signup-dialog/signup-dialog.component';
 import {DateInterceptor} from './services/util/date.interceptor';
 import {FlightSearchPageComponent} from './pages/flight-search-page/flight-search-page.component';
+import { PassengersPageComponent } from './pages/passengers-page/passengers-page.component';
+import { SeatSelectionPageComponent } from './pages/seat-selection-page/seat-selection-page.component';
+import { SeatSelectionComponent } from './components/seat-selection/seat-selection.component';
+import {BookingOverviewPageComponent} from './pages/booking-overview-page/booking-overview-page.component';
 
 @NgModule({
     declarations: [
@@ -57,6 +61,10 @@ import {FlightSearchPageComponent} from './pages/flight-search-page/flight-searc
         BookingOverviewComponent,
         SignupDialogComponent,
         FlightSearchPageComponent,
+        PassengersPageComponent,
+        SeatSelectionPageComponent,
+        SeatSelectionComponent,
+        BookingOverviewPageComponent
     ],
     imports: [
         AppRoutingModule,
