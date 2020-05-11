@@ -4,6 +4,10 @@ import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 
+import de.hso.badenair.domain.booking.Booking;
+import de.hso.badenair.domain.booking.Luggage;
+import de.hso.badenair.domain.booking.Traveler;
+
 public class PriceCalculator {
 	public static final int LUGGAGE_BASE_PRICE_PER_KG = 2;
 
@@ -34,4 +38,31 @@ public class PriceCalculator {
 		// Round to two decimals
 		return Math.round(basePrice * demand * time * 100.0) / 100.0;
 	}
+
+	public static void calculateFinalPrice(Booking booking) {
+		int takenSeats = 0;
+		for (Booking otherBooking : booking.getFlight().getBookings()) {
+			if (otherBooking != booking) {
+				takenSeats += otherBooking.getTravelers().size();
+			}
+		}
+
+		double finalPrice = calcFlightPriceRaw(
+				booking.getFlight().getScheduledFlight().getBasePrice(),
+				takenSeats,
+				booking.getFlight().getPlane().getTypeData()
+						.getNumberOfPassengers(),
+				booking.getFlight().getStartDate());
+		finalPrice *= booking.getTravelers().size();
+
+		// Add the luggage price
+		for (Traveler traveler : booking.getTravelers()) {
+			for (Luggage luggage : traveler.getLuggage()) {
+				finalPrice += luggage.getWeight() * LUGGAGE_BASE_PRICE_PER_KG;
+			}
+		}
+
+		booking.setPrice(finalPrice);
+	}
+
 }
