@@ -19,17 +19,17 @@ public class PriceCalculator {
 		final long twelveMonths = Duration.of(12, ChronoUnit.MONTHS)
 				.getSeconds() / SECONDS_PER_WEEK;
 		long timeLeft = Duration.between(OffsetDateTime.now(), startDate)
-				.getSeconds();
+				.getSeconds() / SECONDS_PER_WEEK;
 		long timeOver;
 		if (timeLeft <= 0) {
 			timeOver = twelveMonths;
 		} else if (timeLeft > twelveMonths) {
 			timeOver = 0;
 		} else {
-			timeOver = (twelveMonths - timeLeft) / SECONDS_PER_WEEK;
+			timeOver = twelveMonths - timeLeft;
 		}
-		final double time = 1
-				+ 0.5 * (1 - Math.exp(-3 * timeOver / twelveMonths));
+		final double time = 1.0 + 0.5 * (1 - Math.exp(-3.0
+				* Double.valueOf(timeOver) / Double.valueOf(twelveMonths)));
 
 		// Round to two decimals
 		return Math.round(basePrice * demand * time * 100.0) / 100.0;
