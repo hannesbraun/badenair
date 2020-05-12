@@ -1,3 +1,5 @@
+import { Seat } from 'src/app/components/seat-selection/seat-selection.component';
+
 export interface SignUpDto {
     lastname: string;
     name: string;
@@ -46,4 +48,11 @@ export interface AirportDto {
 export interface SeatDto {
     type: string;
     freeSeats: boolean[][];
+}
+
+export interface BookingDto{
+    flightId: number,
+    passengers: PassengerDto[],
+    seats: Seat[];
+    price: number
 }

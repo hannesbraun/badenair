@@ -7,7 +7,7 @@
                 <mat-form-field>
                     <mat-label>Reihe</mat-label>
                     <mat-select formControlName="row" placeholder="row">
-                        <mat-option *ngFor="let row of seats; let index = index" [value]="row">
+                        <mat-option *ngFor="let row of seats; let index = index" [value]="row.length">
                             {{index + 1}}
                         </mat-option>
                     </mat-select>
@@ -19,7 +19,7 @@
                 <mat-form-field>
                     <mat-label>Spalte</mat-label>
                     <mat-select formControlName="column" placeholder="column">
-                        <mat-option *ngFor="let column of seats[0]; let index = index" [value]="column">
+                        <mat-option *ngFor="let column of seats[0]; let index = index" [value]="index">
                             {{columns[index]}}
                         </mat-option>
                     </mat-select>
