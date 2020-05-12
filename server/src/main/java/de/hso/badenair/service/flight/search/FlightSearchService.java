@@ -1,7 +1,6 @@
 package de.hso.badenair.service.flight.search;
 
 import java.time.OffsetDateTime;
-import java.time.Period;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
