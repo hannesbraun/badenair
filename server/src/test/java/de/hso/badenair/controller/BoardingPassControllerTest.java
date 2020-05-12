@@ -1,7 +1,6 @@
 package de.hso.badenair.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
@@ -38,11 +37,10 @@ import de.hso.badenair.domain.flight.ScheduledFlight;
 import de.hso.badenair.domain.plane.Plane;
 import de.hso.badenair.domain.plane.PlaneState;
 import de.hso.badenair.domain.plane.PlaneType;
+import de.hso.badenair.domain.plane.PlaneTypeData;
 import de.hso.badenair.service.boardingpass.BoardingPassService;
 import de.hso.badenair.service.luggage.LuggageRepository;
-import de.hso.badenair.service.plane.repository.PlaneTypeDataRepository;
 import de.hso.badenair.service.traveler.TravelerRepository;
-import de.hso.badenair.util.init.StaticDataInitializer;
 
 @DataJpaTest
 @ContextConfiguration(classes = BoardingPassControllerTest.TestConfig.class)
@@ -56,9 +54,6 @@ class BoardingPassControllerTest {
 
 	@MockBean
 	private LuggageRepository luggageRepository;
-
-	@Autowired
-	private PlaneTypeDataRepository planeTypeDataRepository;
 
 	@Autowired
 	private BoardingPassController uut;
@@ -82,9 +77,10 @@ class BoardingPassControllerTest {
 				.name("Basel-Mulhouse").timezone("+1").build();
 		Airport destinationAirport = Airport.builder().id(2l).name("Porto")
 				.timezone("+2").build();
-		Plane plane = Plane.builder().id(1l)
-				.typeData(planeTypeDataRepository
-						.findAllByType(PlaneType.B737_400).get(0))
+		PlaneTypeData planeTypeData = PlaneTypeData.builder().id(1l)
+				.type(PlaneType.Dash_8_400).numberOfPassengers(68)
+				.flightRange(1000).build();
+		Plane plane = Plane.builder().id(1l).typeData(planeTypeData)
 				.state(PlaneState.WAITING).build();
 		ScheduledFlight scheduledFlight = ScheduledFlight.builder().id(1l)
 				.startingAirport(startingAirport)
@@ -112,17 +108,17 @@ class BoardingPassControllerTest {
 
 		mvc.perform(get(API_URL).contentType(MediaType.APPLICATION_JSON)
 				.param("travelerId", traveler.getId().toString()))
-				.andDo(print()).andExpect(status().isOk());
+				.andExpect(status().isOk());
 	}
 
 	@Configuration
 	@EnableJpaRepositories(basePackageClasses = {TravelerRepository.class,
-			LuggageRepository.class, PlaneTypeDataRepository.class})
+			LuggageRepository.class})
 	@EntityScan(basePackageClasses = {Airport.class, Booking.class,
 			Flight.class, ScheduledFlight.class, Luggage.class, Plane.class,
 			Traveler.class})
 	@ComponentScan(basePackageClasses = {BoardingPassService.class})
-	@Import({BoardingPassController.class, StaticDataInitializer.class})
+	@Import({BoardingPassController.class})
 	static class TestConfig {
 	}
 }
