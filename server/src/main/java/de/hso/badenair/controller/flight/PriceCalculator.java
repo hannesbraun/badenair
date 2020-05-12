@@ -2,7 +2,6 @@ package de.hso.badenair.controller.flight;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;
-import java.time.temporal.ChronoUnit;
 
 import de.hso.badenair.domain.booking.Booking;
 import de.hso.badenair.domain.booking.Luggage;
@@ -20,8 +19,7 @@ public class PriceCalculator {
 				+ 0.5 * (1 - Math.exp(-3 * takenSeats / totalSeats));
 
 		// Calculate time factor (and stay within the limits)
-		final long twelveMonths = Duration.of(12, ChronoUnit.MONTHS)
-				.getSeconds() / SECONDS_PER_WEEK;
+		final long twelveMonths = 52;
 		long timeLeft = Duration.between(OffsetDateTime.now(), startDate)
 				.getSeconds() / SECONDS_PER_WEEK;
 		long timeOver;
