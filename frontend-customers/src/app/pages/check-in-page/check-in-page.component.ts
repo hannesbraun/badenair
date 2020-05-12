@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {PassengerService} from '../../services/passenger/passenger.service';
 import {FlightDto, PassengerDto} from '../../services/dtos/Dtos';
 import {FlightService} from '../../services/flight/flight.service';
+import {CheckInService} from '../../services/checkin/checkin.service';
 
 @Component({
     selector: 'app-check-in-page',
@@ -10,11 +11,11 @@ import {FlightService} from '../../services/flight/flight.service';
 })
 export class CheckInPageComponent implements OnInit {
 
-    passengers: PassengerDto[] | undefined;
+    passengers!: PassengerDto[];
     flight: FlightDto | undefined;
     isCheckInComplete: boolean = false;
 
-    constructor(private passengerService: PassengerService, private flightService: FlightService) {
+    constructor(private passengerService: PassengerService, private flightService: FlightService, private checkInService: CheckInService) {
     }
 
     ngOnInit(): void {
@@ -40,6 +41,13 @@ export class CheckInPageComponent implements OnInit {
     }
 
     checkIn() {
+        this.passengers.forEach(passenger => {
+            if(passenger.checkedIn){
+                // TODO: add right Seat Number
+                this.checkInService.updateCheckIn(passenger.id, 1).subscribe(result=> console.log);
+                // Seatnumber is still const
+            }
+        });
         this.isCheckInComplete = true;
     }
 }

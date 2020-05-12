@@ -14,6 +14,7 @@ export class PassengerService {
         return of(
             [
                 {
+                    id: 23456,
                     name: 'Max',
                     surname: 'Mustermann',
                     checkedIn: false,
@@ -23,6 +24,7 @@ export class PassengerService {
                     baggage4: 0
                 },
                 {
+                    id: 23457,
                     name: 'Bob',
                     surname: 'Ross',
                     checkedIn: false,

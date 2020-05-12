@@ -28,13 +28,16 @@ export interface PlaneScheduleDto {
 
 export interface ScheduleConflictDto {
     flight: FlightDto;
+    scheduleId: number;
     cause: string;
+    possibleSolutions: ScheduleConfigSolution[];
 }
 
 export enum ScheduleConfigSolution {
     CANCEL_FLIGHT,
     DO_NOTHING,
-    USE_BACKUP_PLANE
+    USE_BACKUP_PLANE,
+    USE_BACKUP_PERSONAL
 }
 
 export enum BaggageState {

@@ -5,7 +5,7 @@ import { AccountService } from 'src/app/services/account/account.service';
 
 export interface BookedFlight {
     flight: FlightDto;
-    persons: Person[];
+    travelers: Person[];
     baggages: Baggage[];
 }
 
@@ -22,22 +22,16 @@ export class BookedFlightsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.accountService.getBookings().subscribe((data: BookedFlight[]) => this.bookedFlights = {...data});
+        this.accountService.getBookings()
+            .subscribe((data: BookedFlight[]) => this.bookedFlights = data);
     }
 
     checkInPossible(bookedFlight: BookedFlight): boolean {
-        var possible = false;
-
         // Check in only possible until 30 minutes before departure
-        if (bookedFlight.flight.startTime > new Date(Date.now() + 30 * 60000)) {
-            // Check in only possible if at least one person is not checked in yet
-            for (let person of bookedFlight.persons) {
-                if (!person.checkedIn) {
-                    possible = true;
-                }
-            }
+        if (bookedFlight.flight.startTime <= new Date(Date.now() + 30 * 60000)) {
+            return false;
         }
-
-        return possible;
+        // Check in only possible if at least one person is not checked in yet
+        return bookedFlight.travelers.some(person => !person.checkedIn);
     }
 }

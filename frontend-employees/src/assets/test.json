@@ -1,0 +1,32 @@
+[
+	{
+		"id": 0,
+		"plane": "Plane 17",
+		"status": "OK",
+		"hasConflict": false,
+		"flights": [
+			{
+				"id": 0,
+				"start": "Lorem ipsum dolor sit amet",
+				"destination": "Lorem ipsum dolor sit amet",
+				"startTime": "2020-04-26T15:00:00Z",
+				"arrivalTime": "2020-04-26T18:00:00Z"
+			}
+		]
+	},
+	{
+		"id": 1,
+		"plane": "Plane 11",
+		"status": "OK",
+		"hasConflict": true,
+		"flights": [
+			{
+				"id": 0,
+				"start": "Lorem ipsum dolor sit amet",
+				"destination": "Lorem ipsum dolor sit amet",
+				"startTime": "2020-04-26T15:00:00Z",
+				"arrivalTime": "2020-04-26T18:00:00Z"
+			}
+		]
+	}
+]
