@@ -60,7 +60,9 @@ public class AccountController {
 
 			// Luggage
 			List<LuggageStateDto> luggageDtos = booking.getTravelers().stream()
-					.flatMap(traveler -> traveler.getLuggage().stream())
+					.flatMap(traveler -> traveler.getLuggage() == null
+							? null
+							: traveler.getLuggage().stream())
 					.map((luggage) -> {
 						return new LuggageStateDto(luggage.getId(),
 								luggage.getState());

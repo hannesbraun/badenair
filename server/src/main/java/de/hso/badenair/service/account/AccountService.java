@@ -1,8 +1,8 @@
 package de.hso.badenair.service.account;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -14,6 +14,7 @@ import de.hso.badenair.domain.booking.Booking;
 import de.hso.badenair.domain.booking.account.AccountData;
 import de.hso.badenair.service.booking.repository.BookingRepository;
 import de.hso.badenair.util.mapper.AccountDataMapper;
+import de.hso.badenair.util.time.DateFusioner;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -52,22 +53,15 @@ public class AccountService {
 	}
 
 	public List<Booking> getBookings(String customerUserId) {
-		List<Booking> bookings = bookingRepository
-				.findAllByCustomerUserId(customerUserId);
-		List<Booking> bookingsFiltered = new ArrayList<Booking>();
-
-		// Filter out bookings of the past
-		for (Booking booking : bookings) {
-			if (booking.getFlight().getStartDate()
-					.plusHours(booking.getFlight().getScheduledFlight()
-							.getStartTime().getHour())
-					.plusMinutes(booking.getFlight().getScheduledFlight()
-							.getStartTime().getMinute())
-					.isAfter(OffsetDateTime.now())) {
-				bookingsFiltered.add(booking);
-			}
-		}
-
-		return bookingsFiltered;
+		// Get bookings and filter out bookings of the past
+		return bookingRepository.findAllByCustomerUserId(customerUserId)
+				.stream()
+				.filter(booking -> DateFusioner
+						.fusionStartDate(booking.getFlight().getStartDate(),
+								booking.getFlight().getScheduledFlight()
+										.getStartTime(),
+								null)
+						.isAfter(OffsetDateTime.now()))
+				.collect(Collectors.toList());
 	}
 }

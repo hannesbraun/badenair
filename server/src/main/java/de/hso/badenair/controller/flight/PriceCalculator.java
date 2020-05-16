@@ -3,9 +3,10 @@ package de.hso.badenair.controller.flight;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 
+import org.apache.commons.lang3.mutable.MutableDouble;
+import org.apache.commons.lang3.mutable.MutableInt;
+
 import de.hso.badenair.domain.booking.Booking;
-import de.hso.badenair.domain.booking.Luggage;
-import de.hso.badenair.domain.booking.Traveler;
 
 public class PriceCalculator {
 	public static final int LUGGAGE_BASE_PRICE_PER_KG = 2;
@@ -38,30 +39,31 @@ public class PriceCalculator {
 	}
 
 	public static void calculateFinalPrice(Booking booking) {
-		int[] takenSeats = new int[1];
-		takenSeats[0] = 0;
+		MutableInt takenSeats = new MutableInt(0);
 		booking.getFlight().getBookings().stream()
 				.filter((otherBooking) -> otherBooking != booking)
 				.forEach(otherBooking -> {
-					takenSeats[0] += otherBooking.getTravelers().size();
+					takenSeats.add(otherBooking.getTravelers().size());
 				});
 
-		double finalPrice = calcFlightPriceRaw(
+		MutableDouble finalPrice = new MutableDouble(calcFlightPriceRaw(
 				booking.getFlight().getScheduledFlight().getBasePrice(),
-				takenSeats[0],
+				takenSeats.getValue(),
 				booking.getFlight().getPlane().getTypeData()
 						.getNumberOfPassengers(),
-				booking.getFlight().getStartDate());
-		finalPrice *= booking.getTravelers().size();
+				booking.getFlight().getStartDate()));
+		finalPrice.setValue(
+				finalPrice.getValue() * booking.getTravelers().size());
 
 		// Add the luggage price
-		for (Traveler traveler : booking.getTravelers()) {
-			for (Luggage luggage : traveler.getLuggage()) {
-				finalPrice += luggage.getWeight() * LUGGAGE_BASE_PRICE_PER_KG;
-			}
-		}
+		booking.getTravelers().stream()
+				.flatMap(traveler -> traveler.getLuggage() == null
+						? null
+						: traveler.getLuggage().stream())
+				.forEach(luggage -> finalPrice
+						.add(luggage.getWeight() * LUGGAGE_BASE_PRICE_PER_KG));
 
-		booking.setPrice(finalPrice);
+		booking.setPrice(finalPrice.getValue());
 	}
 
 }
