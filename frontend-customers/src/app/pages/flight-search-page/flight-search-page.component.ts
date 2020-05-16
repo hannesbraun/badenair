@@ -5,6 +5,7 @@ import {AirportDto} from '../../services/dtos/Dtos';
 import {AirportService} from '../../services/airport/airport.service';
 import {Router} from '@angular/router';
 import {BookingStateService} from '../../services/search/booking-state.service';
+import {map} from 'rxjs/operators';
 
 @Component({
     selector: 'app-flight-search-page',
@@ -24,7 +25,9 @@ export class FlightSearchPageComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.airports$ = this.airportService.getAirports();
+        this.airports$ = this.airportService.getAirports().pipe(
+            map(value => value.sort((a, b) => a.name.localeCompare(b.name)))
+        );
         this.bookingStateService.state
             .subscribe(bookingState => this.searchValue = bookingState.searchValue);
     }

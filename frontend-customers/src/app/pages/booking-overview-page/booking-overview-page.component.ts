@@ -1,10 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { BookingStateService } from '../../services/search/booking-state.service';
-import { Subscription, forkJoin } from 'rxjs';
-import { FlightDto, PassengerDto, BookingDto } from 'src/app/services/dtos/Dtos';
-import { BookingService } from 'src/app/services/booking/booking.service';
-import { Router } from '@angular/router';
-import { Seat } from 'src/app/components/seat-selection/seat-selection.component';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {BookingStateService} from '../../services/search/booking-state.service';
+import {forkJoin, Subscription} from 'rxjs';
+import {BookingDto, FlightDto, PassengerDto} from 'src/app/services/dtos/Dtos';
+import {BookingService} from 'src/app/services/booking/booking.service';
+import {Router} from '@angular/router';
+import {Seat} from 'src/app/components/seat-selection/seat-selection.component';
 
 
 @Component({
@@ -19,12 +19,12 @@ export class BookingOverviewPageComponent implements OnInit, OnDestroy {
     passengers!: PassengerDto[];
     toSeats !: Seat[];
     returnSeats !: Seat[];
-    price: number = 0;
+    price = 0;
     baggagePrice = 2;
 
     constructor(private bookingStateService: BookingStateService,
-        private bookingService: BookingService,
-        private router: Router) {
+                private bookingService: BookingService,
+                private router: Router) {
     }
 
     ngOnInit(): void {
@@ -34,7 +34,6 @@ export class BookingOverviewPageComponent implements OnInit, OnDestroy {
         this.returnSeats = [];
         this.bookingStateSubscription = this.bookingStateService.state
             .subscribe(state => {
-                console.log(state)
                 if (state.selectedToFlight) {
                     this.toFlight = state.selectedToFlight;
                 }
@@ -46,7 +45,7 @@ export class BookingOverviewPageComponent implements OnInit, OnDestroy {
                 if (state.passengers > 0) {
                     state.passengersDto.forEach(passenger => {
                         this.passengers.push(passenger);
-                    })
+                    });
                 }
 
                 if (state.toSeats && state.toSeats.length > 0) {
@@ -58,7 +57,9 @@ export class BookingOverviewPageComponent implements OnInit, OnDestroy {
                     state.returnSeats.forEach(seat => {
                         this.returnSeats.push(seat);
                     });
-                    state.toSeats
+                    state.toSeats.forEach(seat => {
+                        this.toSeats.push(seat);
+                    });
                 }
 
                 this.price = this.calculatePrice(this.toFlight) + this.calculatePrice(this.returnFlight);
@@ -86,8 +87,7 @@ export class BookingOverviewPageComponent implements OnInit, OnDestroy {
                     price: this.calculatePrice(this.returnFlight)
                 } as BookingDto)
             }).subscribe(() => this.router.navigate(['/success']));
-        }
-        else if (this.toFlight && (this.passengers.length > 0)) {
+        } else if (this.toFlight && (this.passengers.length > 0)) {
             this.bookingService.bookFlight({
                 flightId: this.toFlight.id,
                 passengers: this.passengers,
@@ -95,9 +95,8 @@ export class BookingOverviewPageComponent implements OnInit, OnDestroy {
                 price: this.calculatePrice(this.toFlight)
             } as BookingDto)
                 .subscribe(() => this.router.navigate(['/success']));
-        }
-        else {
-            console.error("Die Buchung ist fehlgeschlagen.")
+        } else {
+            console.error('Die Buchung ist fehlgeschlagen.');
         }
     }
 

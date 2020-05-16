@@ -1,14 +1,15 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {AuthConfig, OAuthService} from 'angular-oauth2-oidc';
 import {environment} from '../../environments/environment';
+import {Router} from '@angular/router';
 
 
 @NgModule({
-  declarations: [],
-  imports: [
-    CommonModule
-  ]
+    declarations: [],
+    imports: [
+        CommonModule
+    ]
 })
 export class AuthModule {
 
@@ -23,12 +24,18 @@ export class AuthModule {
         requireHttps: false
     };
 
-    constructor(private oauthService: OAuthService) {
+    constructor(private oauthService: OAuthService, private router: Router) {
         this.configure();
     }
 
     private configure() {
         this.oauthService.configure(AuthModule.authConfig);
         this.oauthService.loadDiscoveryDocumentAndTryLogin();
+        this.oauthService.events.subscribe(event => {
+            if (event.type === 'token_received') {
+                const url = decodeURIComponent(this.oauthService.state ?? '');
+                this.router.navigate([url]);
+            }
+        });
     }
 }
