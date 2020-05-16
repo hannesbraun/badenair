@@ -15,6 +15,7 @@ export class BookingOverviewComponent {
   @Input() toSeats !: Seat[];
   @Input() returnSeats !: Seat[];
   @Input() price!: number;
+  @Input() baggagePrice!: number;
 
   getDuration(flight: FlightDto) {
     if (flight) {
@@ -23,9 +24,9 @@ export class BookingOverviewComponent {
 
     return 0;
   }
-  
-  convertToSeatNumber(column: number): string{
-    return String.fromCharCode(65+column);
+
+  convertToSeatNumber(column: number): string {
+    return String.fromCharCode(65 + column);
   }
 
 }

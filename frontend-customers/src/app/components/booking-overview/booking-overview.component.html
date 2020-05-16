@@ -9,7 +9,7 @@
         <ng-container *ngIf="passengers">
             <p class="medium">Passagiere: {{passengers.length}}</p>
             <div class="price">
-                <p class="medium">{{toFlight.price | currency:'EUR'}}</p>
+                <p class="medium">{{toFlight.price * passengers.length | currency:'EUR'}}</p>
             </div>
         </ng-container>
     </div>
@@ -22,7 +22,7 @@
         <ng-container *ngIf="passengers">
             <p class="medium">Passagiere: {{passengers.length}}</p>
             <div class="price">
-                <p class="medium">{{returnFlight.price | currency:'EUR'}}</p>
+                <p class="medium">{{returnFlight.price * passengers.length | currency:'EUR'}}</p>
             </div>
         </ng-container>
     </div>
@@ -40,36 +40,36 @@
     </div>
     <div fxLayoutAlign="space-between" *ngIf="passenger.baggage1 !== 0">
         <p class="medium">1x Gepäckstück (Hinflug) ({{passenger.baggage1}}kg)</p>
-        <p class="medium">{{passenger.baggage1 | currency:'EUR'}}</p>
+        <p class="medium">{{passenger.baggage1 * baggagePrice | currency:'EUR'}}</p>
     </div>
     <div fxLayoutAlign="space-between" *ngIf="passenger.baggage1 !== 0">
         <p *ngIf="returnFlight" class="medium">1x Gepäckstück (Rückflug) ({{passenger.baggage1}}kg)</p>
-        <p class="medium">{{passenger.baggage1 | currency:'EUR'}}</p>
+        <p class="medium">{{passenger.baggage1 * baggagePrice | currency:'EUR'}}</p>
     </div>
 
     <div fxLayoutAlign="space-between" *ngIf="passenger.baggage2 !== 0">
         <p class="medium">1x Gepäckstück (Hinflug) ({{passenger.baggage2}}kg)</p>
-        <p class="medium">{{passenger.baggage2 | currency:'EUR'}}</p>
+        <p class="medium">{{passenger.baggage2 * baggagePrice | currency:'EUR'}}</p>
     </div>
     <div fxLayoutAlign="space-between" *ngIf="passenger.baggage2 !== 0">
         <p *ngIf="returnFlight" class="medium">1x Gepäckstück (Rückflug) ({{passenger.baggage2}}kg)</p>
-        <p class="medium">{{passenger.baggage2 | currency:'EUR'}}</p>
+        <p class="medium">{{passenger.baggage2 * baggagePrice | currency:'EUR'}}</p>
     </div>
     <div fxLayoutAlign="space-between" *ngIf="passenger.baggage3 !== 0">
         <p class="medium">1x Gepäckstück (Hinflug) ({{passenger.baggage3}}kg)</p>
-        <p class="medium">{{passenger.baggage3 | currency:'EUR'}}</p>
+        <p class="medium">{{passenger.baggage3 * baggagePrice | currency:'EUR'}}</p>
     </div>
     <div fxLayoutAlign="space-between" *ngIf="passenger.baggage3 !== 0">
         <p *ngIf="returnFlight" class="medium">1x Gepäckstück (Rückflug) ({{passenger.baggage3}}kg)</p>
-        <p class="medium">{{passenger.baggage3 | currency:'EUR'}}</p>
+        <p class="medium">{{passenger.baggage3 * baggagePrice | currency:'EUR'}}</p>
     </div>
     <div fxLayoutAlign="space-between" *ngIf="passenger.baggage4 !== 0">
         <p class="medium">1x Gepäckstück (Hinflug) ({{passenger.baggage4}}kg)</p>
-        <p class="medium">{{passenger.baggage4 | currency:'EUR'}}</p>
+        <p class="medium">{{passenger.baggage4 * baggagePrice | currency:'EUR'}}</p>
     </div>
     <div fxLayoutAlign="space-between" *ngIf="passenger.baggage4 !== 0">
         <p *ngIf="returnFlight" class="medium">1x Gepäckstück (Rückflug) ({{passenger.baggage4}}kg)</p>
-        <p class="medium">{{passenger.baggage4 | currency:'EUR'}}</p>
+        <p class="medium">{{passenger.baggage4 * baggagePrice | currency:'EUR'}}</p>
     </div>
 </div>
 

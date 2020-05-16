@@ -19,7 +19,8 @@ export class BookingOverviewPageComponent implements OnInit, OnDestroy {
     passengers!: PassengerDto[];
     toSeats !: Seat[];
     returnSeats !: Seat[];
-    price : number = 0;
+    price: number = 0;
+    baggagePrice = 2;
 
     constructor(private bookingStateService: BookingStateService,
         private bookingService: BookingService,
@@ -82,7 +83,7 @@ export class BookingOverviewPageComponent implements OnInit, OnDestroy {
                     flightId: this.returnFlight.id,
                     passengers: this.passengers,
                     seats: this.toSeats,
-                    price: this.calculatePrice(this.toFlight)
+                    price: this.calculatePrice(this.returnFlight)
                 } as BookingDto)
             }).subscribe(() => this.router.navigate(['/success']));
         }
@@ -103,15 +104,18 @@ export class BookingOverviewPageComponent implements OnInit, OnDestroy {
     private calculatePrice(flight: FlightDto): number {
         let price = 0;
 
-        if(flight){
-            price += flight.price;
+        if (flight) {
+            price += flight.price * this.passengers.length;
 
             this.passengers.forEach(passenger => {
-                price += passenger.baggage1 + passenger.baggage2 + passenger.baggage3 + passenger.baggage4;
-            })
+                price += passenger.baggage1 * this.baggagePrice;
+                price += passenger.baggage2 * this.baggagePrice;
+                price += passenger.baggage3 * this.baggagePrice;
+                price += passenger.baggage4 * this.baggagePrice;
+            });
         }
 
-        
+
 
         return price;
     }
