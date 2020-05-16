@@ -2,7 +2,7 @@
 <mat-card appHoverClass hoverClass="mat-elevation-z8" *ngIf="flight; else loading">
     <mat-card-content>
         <app-flight-info [time]="flight.startTime" [location]="flight.start"></app-flight-info>
-        <p class="duration">{{getDuration() | date:'HH:mm:ss'}}</p>
+        <p class="duration">{{getDuration() | date:'HH:mm'}}</p>
         <app-flight-info [time]="flight.arrivalTime" [location]="flight.destination"></app-flight-info>
     </mat-card-content>
 </mat-card>

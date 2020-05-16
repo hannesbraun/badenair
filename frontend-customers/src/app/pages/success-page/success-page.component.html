@@ -10,6 +10,6 @@
     <mat-card-content>
         <p>Start: {{flight.startTime | date:'dd.MM.yyyy'}}, {{flight.startTime | date:'HH:mm:ss'}} Uhr</p>
         <p>Landung: {{flight.arrivalTime | date:'dd.MM.yyyy'}}, {{flight.arrivalTime | date:'HH:mm:ss'}} Uhr</p>
-        <p>Flugdauer: {{getDuration(flight)}}</p>
+        <p>Flugdauer: {{getDuration(flight) | date:'HH:mm'}}</p>
     </mat-card-content>
 </mat-card>
