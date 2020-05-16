@@ -32,7 +32,7 @@ public class BookingService {
 		if (flight != null) {
 			Set<Traveler> travelers = new HashSet<>();
 			Booking newBooking = Booking.builder().flight(flight)
-					.customerUserId(username).price(dto.getPrice()).build();
+					.customerUserId(username).build();
 
 			for (int i = 0; i < dto.getPassengers().length; i++) {
 				IncomingTravelerDto travelerDto = dto.getPassengers()[i];
