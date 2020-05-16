@@ -1,5 +1,5 @@
 <h1>Buchungsübersicht</h1>
-<mat-card>
+<mat-card *ngIf="toFlight && passengers && toSeats; else loading">
     <mat-card-content>
         <app-booking-overview [toFlight]="toFlight" [returnFlight]="returnFlight" [passengers]="passengers"
             [toSeats]="toSeats" [returnSeats]="returnSeats" [price]="price">

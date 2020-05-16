@@ -3,6 +3,7 @@ import {BehaviorSubject} from 'rxjs';
 import {FlightDto, PassengerDto} from '../dtos/Dtos';
 import {SearchFormValue} from '../../components/flight-search/flight-search.component';
 import {Seat} from '../../components/seat-selection/seat-selection.component';
+import {AuthService} from '../../auth/auth.service';
 
 interface BookingState {
     searchValue: SearchFormValue;
@@ -22,10 +23,14 @@ interface BookingState {
     providedIn: 'root'
 })
 export class BookingStateService {
+
+    public static readonly BOOKING_STATE_KEY = 'bookingState';
+
     private readonly bookingState: BehaviorSubject<BookingState>;
 
-    constructor() {
-        this.bookingState = new BehaviorSubject<BookingState>({} as BookingState);
+    constructor(authService: AuthService) {
+        const currentState = authService.getData<BookingState>(BookingStateService.BOOKING_STATE_KEY) ?? {} as BookingState;
+        this.bookingState = new BehaviorSubject<BookingState>(currentState);
     }
 
     setReturnFlights(flights: FlightDto[]) {
@@ -59,7 +64,7 @@ export class BookingStateService {
     setPassengers(passengers: number) {
         this.bookingState.next({
             ...this.bookingState.getValue(),
-            passengers: passengers,
+            passengers,
         });
     }
 
@@ -74,7 +79,7 @@ export class BookingStateService {
     setDirection(direction: boolean) {
         this.bookingState.next({
             ...this.bookingState.getValue(),
-            direction: direction,
+            direction,
         });
     }
 

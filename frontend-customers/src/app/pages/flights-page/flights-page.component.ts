@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FlightDto} from '../../services/dtos/Dtos';
 import {BookingStateService} from '../../services/search/booking-state.service';
 import {Router} from '@angular/router';
+import {AuthService} from '../../auth/auth.service';
 
 
 @Component({
@@ -20,7 +21,7 @@ export class FlightsPageComponent implements OnInit {
 
     constructor(
         private bookingStateService: BookingStateService,
-        private router: Router,
+        private router: Router, private authService: AuthService
     ) {
     }
 
@@ -59,7 +60,8 @@ export class FlightsPageComponent implements OnInit {
 
     next() {
         if (this.type === '2') {
-            this.router.navigate(['/passengers']);
+            this.authService.loginWithState('/passengers', BookingStateService.BOOKING_STATE_KEY,
+                this.bookingStateService.state.getValue());
             return;
         }
         if (this.directionState) {
@@ -67,7 +69,8 @@ export class FlightsPageComponent implements OnInit {
             this.bookingStateService.setDirection(false);
             this.shownFlights = this.returnFlights;
         } else {
-            this.router.navigate(['/passengers']);
+            this.authService.loginWithState('/passengers', BookingStateService.BOOKING_STATE_KEY,
+                this.bookingStateService.state.getValue());
         }
     }
 
