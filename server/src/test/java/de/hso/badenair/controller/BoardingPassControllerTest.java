@@ -1,14 +1,20 @@
 package de.hso.badenair.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
-
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.List;
-import java.util.Optional;
-
+import de.hso.badenair.controller.boardingpass.BoardingPassController;
+import de.hso.badenair.domain.booking.Booking;
+import de.hso.badenair.domain.booking.Luggage;
+import de.hso.badenair.domain.booking.LuggageState;
+import de.hso.badenair.domain.booking.Traveler;
+import de.hso.badenair.domain.flight.Airport;
+import de.hso.badenair.domain.flight.Flight;
+import de.hso.badenair.domain.flight.ScheduledFlight;
+import de.hso.badenair.domain.plane.Plane;
+import de.hso.badenair.domain.plane.PlaneState;
+import de.hso.badenair.domain.plane.PlaneType;
+import de.hso.badenair.domain.plane.PlaneTypeData;
+import de.hso.badenair.service.boardingpass.BoardingPassService;
+import de.hso.badenair.service.luggage.LuggageRepository;
+import de.hso.badenair.service.traveler.TravelerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,21 +32,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
-import de.hso.badenair.controller.boardingpass.BoardingPassController;
-import de.hso.badenair.domain.booking.Booking;
-import de.hso.badenair.domain.booking.Luggage;
-import de.hso.badenair.domain.booking.LuggageState;
-import de.hso.badenair.domain.booking.Traveler;
-import de.hso.badenair.domain.flight.Airport;
-import de.hso.badenair.domain.flight.Flight;
-import de.hso.badenair.domain.flight.ScheduledFlight;
-import de.hso.badenair.domain.plane.Plane;
-import de.hso.badenair.domain.plane.PlaneState;
-import de.hso.badenair.domain.plane.PlaneType;
-import de.hso.badenair.domain.plane.PlaneTypeData;
-import de.hso.badenair.service.boardingpass.BoardingPassService;
-import de.hso.badenair.service.luggage.LuggageRepository;
-import de.hso.badenair.service.traveler.TravelerRepository;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.List;
+import java.util.Optional;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 @DataJpaTest
 @ContextConfiguration(classes = BoardingPassControllerTest.TestConfig.class)
@@ -94,7 +93,7 @@ class BoardingPassControllerTest {
 				.plane(plane).build();
 		Booking booking = Booking.builder().id(1l).flight(flight).build();
 		Traveler traveler = Traveler.builder().id(1l).firstName("Bob")
-				.lastName("Ross").seatNumber("21F").checkedIn(true)
+            .lastName("Ross").seatColumn(6).seatRow(21).checkedIn(true)
 				.booking(booking).build();
 
 		Luggage luggage = Luggage.builder().id(1l)

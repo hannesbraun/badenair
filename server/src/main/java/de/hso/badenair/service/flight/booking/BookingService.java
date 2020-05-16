@@ -1,14 +1,8 @@
 package de.hso.badenair.service.flight.booking;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.springframework.stereotype.Service;
-
 import de.hso.badenair.controller.dto.flight.IncomingBookingDto;
 import de.hso.badenair.controller.dto.seat.SelectedSeatDto;
 import de.hso.badenair.controller.dto.traveler.IncomingTravelerDto;
-import de.hso.badenair.controller.flight.PriceCalculator;
 import de.hso.badenair.domain.booking.Booking;
 import de.hso.badenair.domain.booking.Luggage;
 import de.hso.badenair.domain.booking.LuggageState;
@@ -17,6 +11,10 @@ import de.hso.badenair.domain.flight.Flight;
 import de.hso.badenair.service.booking.repository.BookingRepository;
 import de.hso.badenair.service.flight.FlightService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -35,13 +33,12 @@ public class BookingService {
 				IncomingTravelerDto travelerDto = dto.getPassengers()[i];
 				SelectedSeatDto selectedSeat = dto.getSeats()[i];
 				Traveler traveler = Traveler.builder()
-						.firstName(travelerDto.getName())
-						.lastName(travelerDto.getSurname())
-						.checkedIn(travelerDto.isCheckedIn())
-						.booking(newBooking)
-						.seatNumber("" + selectedSeat.getRow()
-								+ Character.toString(
-										(char) (65 + selectedSeat.getColumn())))
+                    .firstName(travelerDto.getName())
+                    .lastName(travelerDto.getSurname())
+                    .checkedIn(travelerDto.isCheckedIn())
+                    .booking(newBooking)
+                    .seatRow(selectedSeat.getRow())
+                    .seatColumn(selectedSeat.getColumn())
 						.build();
 				travelers.add(traveler);
 
@@ -80,11 +77,11 @@ public class BookingService {
 				}
 			}
 			if (!travelers.isEmpty()) {
-				newBooking.setTravelers(travelers);
-				PriceCalculator.calculateFinalPrice(newBooking);
-				bookingRepository.save(newBooking);
-				return true;
-			}
+                newBooking.setTravelers(travelers);
+                // PriceCalculator.calculateFinalPrice(newBooking);
+                bookingRepository.save(newBooking);
+                return true;
+            }
 		}
 
 		return false;
