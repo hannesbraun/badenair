@@ -2,10 +2,8 @@ package de.hso.badenair.controller.account;
 
 import java.security.Principal;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -23,9 +21,9 @@ import de.hso.badenair.controller.dto.flight.FlightDto;
 import de.hso.badenair.controller.dto.luggage.LuggageStateDto;
 import de.hso.badenair.controller.dto.traveler.TravelerDto;
 import de.hso.badenair.domain.booking.Booking;
-import de.hso.badenair.domain.booking.Luggage;
-import de.hso.badenair.domain.booking.Traveler;
+import de.hso.badenair.domain.flight.Flight;
 import de.hso.badenair.service.account.AccountService;
+import de.hso.badenair.util.time.DateFusioner;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -50,58 +48,47 @@ public class AccountController {
 	@GetMapping("/flights")
 	public ResponseEntity<List<BookingDto>> getBookings(Principal user) {
 		List<Booking> bookings = accountService.getBookings(user.getName());
-		List<BookingDto> bookingDtos = new ArrayList<BookingDto>();
-
-		for (Booking booking : bookings) {
+		List<BookingDto> bookingDtos = bookings.stream().map((booking) -> {
 			// Travelers
-			List<TravelerDto> travelerDtos = new ArrayList<TravelerDto>();
-			List<LuggageStateDto> luggageDtos = new ArrayList<LuggageStateDto>();
-			for (Traveler traveler : booking.getTravelers()) {
-				travelerDtos.add(new TravelerDto(
-						traveler.getFirstName() + " " + traveler.getLastName(),
-						traveler.getId(), traveler.isCheckedIn()));
+			List<TravelerDto> travelerDtos = booking.getTravelers().stream()
+					.map((traveler) -> {
+						return new TravelerDto(
+								traveler.getFirstName() + " "
+										+ traveler.getLastName(),
+								traveler.getId(), traveler.isCheckedIn());
+					}).collect(Collectors.toList());
 
-				// Luggage
-				Set<Luggage> luggageSet = traveler.getLuggage();
-				if (luggageSet != null) {
-					for (Luggage luggage : luggageSet) {
-						luggageDtos.add(new LuggageStateDto(luggage.getId(),
-								luggage.getState()));
-					}
-				}
-			}
+			// Luggage
+			List<LuggageStateDto> luggageDtos = booking.getTravelers().stream()
+					.flatMap(traveler -> traveler.getLuggage().stream())
+					.map((luggage) -> {
+						return new LuggageStateDto(luggage.getId(),
+								luggage.getState());
+					}).collect(Collectors.toList());
+
+			Flight flight = booking.getFlight();
 
 			// Dates
-			long durationInHours = Double.valueOf(booking.getFlight()
-					.getScheduledFlight().getDurationInHours()).intValue();
-			OffsetDateTime startDate = booking.getFlight().getStartDate()
-					.plusHours(booking.getFlight().getScheduledFlight()
-							.getStartTime().getHour())
-					.plusMinutes(booking.getFlight().getScheduledFlight()
-							.getStartTime().getMinute())
-					.withOffsetSameInstant(ZoneOffset
-							.of(booking.getFlight().getScheduledFlight()
-									.getStartingAirport().getTimezone()));
-			OffsetDateTime arrivalDate = startDate.plusHours(durationInHours)
-					.plusMinutes(Double
-							.valueOf((booking.getFlight().getScheduledFlight()
-									.getDurationInHours()
-									- Double.valueOf(durationInHours)) * 60.0)
-							.intValue())
-					.withOffsetSameInstant(ZoneOffset
-							.of(booking.getFlight().getScheduledFlight()
-									.getDestinationAirport().getTimezone()));
+			OffsetDateTime startDate = DateFusioner.fusionStartDate(
+					flight.getStartDate(),
+					flight.getScheduledFlight().getStartTime(),
+					flight.getScheduledFlight().getStartingAirport()
+							.getTimezone());
+			OffsetDateTime arrivalDate = DateFusioner.fusionArrivalDate(
+					flight.getStartDate(),
+					flight.getScheduledFlight().getStartTime(),
+					flight.getScheduledFlight().getDurationInHours(),
+					flight.getScheduledFlight().getStartingAirport()
+							.getTimezone());
 
 			// Create final booking dto
-			bookingDtos.add(new BookingDto(
-					new FlightDto(booking.getFlight().getId(),
-							booking.getFlight().getScheduledFlight()
-									.getStartingAirport().getName(),
-							booking.getFlight().getScheduledFlight()
-									.getDestinationAirport().getName(),
-							startDate, arrivalDate, -1337.0),
-					travelerDtos, luggageDtos));
-		}
+			return new BookingDto(new FlightDto(flight.getId(),
+					flight.getScheduledFlight().getStartingAirport().getName(),
+					flight.getScheduledFlight().getDestinationAirport()
+							.getName(),
+					startDate, arrivalDate, -1337.0), travelerDtos,
+					luggageDtos);
+		}).collect(Collectors.toList());
 
 		return ResponseEntity.ok(bookingDtos);
 	}

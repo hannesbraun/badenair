@@ -38,16 +38,17 @@ public class PriceCalculator {
 	}
 
 	public static void calculateFinalPrice(Booking booking) {
-		int takenSeats = 0;
-		for (Booking otherBooking : booking.getFlight().getBookings()) {
-			if (otherBooking != booking) {
-				takenSeats += otherBooking.getTravelers().size();
-			}
-		}
+		int[] takenSeats = new int[1];
+		takenSeats[0] = 0;
+		booking.getFlight().getBookings().stream()
+				.filter((otherBooking) -> otherBooking != booking)
+				.forEach(otherBooking -> {
+					takenSeats[0] += otherBooking.getTravelers().size();
+				});
 
 		double finalPrice = calcFlightPriceRaw(
 				booking.getFlight().getScheduledFlight().getBasePrice(),
-				takenSeats,
+				takenSeats[0],
 				booking.getFlight().getPlane().getTypeData()
 						.getNumberOfPassengers(),
 				booking.getFlight().getStartDate());
