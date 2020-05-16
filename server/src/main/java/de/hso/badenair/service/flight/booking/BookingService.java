@@ -1,6 +1,7 @@
 package de.hso.badenair.service.flight.booking;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
@@ -24,6 +25,8 @@ public class BookingService {
 	private final BookingRepository bookingRepository;
 	private final FlightService flightService;
 
+	private final List<Integer> allowedWeights = List.of(15, 23, 30);
+
 	public boolean bookFlight(String username, IncomingBookingDto dto) {
 		Flight flight = flightService.getFlightById(dto.getFlightId());
 		if (flight != null) {
@@ -46,7 +49,7 @@ public class BookingService {
 				travelers.add(traveler);
 
 				Set<Luggage> luggages = new HashSet<>();
-				if (travelerDto.getBaggage1() != 0) {
+				if (allowedWeights.contains(travelerDto.getBaggage1())) {
 					Luggage luggage1 = Luggage.builder()
 							.state(LuggageState.AT_TRAVELLER)
 							.weight(travelerDto.getBaggage1())
@@ -54,21 +57,21 @@ public class BookingService {
 					luggages.add(luggage1);
 				}
 
-				if (travelerDto.getBaggage2() != 0) {
+				if (allowedWeights.contains(travelerDto.getBaggage2())) {
 					Luggage luggage2 = Luggage.builder()
 							.state(LuggageState.AT_TRAVELLER)
 							.weight(travelerDto.getBaggage2())
 							.traveler(traveler).build();
 					luggages.add(luggage2);
 				}
-				if (travelerDto.getBaggage3() != 0) {
+				if (allowedWeights.contains(travelerDto.getBaggage3())) {
 					Luggage luggage3 = Luggage.builder()
 							.state(LuggageState.AT_TRAVELLER)
 							.weight(travelerDto.getBaggage3())
 							.traveler(traveler).build();
 					luggages.add(luggage3);
 				}
-				if (travelerDto.getBaggage4() != 0) {
+				if (allowedWeights.contains(travelerDto.getBaggage4())) {
 					Luggage luggage4 = Luggage.builder()
 							.state(LuggageState.AT_TRAVELLER)
 							.weight(travelerDto.getBaggage4())
