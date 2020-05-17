@@ -1,8 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {PassengerService} from '../../services/passenger/passenger.service';
-import {FlightDto, PassengerDto} from '../../services/dtos/Dtos';
-import {FlightService} from '../../services/flight/flight.service';
+import {FlightDto, TravelerDto} from '../../services/dtos/Dtos';
 import {CheckInService} from '../../services/checkin/checkin.service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
     selector: 'app-check-in-page',
@@ -11,24 +10,30 @@ import {CheckInService} from '../../services/checkin/checkin.service';
 })
 export class CheckInPageComponent implements OnInit {
 
-    passengers!: PassengerDto[];
+    passengers: TravelerDto[] = [];
     flight: FlightDto | undefined;
-    isCheckInComplete: boolean = false;
+    isCheckInComplete = false;
 
-    constructor(private passengerService: PassengerService, private flightService: FlightService, private checkInService: CheckInService) {
+    constructor(private checkInService: CheckInService, private route: ActivatedRoute) {
     }
 
     ngOnInit(): void {
-        this.passengerService.getPassengersForFlight(1).subscribe(dtos => {
-            this.passengers = dtos;
-        });
+        this.route.paramMap.subscribe(params => {
+            const id = parseInt(params.get('id') ?? '0', 10);
 
-        this.flightService.getFlight(1).subscribe(dto => {
-            this.flight = dto;
+            if (id === 0) {
+                return;
+            }
+
+            this.checkInService.getCheckInInfo(id).subscribe(dto => {
+                this.passengers = dto.travelers;
+                this.flight = dto.flight;
+                this.isCheckInComplete = this.passengers.every(traveler => traveler.checkedIn);
+            });
         });
     }
 
-    onDownload(passenger: PassengerDto) {
+    onDownload(passenger: TravelerDto) {
         // TODO: handle download
     }
 
@@ -42,10 +47,9 @@ export class CheckInPageComponent implements OnInit {
 
     checkIn() {
         this.passengers.forEach(passenger => {
-            if(passenger.checkedIn){
+            if (passenger.checkedIn) {
                 // TODO: add right Seat Number
-                this.checkInService.updateCheckIn(passenger.id, 1).subscribe(result=> console.log);
-                // Seatnumber is still const
+                this.checkInService.updateCheckIn(passenger.id, 1).subscribe();
             }
         });
         this.isCheckInComplete = true;

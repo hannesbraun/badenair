@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {PassengerDto} from '../../services/dtos/Dtos';
+import {TravelerDto} from '../../services/dtos/Dtos';
 
 @Component({
     selector: 'app-check-in-info',
@@ -8,7 +8,7 @@ import {PassengerDto} from '../../services/dtos/Dtos';
 })
 export class CheckInInfoComponent {
 
-    @Input() passenger !: PassengerDto;
+    @Input() passenger !: TravelerDto;
     @Output() download = new EventEmitter<void>();
     @Input() isCheckInComplete !: boolean;
 
