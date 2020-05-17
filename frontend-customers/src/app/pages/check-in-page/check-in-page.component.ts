@@ -34,7 +34,7 @@ export class CheckInPageComponent implements OnInit {
     }
 
     onDownload(passenger: TravelerDto) {
-        // TODO: handle download
+        this.checkInService.downloadPdf(passenger.id);
     }
 
     getDuration() {
@@ -48,8 +48,7 @@ export class CheckInPageComponent implements OnInit {
     checkIn() {
         this.passengers.forEach(passenger => {
             if (passenger.checkedIn) {
-                // TODO: add right Seat Number
-                this.checkInService.updateCheckIn(passenger.id, 1).subscribe();
+                this.checkInService.updateCheckIn(passenger.id).subscribe();
             }
         });
         this.isCheckInComplete = true;
