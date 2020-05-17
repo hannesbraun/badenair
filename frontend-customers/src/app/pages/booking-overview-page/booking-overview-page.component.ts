@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BookingStateService} from '../../services/search/booking-state.service';
 import {forkJoin, Subscription} from 'rxjs';
-import {BookingDto, FlightDto, PassengerDto} from 'src/app/services/dtos/Dtos';
+import {BookingDto, FlightDto, TravelerDto} from 'src/app/services/dtos/Dtos';
 import {BookingService} from 'src/app/services/booking/booking.service';
 import {Router} from '@angular/router';
 import {Seat} from 'src/app/components/seat-selection/seat-selection.component';
@@ -16,7 +16,7 @@ export class BookingOverviewPageComponent implements OnInit, OnDestroy {
     private bookingStateSubscription!: Subscription;
     toFlight!: FlightDto;
     returnFlight !: FlightDto;
-    passengers!: PassengerDto[];
+    passengers!: TravelerDto[];
     toSeats !: Seat[];
     returnSeats !: Seat[];
     price = 0;

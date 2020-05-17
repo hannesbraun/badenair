@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {FlightDto} from '../dtos/Dtos';
 import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
@@ -15,7 +15,7 @@ export class FlightService {
     }
 
     searchFlights(data: any): Observable<FlightDto[]> {
-        return this.http.get<FlightDto[]>(this.baseUrl, {params:  data})
+        return this.http.get<FlightDto[]>(this.baseUrl, {params: data})
             .pipe(
                 map(flights =>
                     flights.map(flight => {
@@ -28,18 +28,5 @@ export class FlightService {
                     )
                 )
             );
-    }
-
-    getFlight(id: number): Observable<FlightDto> {
-        return of(
-            {
-                id: 1,
-                start: 'Lorem ipsum dolor sit amet',
-                destination: 'Lorem ipsum dolor sit amet',
-                startTime: new Date(),
-                arrivalTime: new Date(),
-                price: 200
-            }
-        );
     }
 }

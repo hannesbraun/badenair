@@ -3,7 +3,7 @@ import {BookingStateService} from '../../services/search/booking-state.service';
 import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
-import {PassengerDto} from '../../services/dtos/Dtos';
+import {TravelerDto} from '../../services/dtos/Dtos';
 
 @Component({
     selector: 'app-passengers-page',
@@ -12,7 +12,7 @@ import {PassengerDto} from '../../services/dtos/Dtos';
 })
 export class PassengersPageComponent implements OnInit {
     passengersCount = new Observable<number>();
-    passengers = new Observable<PassengerDto[]>();
+    passengers = new Observable<TravelerDto[]>();
 
     constructor(private bookingStateService: BookingStateService,
                 private router: Router,
@@ -29,7 +29,7 @@ export class PassengersPageComponent implements OnInit {
         );
     }
 
-    onFromSubmit(value: PassengerDto[]) {
+    onFromSubmit(value: TravelerDto[]) {
         this.bookingStateService.setPassengersDto(value);
         this.router.navigate(['seat']);
     }

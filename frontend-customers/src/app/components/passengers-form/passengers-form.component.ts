@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {PassengerDto} from 'src/app/services/dtos/Dtos';
+import {TravelerDto} from 'src/app/services/dtos/Dtos';
 import {Observable} from 'rxjs';
 
 @Component({
@@ -13,9 +13,9 @@ export class PassengersFormComponent implements OnInit {
     baggagePrice = 2;
     form!: FormGroup;
 
-    @Input() passengers!: Observable<PassengerDto[]>;
+    @Input() passengers!: Observable<TravelerDto[]>;
     @Input() passengerCount!: Observable<number>;
-    @Output() passengersSubmit = new EventEmitter<PassengerDto[]>();
+    @Output() passengersSubmit = new EventEmitter<TravelerDto[]>();
 
     constructor(private formBuilder: FormBuilder,
     ) {
@@ -47,8 +47,8 @@ export class PassengersFormComponent implements OnInit {
             return;
         }
         const formModel = this.form.controls.items.value;
-        const passengers: PassengerDto[] = formModel.map(
-            (passenger: PassengerDto) => Object.assign({}, passenger)
+        const passengers: TravelerDto[] = formModel.map(
+            (passenger: TravelerDto) => Object.assign({}, passenger)
         );
 
         this.passengersSubmit.emit(passengers);

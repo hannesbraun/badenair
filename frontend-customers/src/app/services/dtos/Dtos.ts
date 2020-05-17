@@ -1,4 +1,4 @@
-import { Seat } from 'src/app/components/seat-selection/seat-selection.component';
+import {Seat} from 'src/app/components/seat-selection/seat-selection.component';
 
 export interface SignUpDto {
     lastname: string;
@@ -29,7 +29,7 @@ export interface FlightDto {
     price: number;
 }
 
-export interface PassengerDto {
+export interface TravelerDto {
     id: number;
     name: string;
     surname: string;
@@ -38,6 +38,8 @@ export interface PassengerDto {
     baggage2: number;
     baggage3: number;
     baggage4: number;
+    seatRow: number;
+    seatColumn: number;
 }
 
 export interface AirportDto {
@@ -50,9 +52,14 @@ export interface SeatDto {
     freeSeats: boolean[][];
 }
 
-export interface BookingDto{
-    flightId: number,
-    passengers: PassengerDto[],
+export interface BookingDto {
+    flightId: number;
+    passengers: TravelerDto[];
     seats: Seat[];
-    price: number
+    price: number;
+}
+
+export interface CheckInInfoDto {
+    travelers: TravelerDto[];
+    flight: FlightDto;
 }

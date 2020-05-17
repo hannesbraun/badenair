@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { FlightDto, PassengerDto } from 'src/app/services/dtos/Dtos';
+import { FlightDto, TravelerDto } from 'src/app/services/dtos/Dtos';
 import { Seat } from '../seat-selection/seat-selection.component';
 
 @Component({
@@ -11,7 +11,7 @@ import { Seat } from '../seat-selection/seat-selection.component';
 export class BookingOverviewComponent {
   @Input() toFlight !: FlightDto;
   @Input() returnFlight !: FlightDto;
-  @Input() passengers!: PassengerDto[];
+  @Input() passengers!: TravelerDto[];
   @Input() toSeats !: Seat[];
   @Input() returnSeats !: Seat[];
   @Input() price!: number;
