@@ -22,7 +22,7 @@ export const appRoutes: Routes = [
     {path: 'booked', component: BookedFlightsComponent, canActivate: [AuthGuard]},
     {path: 'passengers', component: PassengersPageComponent, canActivate: [AuthGuard]},
     {path: 'seat', component: SeatSelectionPageComponent, canActivate: [AuthGuard]},
-    {path: 'checkin', component: CheckInPageComponent, canActivate: [AuthGuard]},
+    {path: 'checkin/:id', component: CheckInPageComponent, canActivate: [AuthGuard]},
     {path: 'success', component: SuccessPageComponent, canActivate: [AuthGuard]},
     {path: 'overview', component: BookingOverviewPageComponent, canActivate: [AuthGuard]},
 ];

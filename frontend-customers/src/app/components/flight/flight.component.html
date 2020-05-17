@@ -15,7 +15,7 @@
                 <h3>Personen:</h3>
                 <div *ngFor="let person of persons">{{ person.name }}</div>
             </div>
-            <button *ngIf="checkInState" mat-button mat-raised-button class="mat-primary" routerLink="/checkin">Check-In
+            <button *ngIf="checkInState" mat-button mat-raised-button class="mat-primary" [routerLink]="['/checkin', flight.id]">Check-In
             </button>
         </ng-container>
     </mat-card-content>
