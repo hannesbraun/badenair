@@ -6,7 +6,7 @@ import {Component, Input} from '@angular/core';
         <div>
             <p>{{time | date:'dd.MM.yyyy'}}</p>
             <p class="location">{{location}}</p>
-            <p>{{time | date:'HH:mm:ss'}} Uhr</p>
+            <p>{{time | date:'HH:mm'}} Uhr</p>
         </div>
     `,
     styles: [`

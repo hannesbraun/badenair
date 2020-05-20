@@ -25,8 +25,8 @@
                         <mat-label>{{ baggage + 1 }}. Gepäckstück</mat-label>
                         <mat-select formControlName="baggage{{ baggage + 1 }}">
                             <mat-option>Kein Gepäckstück</mat-option>
-                            <mat-option *ngFor="let baggage of baggageCapacity" [value]="baggage">{{ baggage }}kg
-                                Gepäckstück
+                            <mat-option *ngFor="let baggage of baggageCapacity" [value]="baggage * baggagePrice">{{ baggage }}kg
+                                Gepäckstück ({{ baggage * baggagePrice | currency:'EUR'}})
                             </mat-option>
                         </mat-select>
                     </mat-form-field>

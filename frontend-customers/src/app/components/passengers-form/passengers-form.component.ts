@@ -10,6 +10,7 @@ import {Observable} from 'rxjs';
 })
 export class PassengersFormComponent implements OnInit {
     baggageCapacity = [15, 23, 30];
+    baggagePrice = 2;
     form!: FormGroup;
 
     @Input() passengers!: Observable<PassengerDto[]>;
