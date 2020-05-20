@@ -33,9 +33,9 @@
 <div *ngFor="let passenger of passengers; let index = index">
     <h3>{{passenger.name}} {{passenger.surname}}</h3>
     <div>
-        <p *ngIf="toSeats[index]">Sitzplatz Hinflug: Reihe {{toSeats[index].row}}, Sitz:
+        <p *ngIf="toSeats[index]">Sitzplatz Hinflug: Reihe {{toSeats[index].row + 1}}, Sitz:
             {{convertToSeatNumber(toSeats[index].column)}}</p>
-        <p *ngIf="returnSeats[index]">Sitzplatz Rückflug: Reihe {{returnSeats[index].row}}, Sitz:
+        <p *ngIf="returnSeats[index]">Sitzplatz Rückflug: Reihe {{returnSeats[index].row + 1}}, Sitz:
             {{convertToSeatNumber(returnSeats[index].column)}}</p>
     </div>
     <div fxLayoutAlign="space-between" *ngIf="passenger.baggage1 !== 0">

@@ -1,17 +1,18 @@
 <div>
     <form [formGroup]="seatForm">
 
-        <div formArrayName="items" *ngFor="let item of forms; let index = index">
-            <div [formGroupName]="index">
-                <mat-label>Mitreisender {{index + 1}}</mat-label>
+        <div formArrayName="items" *ngFor="let item of forms; let passengerIndex = index">
+            <div [formGroupName]="passengerIndex">
+                <mat-label>Mitreisender {{passengerIndex + 1}}</mat-label>
                 <mat-form-field>
                     <mat-label>Reihe</mat-label>
                     <mat-select formControlName="row" placeholder="row">
-                        <mat-option *ngFor="let row of seats; let index = index" [value]="row.length">
+                        <mat-option *ngFor="let row of seats; let index = index" [value]="index"
+                        [disabled]="isRowDisabled(index)">
                             {{index + 1}}
                         </mat-option>
                     </mat-select>
-                    <mat-error *ngIf="formArray.controls[index].get('row')?.errors?.required">
+                    <mat-error *ngIf="formArray.controls[passengerIndex].get('row')?.errors?.required">
                         Dieses Feld wird benötigt.
                     </mat-error>
                 </mat-form-field>
@@ -19,11 +20,12 @@
                 <mat-form-field>
                     <mat-label>Spalte</mat-label>
                     <mat-select formControlName="column" placeholder="column">
-                        <mat-option *ngFor="let column of seats[0]; let index = index" [value]="index">
+                        <mat-option *ngFor="let column of seats[0]; let index = index" [value]="index"
+                        [disabled]="isColumnDisabled(passengerIndex, index)">
                             {{columns[index]}}
                         </mat-option>
                     </mat-select>
-                    <mat-error *ngIf="formArray.controls[index].get('column')?.errors?.required">
+                    <mat-error *ngIf="formArray.controls[passengerIndex].get('column')?.errors?.required">
                         Dieses Feld wird benötigt.
                     </mat-error>
                 </mat-form-field>
@@ -37,13 +39,19 @@
 </div>
 <div class="svg-container" *ngIf="freeSeats | async as seats; else loading">
     <h1>Sitzplätze ({{seats!.type}})</h1>
+    <div class="indecator">
+        <span>belegt</span><span>frei</span>
+    </div>
     <svg height="1000" width="300">
             <g fill="#000">
                 <text *ngFor="let column of seats!.freeSeats[0]; let x = index;" [attr.x]="x * 30 + 30" [attr.y]="15">{{columns[x]}}</text>
             </g>
-            <g fill="#00F" *ngFor="let row of seats!.freeSeats; let y = index">
+            <g *ngFor="let row of seats!.freeSeats; let y = index">
                 <text [attr.x]="0" [attr.y]="y * 30 + 15 + 30" fill="#000">{{y + 1}}</text>
-                <rect *ngFor="let column of seats!.freeSeats[y]; let x = index;" [attr.x]="x * 30 + 30" [attr.y]="y * 30 + 30"
+                <rect *ngFor="let column of seats!.freeSeats[y]; let x = index;" [attr.x]="x * 30 + 30"
+                      [attr.y]="y * 30 + 30"
+                      [class.taken-seat]="!column"
+                      [class.free-seat]="column"
                       width="20"
                       height="20" class="quad">
                 </rect>

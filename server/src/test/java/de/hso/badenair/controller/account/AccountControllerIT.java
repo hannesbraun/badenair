@@ -1,21 +1,21 @@
 package de.hso.badenair.controller.account;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
-
-import java.security.Principal;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import de.hso.badenair.controller.dto.account.UpdateAccountDataDto;
+import de.hso.badenair.domain.booking.Booking;
+import de.hso.badenair.domain.booking.Traveler;
+import de.hso.badenair.domain.booking.account.AccountData;
+import de.hso.badenair.domain.flight.Airport;
+import de.hso.badenair.domain.flight.Flight;
+import de.hso.badenair.domain.flight.ScheduledFlight;
+import de.hso.badenair.domain.plane.Plane;
+import de.hso.badenair.domain.plane.PlaneState;
+import de.hso.badenair.domain.plane.PlaneType;
+import de.hso.badenair.domain.plane.PlaneTypeData;
+import de.hso.badenair.service.account.AccountDataRepository;
+import de.hso.badenair.service.account.AccountService;
+import de.hso.badenair.service.booking.repository.BookingRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,23 +34,21 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.security.Principal;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
-import de.hso.badenair.controller.dto.account.UpdateAccountDataDto;
-import de.hso.badenair.domain.booking.Booking;
-import de.hso.badenair.domain.booking.Traveler;
-import de.hso.badenair.domain.booking.account.AccountData;
-import de.hso.badenair.domain.flight.Airport;
-import de.hso.badenair.domain.flight.Flight;
-import de.hso.badenair.domain.flight.ScheduledFlight;
-import de.hso.badenair.domain.plane.Plane;
-import de.hso.badenair.domain.plane.PlaneState;
-import de.hso.badenair.domain.plane.PlaneType;
-import de.hso.badenair.domain.plane.PlaneTypeData;
-import de.hso.badenair.service.account.AccountDataRepository;
-import de.hso.badenair.service.account.AccountService;
-import de.hso.badenair.service.booking.repository.BookingRepository;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 @DataJpaTest
 @ContextConfiguration(classes = AccountControllerIT.TestConfig.class)
@@ -138,18 +136,18 @@ class AccountControllerIT {
 				.scheduledFlight(scheduledFlight)
 				.startDate(OffsetDateTime.now().minusDays(10)).plane(plane)
 				.build();
-		Flight flight2 = Flight.builder().id(2l)
-				.scheduledFlight(scheduledFlight)
-				.startDate(OffsetDateTime.now().plusDays(10)).plane(plane)
-				.build();
-		Traveler traveler1 = Traveler.builder().id(1l).firstName("Bob")
-				.lastName("Ross").seatNumber("21F").checkedIn(true).build();
-		Booking booking1 = Booking.builder().id(1l).flight(flight1)
-				.travelers(Set.of(traveler1)).build();
-		Traveler traveler2 = Traveler.builder().id(2l).firstName("Bob")
-				.lastName("Ross").seatNumber("21F").checkedIn(true).build();
-		Booking booking2 = Booking.builder().id(2l).flight(flight2)
-				.travelers(Set.of(traveler2)).build();
+        Flight flight2 = Flight.builder().id(2l)
+            .scheduledFlight(scheduledFlight)
+            .startDate(OffsetDateTime.now().plusDays(10)).plane(plane)
+            .build();
+        Traveler traveler1 = Traveler.builder().id(1l).firstName("Bob")
+            .lastName("Ross").seatColumn(6).seatRow(21).checkedIn(true).build();
+        Booking booking1 = Booking.builder().id(1l).flight(flight1)
+            .travelers(Set.of(traveler1)).build();
+        Traveler traveler2 = Traveler.builder().id(2l).firstName("Bob")
+            .lastName("Ross").seatColumn(6).seatRow(21).checkedIn(true).build();
+        Booking booking2 = Booking.builder().id(2l).flight(flight2)
+            .travelers(Set.of(traveler2)).build();
 
 		// Mock repository
 		Mockito.when(

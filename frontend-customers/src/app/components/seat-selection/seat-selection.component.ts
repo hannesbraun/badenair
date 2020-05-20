@@ -51,6 +51,7 @@ export class SeatSelectionComponent implements OnInit {
         });
         this.freeSeats.subscribe(seats => {
             this.seats = seats.freeSeats;
+            console.log(seats);
             this.planeType = seats.type;
         });
     }
@@ -61,6 +62,7 @@ export class SeatSelectionComponent implements OnInit {
         }
         const value: Seat[] = Object.values(this.seatForm.controls.items.value);
         this.seatSelected.emit(value);
+        this.formArray.reset();
     }
 
     get formArray(): FormArray {
@@ -86,5 +88,23 @@ export class SeatSelectionComponent implements OnInit {
 
     back() {
         this.previous.emit();
+    }
+
+    isRowDisabled(index: number): boolean {
+        if (!this.seats) {
+            return false;
+        }
+        return this.seats[index].every(value => !value);
+    }
+
+    isColumnDisabled(passengerIndex: number, index: number): boolean {
+        if (!this.seats) {
+            return true;
+        }
+        const rowValue = this.formArray.controls[passengerIndex]?.get('row')?.value;
+        if (!rowValue) {
+            return true;
+        }
+        return !this.seats[rowValue][index];
     }
 }
