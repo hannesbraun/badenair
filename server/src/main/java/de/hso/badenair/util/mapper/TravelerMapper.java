@@ -11,6 +11,11 @@ import java.util.stream.Collectors;
 
 public abstract class TravelerMapper {
 
+    /**
+     * @param traveler Traveler to map to the corresponding dto
+     * @return Returns the mapped dto
+     */
+
     public static CheckInTravelerDto mapToDto(Traveler traveler) {
         final List<Integer> luggage = traveler.getLuggage().stream()
             .map(Luggage::getWeight)
@@ -30,8 +35,8 @@ public abstract class TravelerMapper {
             luggage.get(1),
             luggage.get(2),
             luggage.get(3),
-            4, // TODO: Change when rebased
-            1
+            traveler.getSeatRow(),
+            traveler.getSeatColumn()
         );
     }
 }

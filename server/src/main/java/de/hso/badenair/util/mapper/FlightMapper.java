@@ -10,6 +10,10 @@ import java.time.OffsetDateTime;
 
 public abstract class FlightMapper {
 
+    /**
+     * @param flight Flight to map to the corresponding dto
+     * @return Returns the mapped dto
+     */
     public static FlightDto mapToDto(Flight flight) {
         int takenSeats = 0;
         for (Booking booking : flight.getBookings()) {

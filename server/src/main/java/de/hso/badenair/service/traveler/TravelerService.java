@@ -23,6 +23,10 @@ public class TravelerService {
     private final TravelerRepository travelerRepository;
     private final BookingRepository bookingRepository;
 
+    /**
+     * @param TravelerId ID of the traveler that is updated
+     * @return Returns whether the update was successful
+     */
     @Transactional
     public boolean updateCheckIn(Long TravelerId) {
         Optional<Traveler> traveler = travelerRepository.findById(TravelerId);
@@ -37,6 +41,11 @@ public class TravelerService {
         return true;
     }
 
+    /**
+     * @param customerUserId ID to identify the customer
+     * @param flightId ID of the flight to get the info from
+     * @return Returns All data needed for the check in
+     */
     public CheckInInfoDto getCheckInInfo(String customerUserId, Long flightId) {
         final Booking booking = bookingRepository.findByCustomerUserIdAndFlight_IdEquals(customerUserId, flightId)
             .orElseThrow();
