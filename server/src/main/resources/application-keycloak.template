@@ -1,0 +1,4 @@
+keycloak:
+  username: <USERNAME>
+  password: <PASSWORD>
+  host: localhost:8080
