@@ -32,3 +32,5 @@ build/
 
 ### macOS ###
 .DS_Store
+
+src/main/resources/application-keycloak.yml
