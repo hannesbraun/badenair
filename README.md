@@ -21,3 +21,8 @@ Starten mit Profil `h2`:
 * Maven: `mvn spring-boot:run '-Dspring-boot.run.profiles=h2'`
 
 Zugriff auf die Konsole auf [localhost:8081/h2-console](localhost:8081/h2-console). JDBC URL bei dem Anmelden mit `jdbc:h2:mem:testdb` ersetzen.
+
+### Keycloak API Zugriff
+
+1. Datei `application-keycloak.template` in `application-keycloak.yml` umbenennen
+2. Username und Passwort des Keycloak Admins eintragen
