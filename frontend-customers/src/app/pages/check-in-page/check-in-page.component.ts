@@ -34,7 +34,7 @@ export class CheckInPageComponent implements OnInit {
     }
 
     onDownload(passenger: TravelerDto) {
-        this.checkInService.downloadPdf(passenger.id);
+        this.checkInService.downloadPdf(passenger.id, passenger.name + '_' + passenger.surname);
     }
 
     getDuration() {

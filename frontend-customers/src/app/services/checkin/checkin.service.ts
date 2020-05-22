@@ -22,20 +22,20 @@ export class CheckInService {
         return this.http.get<CheckInInfoDto>(`${this.apiUrl}/flight/checkin/${flightId}`);
     }
 
-    downloadPdf(travelerId: number): void {
+    downloadPdf(travelerId: number, name: string): void {
         const params = new HttpParams().set('travelerId', String(travelerId));
         this.http.get(`${this.apiUrl}/boardingpass`, {params, responseType: 'blob'})
             .subscribe((pdfData) => {
                 const blob = new Blob([pdfData], {type: 'application/pdf'});
-                this.downloadBlob(blob);
+                this.downloadBlob(blob, name);
             });
     }
 
-    private downloadBlob(blob: Blob): void {
+    private downloadBlob(blob: Blob, name: string): void {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = 'BoardingPass.pdf';
+        link.download = `BoardingPass_${name}.pdf`;
         link.click();
         window.URL.revokeObjectURL(url);
         link.remove();
