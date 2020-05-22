@@ -36,6 +36,9 @@ public class KeycloakApiService {
     private String accessToken;
     private Map<EmployeeRole, RoleRepresentation> employeeRoles;
 
+    /**
+     * Retrieves access token from the keyloak server with the given credentials
+     */
     @PostConstruct
     private void getToken() {
         RestTemplate restTemplate = new RestTemplate();
@@ -59,6 +62,11 @@ public class KeycloakApiService {
         getRolesForInit();
     }
 
+    /**
+     * Creates a new employee user account
+     * @param username Name of the user to create (must be unique)
+     * @param role Role the user should have
+     */
     public void createEmployeeUser(String username, EmployeeRole role) {
         final UserRepresentation user = createUser(username);
 
@@ -79,6 +87,10 @@ public class KeycloakApiService {
 
     }
 
+    /**
+     * Creates a new customer user account
+     * @param username Name of the user to create (must be unique)
+     */
     public void createCustomerUser(String username) {
         final UserRepresentation user = createUser(username);
 
@@ -94,6 +106,9 @@ public class KeycloakApiService {
 
     }
 
+    /**
+     * @return Returns all customer user accounts
+     */
     public List<UserRepresentation> getCustomerUsers() {
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(getAuthHeader());
 
@@ -105,6 +120,9 @@ public class KeycloakApiService {
         return Arrays.asList(body);
     }
 
+    /**
+     * @return Returns all employee user accounts
+     */
     public List<UserRepresentation> getEmployeeUsers() {
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(getAuthHeader());
 
@@ -116,6 +134,10 @@ public class KeycloakApiService {
         return Arrays.asList(body);
     }
 
+    /**
+     * @param username Name of the user to seach for
+     * @return Returns an {@link Optional} with a user
+     */
     public Optional<UserRepresentation> getUser(String username) {
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(getAuthHeader());
 
@@ -131,6 +153,9 @@ public class KeycloakApiService {
         return Optional.empty();
     }
 
+    /**
+     * Retrieves the roles with ids needed for user creation
+     */
     private void getRolesForInit() {
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(getAuthHeader());
 
@@ -147,6 +172,10 @@ public class KeycloakApiService {
             ));
     }
 
+    /**
+     * @param username Name of the user
+     * @return Returns a user with the default password '1234'
+     */
     private UserRepresentation createUser(String username) {
         return UserRepresentation.builder()
             .username(username)
@@ -162,6 +191,11 @@ public class KeycloakApiService {
             .build();
     }
 
+    /**
+     * Adds the specified rules to the user
+     * @param roleRepresentations Roles the user will be given
+     * @param userId ID of the user
+     */
     private void addRoleToUser(RoleRepresentation[] roleRepresentations, String userId) {
         HttpEntity<RoleRepresentation[]> entity = new HttpEntity<>(roleRepresentations, getAuthHeader());
 
@@ -169,12 +203,18 @@ public class KeycloakApiService {
         restTemplate.exchange(url, HttpMethod.POST, entity, Void.class);
     }
 
+    /**
+     * @return Returns a header with the 'Authorization' field set to a valid token
+     */
     private HttpHeaders getAuthHeader() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
         return headers;
     }
 
+    /**
+     * @return Returns the base URL of the keycloak API
+     */
     private String getBaseUrl() {
         return "http://" + config.getHost() + "/auth/admin/realms/badenair/";
     }
