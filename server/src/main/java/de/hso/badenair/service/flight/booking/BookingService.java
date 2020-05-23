@@ -13,6 +13,7 @@ import de.hso.badenair.service.booking.repository.BookingRepository;
 import de.hso.badenair.service.flight.FlightService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -26,6 +27,7 @@ public class BookingService {
 
 	private final List<Integer> allowedWeights = List.of(15, 23, 30);
 
+	@Transactional
 	public boolean bookFlight(String username, IncomingBookingDto dto) {
 		Flight flight = flightService.getFlightById(dto.getFlightId());
 		if (flight != null) {
