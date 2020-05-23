@@ -7,12 +7,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
+import de.hso.badenair.controller.dto.flight.IncomingBookingDto;
+import de.hso.badenair.controller.dto.plan.RequestVacationDto;
+import de.hso.badenair.controller.dto.seat.SelectedSeatDto;
+import de.hso.badenair.controller.dto.traveler.IncomingTravelerDto;
 import de.hso.badenair.domain.flight.Airport;
 import de.hso.badenair.domain.flight.Flight;
 import de.hso.badenair.domain.flight.FlightState;
@@ -22,8 +27,13 @@ import de.hso.badenair.domain.plane.PlaneState;
 import de.hso.badenair.domain.plane.PlaneType;
 import de.hso.badenair.domain.plane.PlaneTypeData;
 import de.hso.badenair.service.airport.AirportRepository;
+import de.hso.badenair.service.flight.booking.BookingService;
 import de.hso.badenair.service.flight.repository.FlightRepository;
 import de.hso.badenair.service.flight.repository.ScheduledFlightRepository;
+import de.hso.badenair.service.keycloakapi.EmployeeRole;
+import de.hso.badenair.service.keycloakapi.KeycloakApiService;
+import de.hso.badenair.service.keycloakapi.dto.UserRepresentation;
+import de.hso.badenair.service.plan.vacation.VacationService;
 import de.hso.badenair.service.plane.repository.PlaneRepository;
 import de.hso.badenair.service.plane.repository.PlaneTypeDataRepository;
 import de.hso.badenair.util.csv.CsvHelper;
@@ -43,8 +53,22 @@ public class StaticDataInitializer {
 
 	private final FlightRepository flightRepository;
 
-	private final boolean demoMode = false;
+	private final KeycloakApiService keycloakApiService;
 
+	private final BookingService bookingService;
+
+	private final VacationService vacationService;
+
+	private static final boolean DEMO_MODE = false;
+
+	private static final int AMOUNT_OF_CUSTOMERS = 1040;
+
+	private static final int BOOKINGS_PER_CUSTOMER = 349;
+
+	/**
+	 * Inserts initial data into the database. If {@link DEMO_MODE} is set,
+	 * additional demo data will be inserted.
+	 */
 	@PostConstruct
 	private void init() {
 		initPlaneTypeData();
@@ -54,34 +78,39 @@ public class StaticDataInitializer {
 
 		initFlightplan();
 		// generateFlightplan();
+
+		if (DEMO_MODE) {
+			initCustomers();
+			initBookings();
+
+			initEmployees();
+			initVacation();
+		}
 	}
 
-    private void initPlaneTypeData() {
-        final PlaneTypeData planeTypeDataDash_8_400 = PlaneTypeData.builder()
-            .type(PlaneType.Dash_8_400)
-            .numberOfPassengers(76)
-            .numberOfRows(19)
-            .numberOfColumns(4)
-            .flightRange(1000).build();
+	/**
+	 * Creates the available plane types in the database.
+	 */
+	private void initPlaneTypeData() {
+		final PlaneTypeData planeTypeDataDash_8_400 = PlaneTypeData.builder()
+				.type(PlaneType.Dash_8_400).numberOfPassengers(76)
+				.numberOfRows(19).numberOfColumns(4).flightRange(1000).build();
 
-        final PlaneTypeData planeTypeDataDash_8_200 = PlaneTypeData.builder()
-            .type(PlaneType.Dash_8_200)
-            .numberOfPassengers(36)
-            .numberOfRows(9)
-            .numberOfColumns(4)
-            .flightRange(1000).build();
+		final PlaneTypeData planeTypeDataDash_8_200 = PlaneTypeData.builder()
+				.type(PlaneType.Dash_8_200).numberOfPassengers(36)
+				.numberOfRows(9).numberOfColumns(4).flightRange(1000).build();
 
-        final PlaneTypeData planeTypeDataB737_400 = PlaneTypeData.builder()
-            .type(PlaneType.B737_400)
-            .numberOfPassengers(186)
-            .numberOfRows(31)
-            .numberOfColumns(6)
-            .flightRange(2500).build();
+		final PlaneTypeData planeTypeDataB737_400 = PlaneTypeData.builder()
+				.type(PlaneType.B737_400).numberOfPassengers(186)
+				.numberOfRows(31).numberOfColumns(6).flightRange(2500).build();
 
 		planeTypeDataRepository.saveAll(List.of(planeTypeDataDash_8_400,
 				planeTypeDataDash_8_200, planeTypeDataB737_400));
 	}
 
+	/**
+	 * Creates the available planes in the database.
+	 */
 	private void initPlanes() {
 		// Get types
 		PlaneTypeData planeTypeDataDash_8_200 = planeTypeDataRepository
@@ -117,6 +146,9 @@ public class StaticDataInitializer {
 		planeRepository.saveAll(planes);
 	}
 
+	/**
+	 * Creates the available airports in the database.
+	 */
 	private void initAirports() {
 		List<Airport> airports = new ArrayList<Airport>();
 
@@ -139,6 +171,10 @@ public class StaticDataInitializer {
 		airportRepository.saveAll(airports);
 	}
 
+	/**
+	 * Initializes the flightplan data according to the file "flightplan.csv".
+	 * If {@link DEMO_MODE} is set, a more dense flightplan will be used.
+	 */
 	private void initFlightplan() {
 		// Get planes
 		List<Plane> initialPlanes = new LinkedList<Plane>();
@@ -147,7 +183,7 @@ public class StaticDataInitializer {
 
 		// Demo mode: adjusted flightplan
 		String flightplanFile;
-		if (!demoMode) {
+		if (!DEMO_MODE) {
 			flightplanFile = "flightplan.csv";
 		} else {
 			flightplanFile = "flightplanDemo.csv";
@@ -219,6 +255,116 @@ public class StaticDataInitializer {
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Creates {@link AMOUNT_OF_CUSTOMERS} demo customer accounts. (This method
+	 * shall be used solely for the demo mode.)
+	 */
+	private void initCustomers() {
+		for (int i = 0; i < AMOUNT_OF_CUSTOMERS; i++) {
+			keycloakApiService.createCustomerUser("customer" + (i + 1));
+		}
+	}
+
+	/**
+	 * Creates {@link BOOKINGS_PER_CUSTOMER} random demo bookings for every
+	 * customer. (This method shall be used solely for the demo mode.)
+	 */
+	private void initBookings() {
+		List<UserRepresentation> customers = keycloakApiService
+				.getCustomerUsers();
+		List<Flight> flights = new ArrayList<>();
+		flightRepository.findAll().forEach(flights::add);
+		final int[] baggageWeights = {0, 15, 23, 30};
+
+		Random random = new Random(444);
+		for (UserRepresentation customer : customers) {
+			for (int i = 0; i < BOOKINGS_PER_CUSTOMER; i++) {
+				// Flight
+				Flight flight = flights.get(random.nextInt(flights.size()));
+
+				// Create travelers
+				IncomingTravelerDto[] travelers = new IncomingTravelerDto[random
+						.nextInt(12) + 1];
+				SelectedSeatDto[] selectedSeats = new SelectedSeatDto[travelers.length];
+				for (int j = 0; j < travelers.length; j++) {
+					travelers[j] = new IncomingTravelerDto("Max", "Mustermann",
+							false,
+							baggageWeights[random
+									.nextInt(baggageWeights.length)],
+							baggageWeights[random
+									.nextInt(baggageWeights.length)],
+							baggageWeights[random
+									.nextInt(baggageWeights.length)],
+							baggageWeights[random
+									.nextInt(baggageWeights.length)]);
+					selectedSeats[j] = new SelectedSeatDto(
+							random.nextInt(flight.getPlane().getTypeData()
+									.getNumberOfRows()),
+							random.nextInt(flight.getPlane().getTypeData()
+									.getNumberOfColumns()));
+				}
+
+				// Try to book the flight (may fail if seat is already taken by
+				// another traveler)
+				IncomingBookingDto booking = new IncomingBookingDto(
+						flight.getId(), travelers, selectedSeats, 0.0);
+				bookingService.bookFlight(customer.getUsername(), booking);
+			}
+		}
+	}
+
+	/**
+	 * Creates the required employee accounts.
+	 */
+	private void initEmployees() {
+		// Pilots
+		// TODO: differentiate dash and jet pilots
+		for (int i = 0; i < 40; i++) {
+			keycloakApiService.createEmployeeUser("dashpilot" + (i + 1),
+					EmployeeRole.PILOT);
+		}
+		for (int i = 0; i < 10; i++) {
+			keycloakApiService.createEmployeeUser("jetpilot" + (i + 1),
+					EmployeeRole.PILOT);
+		}
+
+		// Cabin crew
+		// TODO: add cabin crew role
+		for (int i = 0; i < 200; i++) {
+			keycloakApiService.createEmployeeUser("cabin" + (i + 1),
+					EmployeeRole.DEFAULT);
+		}
+
+		for (int i = 0; i < 30; i++) {
+			keycloakApiService.createEmployeeUser("technician" + (i + 1),
+					EmployeeRole.TECHNICIAN);
+		}
+
+		for (int i = 0; i < 20; i++) {
+			keycloakApiService.createEmployeeUser("ground" + (i + 1),
+					EmployeeRole.GROUND);
+		}
+	}
+
+	/**
+	 * Requests a vacation for every employee.
+	 */
+	private void initVacation() {
+		List<UserRepresentation> employees = keycloakApiService
+				.getEmployeeUsers();
+		Random random = new Random(42);
+
+		for (UserRepresentation employee : employees) {
+			int offsetInDays = random.nextInt(340) + 1;
+			RequestVacationDto requestVacationDto = new RequestVacationDto(
+					OffsetDateTime.now().plusDays(offsetInDays),
+					OffsetDateTime.now()
+							.plusDays(offsetInDays + random.nextInt(14) + 1));
+			vacationService.requestVacation(employee.getUsername(),
+					requestVacationDto);
 		}
 	}
 
