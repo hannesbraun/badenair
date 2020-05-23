@@ -11,6 +11,7 @@ import java.util.Random;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
@@ -39,8 +40,12 @@ import de.hso.badenair.service.plane.repository.PlaneTypeDataRepository;
 import de.hso.badenair.util.csv.CsvHelper;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Performs various data initialization tasks.
+ */
 @Component
 @RequiredArgsConstructor
+@DependsOn("keycloakApiService")
 public class StaticDataInitializer {
 
 	private final PlaneTypeDataRepository planeTypeDataRepository;
@@ -59,10 +64,19 @@ public class StaticDataInitializer {
 
 	private final VacationService vacationService;
 
-	private static final boolean DEMO_MODE = false;
+	/**
+	 * If set to true, demo mode will be enabled.
+	 */
+	private static final boolean DEMO_MODE = true;
 
+	/**
+	 * Defines the amount of customer accounts that will be created in the demo mode.
+	 */
 	private static final int AMOUNT_OF_CUSTOMERS = 1040;
 
+	/**
+	 * Defines the amount of bookings that will be generated for a customer in the demo mode.
+	 */
 	private static final int BOOKINGS_PER_CUSTOMER = 349;
 
 	/**
@@ -78,12 +92,13 @@ public class StaticDataInitializer {
 
 		initFlightplan();
 		// generateFlightplan();
-
+		
+		initEmployees();
+		
 		if (DEMO_MODE) {
 			initCustomers();
 			initBookings();
 
-			initEmployees();
 			initVacation();
 		}
 	}
@@ -311,7 +326,7 @@ public class StaticDataInitializer {
 				// another traveler)
 				IncomingBookingDto booking = new IncomingBookingDto(
 						flight.getId(), travelers, selectedSeats, 0.0);
-				bookingService.bookFlight(customer.getUsername(), booking);
+				bookingService.bookFlight(customer.getId(), booking);
 			}
 		}
 	}
