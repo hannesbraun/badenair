@@ -60,21 +60,19 @@ export class ProfileFormComponent implements ControlValueAccessor, OnInit, OnDes
     creditCardNumberValidator(control: AbstractControl): { [key: string]: boolean } | null {
         const digits = [...control.value.replace(/\D/g, '')];
         if (digits.length !== 16) {
-            console.log("fuq")
             return { 'checkDigit': true };
         }
 
         // Only accept mastercard and visa
         if (parseInt(digits[0]) !== 4 && parseInt(digits[0]) !== 5) {
             // Definitely not a mastercard or visa credit card
-            console.log("Definitely not a mastercard or visa credit card")
             return { 'checkDigit': true };
         } else if (parseInt(digits[1]) < 1 || parseInt(digits[1]) > 5) {
             // Could have been a mastercard, but second digit didn't match
-            console.log("Could have been a mastercard, but second digit didn't match")
             return { 'checkDigit': true };
         }
 
+        // Actual algorithm
         let sum = 0;
         for (let i = 0; i < digits.length - 1; i++) {
             let cardNum = parseInt(digits[i]);
@@ -90,7 +88,6 @@ export class ProfileFormComponent implements ControlValueAccessor, OnInit, OnDes
             sum += cardNum;
         }
 
-        console.log(sum.toString())
         if ((10 - (sum % 10)) !== parseInt(digits[digits.length - 1])) {
             return { 'checkDigit': true };
         } else {
