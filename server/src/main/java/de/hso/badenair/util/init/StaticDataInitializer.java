@@ -208,7 +208,7 @@ public class StaticDataInitializer {
 							mappedPlanes.put(flightData[7], plane);
 						}
 					}
-					initialPlanes.remove(flightData[7]);
+					initialPlanes.remove(mappedPlanes.get(flightData[7]));
 				}
 			}
 
