@@ -80,7 +80,7 @@ public class AccountController {
 					flight.getStartDate(),
 					flight.getScheduledFlight().getStartTime(),
 					flight.getScheduledFlight().getDurationInHours(),
-					flight.getScheduledFlight().getStartingAirport()
+					flight.getScheduledFlight().getDestinationAirport()
 							.getTimezone());
 
 			// Create final booking dto
