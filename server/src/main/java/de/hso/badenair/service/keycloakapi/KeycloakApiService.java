@@ -112,7 +112,7 @@ public class KeycloakApiService {
     public List<UserRepresentation> getCustomerUsers() {
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(getAuthHeader());
 
-        final String url = getBaseUrl() + "roles/" + CUSTOMER_ROLE_NAME + "/users";
+        final String url = getBaseUrl() + "roles/" + CUSTOMER_ROLE_NAME + "/users?max=2000";
         final ResponseEntity<UserRepresentation[]> exchange = restTemplate.exchange(url, HttpMethod.GET, entity, UserRepresentation[].class);
 
         final UserRepresentation[] body = Optional.ofNullable(exchange.getBody()).orElse(EMPTY_USER_LIST);
@@ -126,7 +126,7 @@ public class KeycloakApiService {
     public List<UserRepresentation> getEmployeeUsers() {
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(getAuthHeader());
 
-        final String url = getBaseUrl() + "roles/" + EmployeeRole.DEFAULT.getName() + "/users";
+        final String url = getBaseUrl() + "roles/" + EmployeeRole.DEFAULT.getName() + "/users?max=1000";
         final ResponseEntity<UserRepresentation[]> exchange = restTemplate.exchange(url, HttpMethod.GET, entity, UserRepresentation[].class);
 
         final UserRepresentation[] body = Optional.ofNullable(exchange.getBody()).orElse(EMPTY_USER_LIST);
