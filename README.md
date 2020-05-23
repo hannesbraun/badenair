@@ -24,5 +24,6 @@ Zugriff auf die Konsole auf [localhost:8081/h2-console](localhost:8081/h2-consol
 
 ### Keycloak API Zugriff
 
-1. Datei `application-keycloak.template` in `application-keycloak.yml` umbenennen
+1. Datei `application-keycloak.template` duplizieren und Duplikat in `application-keycloak.yml` umbenennen
 2. Username und Passwort des Keycloak Admins eintragen
+3. Beim Start des Servers: `keycloak` als Profil übergeben (Syntax analog wie bei Profil `h2`)
