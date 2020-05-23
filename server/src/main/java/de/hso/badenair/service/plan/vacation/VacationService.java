@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -35,8 +36,8 @@ public class VacationService {
 
     @Transactional
     public void requestVacation(String employeeUserId, RequestVacationDto requestVacationDto) {
-        final OffsetDateTime startDate = requestVacationDto.getStartDate();
-        final OffsetDateTime endDate = requestVacationDto.getEndDate();
+        final OffsetDateTime startDate = requestVacationDto.getStartDate().withOffsetSameLocal(ZoneOffset.of("+1"));
+        final OffsetDateTime endDate = requestVacationDto.getEndDate().withOffsetSameLocal(ZoneOffset.of("+1"));
         final int differenceInDays = getDifferenceInDays(startDate, endDate);
 
         if (endDate.isBefore(startDate) || differenceInDays <= 0) {
