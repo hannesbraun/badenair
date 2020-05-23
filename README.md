@@ -13,6 +13,7 @@
 5. Keycloak config importieren (`kcadm.bat`/`kcadm.sh` befinden sich im `bin/` Ordner von Keycloak):
     * Admin CLI anmelden: `.\kcadm.bat config credentials --server http://localhost:8080/auth --realm master --user <USERNAME> --password <PASSWORD>`
     * Realm importieren (keycloak_config.json im Projektordner): `.\kcadm.bat create realms -f "<PATH-TO-CONFIG>"`
+    6. In der Keycloak-Admin-Konsole im Master-Realm unter Realm-Settings -> Tokens die "Access Token Lifespan" auf 30 Minuten erhöhen
 
 ### H2 In-memory Datenbank
 
