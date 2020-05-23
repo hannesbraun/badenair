@@ -3,7 +3,7 @@
     <div>
         <mat-form-field>
             <input matInput placeholder="Geburtsdatum" [min]="minDateBirthDate" [max]="maxDateBirthDate"
-                   [matDatepicker]="pickerBirthDate" formControlName="birthDate">
+                [matDatepicker]="pickerBirthDate" formControlName="birthDate">
             <mat-datepicker-toggle matSuffix [for]="pickerBirthDate"></mat-datepicker-toggle>
             <mat-datepicker #pickerBirthDate></mat-datepicker>
             <mat-error *ngIf="profileForm?.get('birthDate')?.errors?.required">
@@ -41,7 +41,7 @@
         </mat-form-field>
     </div>
 
-    <h3>Zahlungsinformationen</h3>
+    <h3>Zahlungsinformationen (MasterCard/Visa)</h3>
     <div class="formContainer">
         <mat-form-field>
             <input matInput placeholder="Karteninhaber" formControlName="cardOwner">
@@ -52,21 +52,34 @@
 
         <mat-form-field class="large">
             <input matInput placeholder="Kartennummer" formControlName="cardNumber">
-            <mat-error *ngIf="profileForm?.get('cardNumber')?.errors?.required">
-                Dieses Feld muss ausgefüllt sein.
+            <mat-error>
+                <span *ngIf="profileForm?.get('cardNumber')?.errors?.required">
+                    Dieses Feld muss ausgefüllt sein.
+                </span>
+                <span *ngIf="profileForm?.get('cardNumber')?.errors?.pattern && !profileForm?.get('cardNumber')?.errors?.required">
+                    Dieses Feld muss eine 16-stellige Kartennummer enthalten.
+                </span>
+                <span *ngIf="profileForm?.get('cardNumber')?.errors?.checkDigit && !profileForm?.get('cardNumber')?.errors?.pattern && !profileForm?.get('cardNumber')?.errors?.required">
+                    Dieses Feld muss eine gültige Kartennummer enthalten.
+                </span>
             </mat-error>
         </mat-form-field>
 
         <mat-form-field class="small">
             <input matInput placeholder="Prüfziffer" formControlName="check">
-            <mat-error *ngIf="profileForm?.get('check')?.errors?.required">
-                Dieses Feld muss ausgefüllt sein.
+            <mat-error>
+                <span *ngIf="profileForm?.get('check')?.errors?.required">
+                    Dieses Feld muss ausgefüllt sein.
+                </span>
+                <span *ngIf="profileForm?.get('check')?.errors?.pattern">
+                    Dieses Feld muss eine gültige Prüfziffer enthalten.
+                </span>
             </mat-error>
         </mat-form-field>
 
         <mat-form-field>
             <input matInput placeholder="Auslaufdatum" [min]="minDateInvalidationDate"
-                   [matDatepicker]="pickerInvalidationDate" formControlName="invalidationDate">
+                [matDatepicker]="pickerInvalidationDate" formControlName="invalidationDate">
             <mat-datepicker-toggle matSuffix [for]="pickerInvalidationDate"></mat-datepicker-toggle>
             <mat-datepicker #pickerInvalidationDate></mat-datepicker>
             <mat-error *ngIf="profileForm?.get('street')?.errors?.required">
