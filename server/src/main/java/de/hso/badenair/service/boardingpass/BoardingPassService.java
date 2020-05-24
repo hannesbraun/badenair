@@ -33,6 +33,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+/**
+ * Service to generate boarding pass pdf documents
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -42,6 +45,11 @@ public class BoardingPassService {
 
     private final LuggageRepository luggageRepository;
 
+    /**
+     * Retrieves the required data from the database and generates a boarding pass pdf using this data.
+     * @param id the id of the traveler for which to generate the boarding pass
+     * @return the generated boarding pass pdf document
+     */
     public byte[] getBoardingPass(Long id) {
         Optional<Traveler> traveler = travelerRepository.findById(id);
         if (!traveler.isPresent()) {
@@ -65,6 +73,13 @@ public class BoardingPassService {
 
     // The following code may look ugly. Sorry.
 
+    /**
+     * Generates a boarding pass pdf document using the given data.
+     * @param traveler the traveler data (this object should include references to the flight data as well)
+     * @param luggage the list of luggage which the traveler has booked
+     * @return the generated boarding pass pdf document
+     * @throws IOException if writing to the pdf document fails (thrown by the pdfbox library)
+     */
     private byte[] generatePdf(Traveler traveler, List<Luggage> luggage)
         throws IOException {
         // Duration
@@ -367,6 +382,13 @@ public class BoardingPassService {
         return result.toByteArray();
     }
 
+    /**
+     * Generates a qr code using the given string.
+     * @param input the string that the qr code should contain
+     * @return the generated qr code picture (format: png)
+     * @throws WriterException if contents can't be encoded legally in a format
+     * @throws IOException if writing to the byte array stream fails
+     */
     private byte[] generateQRCode(String input)
         throws WriterException, IOException {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
@@ -378,6 +400,12 @@ public class BoardingPassService {
         return result.toByteArray();
     }
 
+    /**
+     * Returns the string to display in the boarding pass for a given piece of luggage.
+     * @param list the list of booked luggage (can be smaller than the requested index)
+     * @param index the index of the piece of luggage of which to get the string for
+     * @return the constructed luggage string
+     */
     private String getLuggageString(List<Luggage> list, int index) {
         if (list.size() <= index) {
             return "Nicht gebucht";

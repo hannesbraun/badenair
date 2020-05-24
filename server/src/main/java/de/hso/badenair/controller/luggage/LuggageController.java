@@ -13,6 +13,9 @@ import de.hso.badenair.controller.dto.luggage.LuggageStateDto;
 import de.hso.badenair.service.luggage.LuggageService;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Controller for updating the luggage state.
+ */
 @RestController
 @RequestMapping("/api/employee")
 @RequiredArgsConstructor
@@ -20,6 +23,11 @@ public class LuggageController {
 
 	private final LuggageService luggageService;
 
+	/**
+	 * Updates the state of the given piece of luggage.
+	 * @param dto the data sent by the client
+	 * @return If the update was successful, HTTP Status 204 will be returned. Else, an error 404 will be returned.
+	 */
 	@PatchMapping("/luggage")
 	public ResponseEntity<Object> updateLuggageState(
 			@RequestBody @Valid LuggageStateDto dto) {

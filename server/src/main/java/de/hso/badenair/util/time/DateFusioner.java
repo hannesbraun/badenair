@@ -3,6 +3,9 @@ package de.hso.badenair.util.time;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
+/**
+ * Fusions the day and the time from a flight (provided by the database) into a single OffsetDateTime object.
+ */
 public class DateFusioner {
 	/**
 	 * Fusions the day and the time of a flight into a single OffsetDateTime
