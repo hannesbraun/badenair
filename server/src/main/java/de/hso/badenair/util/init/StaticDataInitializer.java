@@ -70,12 +70,14 @@ public class StaticDataInitializer {
 	private static final boolean DEMO_MODE = false;
 
 	/**
-	 * Defines the amount of customer accounts that will be created in the demo mode.
+	 * Defines the amount of customer accounts that will be created in the demo
+	 * mode.
 	 */
 	private static final int AMOUNT_OF_CUSTOMERS = 1040;
 
 	/**
-	 * Defines the amount of bookings that will be generated for a customer in the demo mode.
+	 * Defines the amount of bookings that will be generated for a customer in the
+	 * demo mode.
 	 */
 	private static final int BOOKINGS_PER_CUSTOMER = 349;
 
@@ -92,9 +94,9 @@ public class StaticDataInitializer {
 
 		initFlightplan();
 		// generateFlightplan();
-		
+
 		initEmployees();
-		
+
 		if (DEMO_MODE) {
 			initCustomers();
 			initBookings();
@@ -107,20 +109,17 @@ public class StaticDataInitializer {
 	 * Creates the available plane types in the database.
 	 */
 	private void initPlaneTypeData() {
-		final PlaneTypeData planeTypeDataDash_8_400 = PlaneTypeData.builder()
-				.type(PlaneType.Dash_8_400).numberOfPassengers(76)
-				.numberOfRows(19).numberOfColumns(4).flightRange(1000).build();
+		final PlaneTypeData planeTypeDataDash_8_400 = PlaneTypeData.builder().type(PlaneType.Dash_8_400)
+				.numberOfPassengers(76).numberOfRows(19).numberOfColumns(4).flightRange(1000).build();
 
-		final PlaneTypeData planeTypeDataDash_8_200 = PlaneTypeData.builder()
-				.type(PlaneType.Dash_8_200).numberOfPassengers(36)
-				.numberOfRows(9).numberOfColumns(4).flightRange(1000).build();
+		final PlaneTypeData planeTypeDataDash_8_200 = PlaneTypeData.builder().type(PlaneType.Dash_8_200)
+				.numberOfPassengers(36).numberOfRows(9).numberOfColumns(4).flightRange(1000).build();
 
-		final PlaneTypeData planeTypeDataB737_400 = PlaneTypeData.builder()
-				.type(PlaneType.B737_400).numberOfPassengers(186)
-				.numberOfRows(31).numberOfColumns(6).flightRange(2500).build();
+		final PlaneTypeData planeTypeDataB737_400 = PlaneTypeData.builder().type(PlaneType.B737_400)
+				.numberOfPassengers(186).numberOfRows(31).numberOfColumns(6).flightRange(2500).build();
 
-		planeTypeDataRepository.saveAll(List.of(planeTypeDataDash_8_400,
-				planeTypeDataDash_8_200, planeTypeDataB737_400));
+		planeTypeDataRepository
+				.saveAll(List.of(planeTypeDataDash_8_400, planeTypeDataDash_8_200, planeTypeDataB737_400));
 	}
 
 	/**
@@ -128,12 +127,9 @@ public class StaticDataInitializer {
 	 */
 	private void initPlanes() {
 		// Get types
-		PlaneTypeData planeTypeDataDash_8_200 = planeTypeDataRepository
-				.findAllByType(PlaneType.Dash_8_200).get(0);
-		PlaneTypeData planeTypeDataDash_8_400 = planeTypeDataRepository
-				.findAllByType(PlaneType.Dash_8_400).get(0);
-		PlaneTypeData planeTypeDataB737_400 = planeTypeDataRepository
-				.findAllByType(PlaneType.B737_400).get(0);
+		PlaneTypeData planeTypeDataDash_8_200 = planeTypeDataRepository.findAllByType(PlaneType.Dash_8_200).get(0);
+		PlaneTypeData planeTypeDataDash_8_400 = planeTypeDataRepository.findAllByType(PlaneType.Dash_8_400).get(0);
+		PlaneTypeData planeTypeDataB737_400 = planeTypeDataRepository.findAllByType(PlaneType.B737_400).get(0);
 
 		List<Plane> planes = new ArrayList<Plane>();
 
@@ -144,18 +140,18 @@ public class StaticDataInitializer {
 
 		// Create planes
 		for (int i = 0; i < dash_8_200_count; i++) {
-			planes.add(Plane.builder().typeData(planeTypeDataDash_8_200)
-					.state(PlaneState.WAITING).traveledDistance(0).build());
+			planes.add(Plane.builder().typeData(planeTypeDataDash_8_200).state(PlaneState.WAITING).traveledDistance(0)
+					.build());
 		}
 
 		for (int i = 0; i < dash_8_400_count; i++) {
-			planes.add(Plane.builder().typeData(planeTypeDataDash_8_400)
-					.state(PlaneState.WAITING).traveledDistance(0).build());
+			planes.add(Plane.builder().typeData(planeTypeDataDash_8_400).state(PlaneState.WAITING).traveledDistance(0)
+					.build());
 		}
 
 		for (int i = 0; i < b737_400_count; i++) {
-			planes.add(Plane.builder().typeData(planeTypeDataB737_400)
-					.state(PlaneState.WAITING).traveledDistance(0).build());
+			planes.add(Plane.builder().typeData(planeTypeDataB737_400).state(PlaneState.WAITING).traveledDistance(0)
+					.build());
 		}
 
 		planeRepository.saveAll(planes);
@@ -168,14 +164,12 @@ public class StaticDataInitializer {
 		List<Airport> airports = new ArrayList<Airport>();
 
 		try {
-			List<String[]> data = CsvHelper.getData(
-					ResourceUtils.getFile("classpath:data/airports.csv"));
+			List<String[]> data = CsvHelper.getData(ResourceUtils.getFile("classpath:data/airports.csv"));
 
 			// Get all (valid) airports
 			for (String[] airportData : data) {
 				if (airportData.length == 3) {
-					airports.add(Airport.builder().name(airportData[0])
-							.distance(Integer.valueOf(airportData[1]))
+					airports.add(Airport.builder().name(airportData[0]).distance(Integer.valueOf(airportData[1]))
 							.timezone(airportData[2]).build());
 				}
 			}
@@ -187,14 +181,17 @@ public class StaticDataInitializer {
 	}
 
 	/**
-	 * Initializes the flightplan data according to the file "flightplan.csv".
-	 * If {@link DEMO_MODE} is set, a more dense flightplan will be used.
+	 * Initializes the flightplan data according to the file "flightplan.csv". If
+	 * {@link DEMO_MODE} is set, a more dense flightplan will be used.
 	 */
 	private void initFlightplan() {
 		// Get planes
 		List<Plane> initialPlanes = new LinkedList<Plane>();
 		planeRepository.findAll().forEach(initialPlanes::add);
 		HashMap<String, Plane> mappedPlanes = new HashMap<String, Plane>();
+
+		List<ScheduledFlight> scheduledFlights = new ArrayList<>();
+		List<Flight> flights = new ArrayList<>();
 
 		// Demo mode: adjusted flightplan
 		String flightplanFile;
@@ -205,8 +202,7 @@ public class StaticDataInitializer {
 		}
 
 		try {
-			List<String[]> data = CsvHelper.getData(
-					ResourceUtils.getFile("classpath:data/" + flightplanFile));
+			List<String[]> data = CsvHelper.getData(ResourceUtils.getFile("classpath:data/" + flightplanFile));
 
 			// Map ids of planes (in case they change)
 			for (String[] flightData : data) {
@@ -218,8 +214,7 @@ public class StaticDataInitializer {
 
 					// Find unmapped plane
 					for (Plane plane : initialPlanes) {
-						if (plane.getTypeData().getType().getName()
-								.equals(flightData[6])) {
+						if (plane.getTypeData().getType().getName().equals(flightData[6])) {
 							mappedPlanes.put(flightData[7], plane);
 						}
 					}
@@ -228,46 +223,38 @@ public class StaticDataInitializer {
 			}
 
 			// Dates stored for consistency
-			OffsetDateTime now = OffsetDateTime.now()
-					.withOffsetSameLocal(ZoneOffset.of("+1"));
+			OffsetDateTime now = OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.of("+1"));
 			OffsetDateTime endOfPlanDate = now.plusMonths(12l);
 
 			// Get all (valid) scheduled flights
 			for (String[] flightData : data) {
 				if (flightData.length == 8) {
-					int hour = Integer.valueOf(flightData[4].substring(0,
-							flightData[4].indexOf(":")));
-					int minute = Integer.valueOf(flightData[4]
-							.substring(flightData[4].indexOf(":") + 1));
+					int hour = Integer.valueOf(flightData[4].substring(0, flightData[4].indexOf(":")));
+					int minute = Integer.valueOf(flightData[4].substring(flightData[4].indexOf(":") + 1));
 
 					ScheduledFlight scheduledFlight = ScheduledFlight.builder()
-							.startingAirport(airportRepository
-									.findByName(flightData[0]).get())
-							.destinationAirport(airportRepository
-									.findByName(flightData[1]).get())
-							.basePrice(Double.valueOf(flightData[2]))
-							.durationInHours(Double.valueOf(flightData[3]))
-							.startTime(now.withHour(hour).withMinute(minute))
-							.build();
-					scheduledFlightRepository.save(scheduledFlight);
+							.startingAirport(airportRepository.findByName(flightData[0]).get())
+							.destinationAirport(airportRepository.findByName(flightData[1]).get())
+							.basePrice(Double.valueOf(flightData[2])).durationInHours(Double.valueOf(flightData[3]))
+							.startTime(now.withHour(hour).withMinute(minute)).build();
+					scheduledFlights.add(scheduledFlight);
 
 					Plane plane = mappedPlanes.get(flightData[7]);
 
 					OffsetDateTime startDate = now
-							.plusDays(Math.floorMod(
-									Integer.valueOf(flightData[5])
-											- now.getDayOfWeek().getValue(),
-									7));
+							.plusDays(Math.floorMod(Integer.valueOf(flightData[5]) - now.getDayOfWeek().getValue(), 7));
 					do {
 						// Add flights for the next 12 months
-						flightRepository.save(Flight.builder()
-								.scheduledFlight(scheduledFlight)
-								.state(FlightState.OK).plane(plane)
+						flights.add(Flight.builder().scheduledFlight(scheduledFlight).state(FlightState.OK).plane(plane)
 								.startDate(startDate).build());
 						startDate = startDate.plusDays(7l);
 					} while (startDate.isBefore(endOfPlanDate));
 				}
 			}
+
+			// Save to database
+			scheduledFlightRepository.saveAll(scheduledFlights);
+			flightRepository.saveAll(flights);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -288,11 +275,10 @@ public class StaticDataInitializer {
 	 * customer. (This method shall be used solely for the demo mode.)
 	 */
 	private void initBookings() {
-		List<UserRepresentation> customers = keycloakApiService
-				.getCustomerUsers();
+		List<UserRepresentation> customers = keycloakApiService.getCustomerUsers();
 		List<Flight> flights = new ArrayList<>();
 		flightRepository.findAll().forEach(flights::add);
-		final int[] baggageWeights = {0, 15, 23, 30};
+		final int[] baggageWeights = { 0, 15, 23, 30 };
 
 		Random random = new Random(444);
 		for (UserRepresentation customer : customers) {
@@ -301,31 +287,22 @@ public class StaticDataInitializer {
 				Flight flight = flights.get(random.nextInt(flights.size()));
 
 				// Create travelers
-				IncomingTravelerDto[] travelers = new IncomingTravelerDto[random
-						.nextInt(12) + 1];
+				IncomingTravelerDto[] travelers = new IncomingTravelerDto[random.nextInt(12) + 1];
 				SelectedSeatDto[] selectedSeats = new SelectedSeatDto[travelers.length];
 				for (int j = 0; j < travelers.length; j++) {
-					travelers[j] = new IncomingTravelerDto("Max", "Mustermann",
-							false,
-							baggageWeights[random
-									.nextInt(baggageWeights.length)],
-							baggageWeights[random
-									.nextInt(baggageWeights.length)],
-							baggageWeights[random
-									.nextInt(baggageWeights.length)],
-							baggageWeights[random
-									.nextInt(baggageWeights.length)]);
+					travelers[j] = new IncomingTravelerDto("Max", "Mustermann", false,
+							baggageWeights[random.nextInt(baggageWeights.length)],
+							baggageWeights[random.nextInt(baggageWeights.length)],
+							baggageWeights[random.nextInt(baggageWeights.length)],
+							baggageWeights[random.nextInt(baggageWeights.length)]);
 					selectedSeats[j] = new SelectedSeatDto(
-							random.nextInt(flight.getPlane().getTypeData()
-									.getNumberOfRows()),
-							random.nextInt(flight.getPlane().getTypeData()
-									.getNumberOfColumns()));
+							random.nextInt(flight.getPlane().getTypeData().getNumberOfRows()),
+							random.nextInt(flight.getPlane().getTypeData().getNumberOfColumns()));
 				}
 
 				// Try to book the flight (may fail if seat is already taken by
 				// another traveler)
-				IncomingBookingDto booking = new IncomingBookingDto(
-						flight.getId(), travelers, selectedSeats, 0.0);
+				IncomingBookingDto booking = new IncomingBookingDto(flight.getId(), travelers, selectedSeats, 0.0);
 				bookingService.bookFlight(customer.getId(), booking);
 			}
 		}
@@ -338,29 +315,24 @@ public class StaticDataInitializer {
 		// Pilots
 		// TODO: differentiate dash and jet pilots
 		for (int i = 0; i < 40; i++) {
-			keycloakApiService.createEmployeeUser("dashpilot" + (i + 1),
-					EmployeeRole.PILOT);
+			keycloakApiService.createEmployeeUser("dashpilot" + (i + 1), EmployeeRole.PILOT);
 		}
 		for (int i = 0; i < 10; i++) {
-			keycloakApiService.createEmployeeUser("jetpilot" + (i + 1),
-					EmployeeRole.PILOT);
+			keycloakApiService.createEmployeeUser("jetpilot" + (i + 1), EmployeeRole.PILOT);
 		}
 
 		// Cabin crew
 		// TODO: add cabin crew role
 		for (int i = 0; i < 200; i++) {
-			keycloakApiService.createEmployeeUser("cabin" + (i + 1),
-					EmployeeRole.DEFAULT);
+			keycloakApiService.createEmployeeUser("cabin" + (i + 1), EmployeeRole.DEFAULT);
 		}
 
 		for (int i = 0; i < 30; i++) {
-			keycloakApiService.createEmployeeUser("technician" + (i + 1),
-					EmployeeRole.TECHNICIAN);
+			keycloakApiService.createEmployeeUser("technician" + (i + 1), EmployeeRole.TECHNICIAN);
 		}
 
 		for (int i = 0; i < 20; i++) {
-			keycloakApiService.createEmployeeUser("ground" + (i + 1),
-					EmployeeRole.GROUND);
+			keycloakApiService.createEmployeeUser("ground" + (i + 1), EmployeeRole.GROUND);
 		}
 	}
 
@@ -368,18 +340,14 @@ public class StaticDataInitializer {
 	 * Requests a vacation for every employee.
 	 */
 	private void initVacation() {
-		List<UserRepresentation> employees = keycloakApiService
-				.getEmployeeUsers();
+		List<UserRepresentation> employees = keycloakApiService.getEmployeeUsers();
 		Random random = new Random(42);
 
 		for (UserRepresentation employee : employees) {
 			int offsetInDays = random.nextInt(340) + 1;
-			RequestVacationDto requestVacationDto = new RequestVacationDto(
-					OffsetDateTime.now().plusDays(offsetInDays),
-					OffsetDateTime.now()
-							.plusDays(offsetInDays + random.nextInt(14) + 1));
-			vacationService.requestVacation(employee.getUsername(),
-					requestVacationDto);
+			RequestVacationDto requestVacationDto = new RequestVacationDto(OffsetDateTime.now().plusDays(offsetInDays),
+					OffsetDateTime.now().plusDays(offsetInDays + random.nextInt(14) + 1));
+			vacationService.requestVacation(employee.getUsername(), requestVacationDto);
 		}
 	}
 
