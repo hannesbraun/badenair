@@ -67,7 +67,7 @@ public class StaticDataInitializer {
 	/**
 	 * If set to true, demo mode will be enabled.
 	 */
-	private static final boolean DEMO_MODE = true;
+	private static final boolean DEMO_MODE = false;
 
 	/**
 	 * Defines the amount of customer accounts that will be created in the demo mode.
