@@ -4,6 +4,8 @@ export interface FlightDto {
     destination: string;
     startTime: Date;
     arrivalTime: Date;
+    realStartTime: Date;
+    realLandingTime: Date;
 }
 
 export enum UserType {
@@ -27,10 +29,10 @@ export interface PlaneScheduleDto {
 }
 
 export interface ScheduleConflictDto {
-    flight: FlightDto;
-    scheduleId: number;
-    cause: string;
-    possibleSolutions: ScheduleConfigSolution[];
+    flightID: number;
+    flightDelayed: boolean;
+    notEnoughPersonel: boolean;
+    planeNotAvailable: boolean;
 }
 
 export enum ScheduleConfigSolution {

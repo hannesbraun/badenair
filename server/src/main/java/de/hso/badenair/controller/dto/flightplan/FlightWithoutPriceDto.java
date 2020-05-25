@@ -11,4 +11,6 @@ public class FlightWithoutPriceDto {
     String destination;
     OffsetDateTime startTime;
     OffsetDateTime arrivalTime;
+    OffsetDateTime realStartTime;
+    OffsetDateTime realLandingTime;
 }
