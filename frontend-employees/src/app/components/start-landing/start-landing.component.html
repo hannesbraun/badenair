@@ -23,10 +23,15 @@
             <div>Panne:</div>
             <button mat-raised-button (click)="hasDelay = true">Panne</button>
             <div></div>
-            <div>Voraussichtliche Verzögerung:</div>
-            <mat-form-field>
-                <input type="number" matInput name="delay" [disabled]="!hasDelay">
-            </mat-form-field>
+            
+            <div *ngIf="hasDelay">Voraussichtliche Verzögerung:</div>
+                <mat-form-field *ngIf="hasDelay">
+                    <input type="number" matInput name="delay">
+                </mat-form-field>
+            <div  *ngIf="hasDelay">
+                <button class="delay-transmission-content" mat-raised-button (click)="delay(flight)">Bestätigen</button>
+                <div class="delay-transmission-content"><div class="delay-transmission-text" *ngIf="delayTransmitted">Verzögerung übermittelt</div></div>
+            </div>    
         </mat-card>
     </div>
 </div>

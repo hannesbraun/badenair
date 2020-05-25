@@ -11,6 +11,7 @@ export class StartLandingComponent implements OnInit {
     isStarted = false;
     hasDelay = false;
     loaded = false;
+    delayTransmitted = false;
 
     flight!: FlightDto;
 
@@ -50,6 +51,7 @@ export class StartLandingComponent implements OnInit {
 
     delay(flight: FlightDto) {
         this.flightService.updateFlightTracking(flight.id, { action: "Verspätung", delay: 1100010 } as TrackingDto).subscribe();
+        this.delayTransmitted= true;
     }
 
     /* get name() {
