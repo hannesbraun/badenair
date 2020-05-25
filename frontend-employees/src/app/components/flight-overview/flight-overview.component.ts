@@ -4,6 +4,8 @@ import {
     calculateHeight,
     calculateRemainingLength,
     calculateStart,
+    calculateRealStart,
+    calculateRealDurationLength,
     displayableHours,
     getViewBoxConfig,
     hourWidth,
@@ -28,6 +30,8 @@ interface LengthData {
     start: number;
     duration: number;
     remaining: number;
+    realStart: number;
+    realDuration: number;
 }
 
 @Component({
@@ -69,7 +73,9 @@ export class FlightOverviewComponent implements OnInit {
                             return {
                                 start: calculateStart(flight),
                                 duration: calculateDurationLength(flight),
-                                remaining: calculateRemainingLength(flight)
+                                remaining: calculateRemainingLength(flight),
+                                realStart: calculateRealStart(flight),
+                                realDuration: calculateRealDurationLength(flight)
                             };
                         });
                     });
@@ -119,7 +125,7 @@ export class FlightOverviewComponent implements OnInit {
     }
 
     onClickConflict(id: number) {
-        const conflictDto = this.conflicts.find(value => (id === value.scheduleId));
+        const conflictDto = this.conflicts.find(value => (id === value.flightID));
 
         const config: MatDialogConfig = {
             data: {

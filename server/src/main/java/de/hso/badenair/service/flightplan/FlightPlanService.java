@@ -5,6 +5,7 @@ import de.hso.badenair.controller.dto.flightplan.FlightWithoutPriceDto;
 import de.hso.badenair.controller.dto.flightplan.PlaneScheduleDto;
 import de.hso.badenair.domain.flight.ScheduledFlight;
 import de.hso.badenair.domain.plane.Plane;
+import de.hso.badenair.service.plane.repository.PlaneRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 public class FlightPlanService {
 
     private final FlightplanRepository flightplanRepository;
+    private final PlaneRepository planeRepository;
     private ArrayList<ConflictDto> conflicts;
 
     public ArrayList<PlaneScheduleDto> getPlaneSchedules() {
@@ -27,30 +29,33 @@ public class FlightPlanService {
         OffsetDateTime oneDayLater = now.plusHours(12);
         AtomicBoolean hasConflict = new AtomicBoolean(false);
 
-        List<Plane> planes = flightplanRepository.findByActualStartTimeBetween(now, oneDayLater);
+        List<Plane> planes = (List<Plane>) planeRepository.findAll();
         ArrayList<PlaneScheduleDto> planeSchedules = new ArrayList<>(0);
 
-        ConflictFinder.findConflicts(planes, conflicts);
+        //ConflictFinder.findConflicts(planes, conflicts);
 
+        OffsetDateTime finalNow = now;
         planes.forEach(plane -> {
             hasConflict.set(false);
-            final List<FlightWithoutPriceDto> flights = plane.getFlight().stream()
+            final List<FlightWithoutPriceDto> flights = flightplanRepository.findByStartDateBetweenAndPlane_IdEquals(finalNow, oneDayLater, plane.getId()).stream()
                 .map(flight -> {
                     final ScheduledFlight scheduledFlight = flight.getScheduledFlight();
 
-                    for (int i = 0; i < conflicts.size(); i++)
+                    /*for (int i = 0; i < conflicts.size(); i++)
                     {
                         if (flight.getId() == conflicts.get(i).getFlightID())
                             hasConflict.set(true);
                     }
 
+                    */
+
                     return new FlightWithoutPriceDto(flight.getId(),
                         scheduledFlight.getStartingAirport().getName(),
                         scheduledFlight.getDestinationAirport().getName(),
-                        flight.getActualStartTime(),
-                        flight.getActualLandingTime(),
                         flight.getStartDate(),
-                        flight.getStartDate().plusHours(flight.getScheduledFlight().getDurationInHours().longValue()));
+                        flight.getStartDate().plusHours(flight.getScheduledFlight().getDurationInHours().longValue()),
+                        flight.getActualStartTime(),
+                        flight.getActualLandingTime());
                 })
                 .collect(Collectors.toList());
 

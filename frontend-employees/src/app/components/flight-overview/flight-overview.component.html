@@ -27,9 +27,12 @@
         <!-- Flights -->
         <g class="flight" *ngFor="let j = index; let lengths of calculatedLengths[i]"
            (click)="onClickFlight(schedule.flights[j], schedule.plane)">
-            <rect [attr.x]="lengths.start" [attr.y]="26 + lineHeight * i"
+            <rect [attr.x]="lengths.start" [attr.y]="23 + lineHeight * i"
                   [attr.width]="lengths.duration"
-                  height="8" fill="#00B0FF"></rect>
+                  height="14" stroke="#00B0FF" fill="#FFFFFF"></rect>
+            <rect [attr.x]="lengths.start" [attr.y]="23 + lineHeight * i"
+                  [attr.width]="lengths.remaining"
+                  height="14" stroke="#01579B" fill="#FFFFFF"></rect>
             <rect [attr.x]="lengths.start" [attr.y]="26 + lineHeight * i"
                   [attr.width]="lengths.remaining"
                   height="8" fill="#01579B"></rect>

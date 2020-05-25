@@ -37,13 +37,13 @@ public class ConflictFinder {
                     if (finalPlaneDamaged)
                     {
                         //search for unused plane
-                        List<Plane> temp = flightplanRepository.findByActualStartTimeBetween(flight.getStartDate(), flight.getActualLandingTime());
+                        /*List<Plane> temp = flightplanRepository.findByActualStartTimeBetween(flight.getStartDate(), flight.getActualLandingTime());
                         temp.forEach((Plane p) -> {
                             if (p.getFlight().size() == 0)
                             {
                                 //plane available
                             }
-                    });
+                    });*/
                     }
                     conflicts.add(new ConflictDto(flight.getId(), true, false, finalPlaneDamaged, false));
                 }
