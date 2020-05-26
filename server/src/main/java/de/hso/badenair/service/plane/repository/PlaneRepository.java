@@ -11,6 +11,4 @@ import java.util.List;
 
 @Repository
 public interface PlaneRepository extends CrudRepository<Plane, Long> {
-    List<Flight> findByStartDateAfter(OffsetDateTime date);
-
 }
