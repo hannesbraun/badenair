@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FlightRepository extends CrudRepository<Flight, Long> {
+    List<Flight> findByStartDateAfter(OffsetDateTime date);
 }
