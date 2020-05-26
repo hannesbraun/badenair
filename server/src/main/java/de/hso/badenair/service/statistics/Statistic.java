@@ -48,6 +48,8 @@ public class Statistic {
                 printWriter.printf("Statistics for %s\n\nPlaneID:\t\t%d\nPlaneType:\t\t%s\nStartTime:\t\t%s\nLandingTime:\t\t%s\nSales:\t\t%f\n",
                     OffsetDateTime.now().toString(), id, planeType.toString(), startDate.toString(), landingTime.toString(), sales);
 
+				fileWriter.flush();
+				fileWriter.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
