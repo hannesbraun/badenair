@@ -6,10 +6,12 @@ import de.hso.badenair.controller.dto.flightplan.PlaneScheduleDto;
 import de.hso.badenair.domain.flight.ScheduledFlight;
 import de.hso.badenair.domain.plane.Plane;
 import de.hso.badenair.service.plane.repository.PlaneRepository;
+import de.hso.badenair.util.time.DateFusioner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -25,8 +27,9 @@ public class FlightPlanService {
 
     public ArrayList<PlaneScheduleDto> getPlaneSchedules() {
         OffsetDateTime now = OffsetDateTime.now();
-        now = now.minusHours(1);
-        OffsetDateTime oneDayLater = now.plusHours(12);
+        now = now.truncatedTo(ChronoUnit.DAYS);
+        now = now.plusHours(6);
+        OffsetDateTime oneDayLater = now.plusHours(21);
         AtomicBoolean hasConflict = new AtomicBoolean(false);
 
         List<Plane> planes = (List<Plane>) planeRepository.findAll();
@@ -52,8 +55,8 @@ public class FlightPlanService {
                     return new FlightWithoutPriceDto(flight.getId(),
                         scheduledFlight.getStartingAirport().getName(),
                         scheduledFlight.getDestinationAirport().getName(),
-                        flight.getStartDate(),
-                        flight.getStartDate().plusHours(flight.getScheduledFlight().getDurationInHours().longValue()),
+                        DateFusioner.fusionStartDate(flight.getStartDate(), scheduledFlight.getStartTime(), null),
+                        DateFusioner.fusionArrivalDate(flight.getStartDate(), scheduledFlight.getStartTime(), scheduledFlight.getDurationInHours(), null),
                         flight.getActualStartTime(),
                         flight.getActualLandingTime());
                 })

@@ -100,6 +100,7 @@ export class FlightOverviewComponent implements OnInit {
 
     getTimeToDisplay(i: number): string {
         let hours = new Date().getHours() + i - 1;
+        hours = 5 + i;
 
         if (hours > 23) {
             hours -= 24;

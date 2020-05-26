@@ -1,13 +1,15 @@
 import {FlightDto} from '../dtos/Dtos';
 
-export const displayableHours: number[] = [...Array(13).keys()].map(value => value + 1);
+export const displayableHours: number[] = [...Array(23).keys()].map(value => value + 1);
 export const lineHeight = 20;
 export const hourWidth = 15;
-export const totalWidth = 400;
+export const totalWidth = 550;
 
 export function calculateStart(flight: FlightDto): number {
-    const time = flight.startTime.getHours() + flight.startTime.getMinutes() / 60;
-    const start = 205 + (time - new Date().getHours()) * hourWidth;
+    let time = flight.startTime.getHours() + flight.startTime.getMinutes() / 60;
+    if (time < 6)
+        time += 24;
+    const start = 205 + (time - 6) * hourWidth;
 
     if (start < 190) {
         return 190;
@@ -23,7 +25,7 @@ export function calculateDurationLength(flight: FlightDto): number {
 }
 
 export function calculateRemainingLength(flight: FlightDto): number {
-    const duration = toHours(new Date().getTime() - flight.startTime.getTime());
+    const duration = toHours(flight.arrivalTime.getTime() - flight.startTime.getTime());
 
     if (duration < 0) {
         return 0;
@@ -37,7 +39,7 @@ export function calculateRealStart(flight: FlightDto): number {
         return calculateStart(flight);
     
     const time = flight.realStartTime.getHours() + flight.realStartTime.getMinutes() / 60;
-    const start = 205 + (time - new Date().getHours()) * hourWidth;
+    const start = 205 + (time - 6) * hourWidth;
 
     if (start < 190) {
         return 190;
