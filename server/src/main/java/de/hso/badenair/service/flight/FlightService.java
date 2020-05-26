@@ -65,22 +65,18 @@ public class FlightService {
 		}
 
 		if (flight.getActualStartTime() != null && flight.getActualLandingTime() == null) {
-			return new TrackingDto(FlightAction.START.getName(), 0L, flight.getActualStartTime()); // TODO: return dto
-																									// with actual delay
-																									// from db
+			// TODO: return dto with actual delay from db
+			return new TrackingDto(FlightAction.START.getName(), 0L, flight.getActualStartTime());
 		} else if (flight.getActualStartTime() != null && flight.getActualLandingTime() != null) {
-			return new TrackingDto(FlightAction.LANDING.getName(), 0L, flight.getActualLandingTime()); // TODO: return
-																										// dto with
-																										// actual delay
-																										// from db
+			// TODO: return dto with actual delay from db
+			return new TrackingDto(FlightAction.LANDING.getName(), 0L, flight.getActualLandingTime());
 		} else if (flight.getActualStartTime() == null && flight.getActualLandingTime() == null
 				&& flight.getState() == FlightState.DELAYED) {
-			return new TrackingDto(FlightAction.DELAY.getName(), 0L, OffsetDateTime.now()); // TODO: return dto with
-																							// actual delay from db
+			// TODO: return dto with actual delay from db
+			return new TrackingDto(FlightAction.DELAY.getName(), 0L, OffsetDateTime.now());
 		}
-
-		return new TrackingDto(FlightAction.STANDBY.getName(), 0L, OffsetDateTime.now()); // TODO: return dto with
-																							// actual delay from db;
+		// TODO: return dto with actual delay from db;
+		return new TrackingDto(FlightAction.STANDBY.getName(), 0L, OffsetDateTime.now());
 	}
 
 	public FlightDto getCurrentFlightForPilot(String userName) {
