@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import { MaintenanceService } from 'src/app/services/maintenance/maintenance.service';
-import { PlaneMaintenance } from 'src/app/services/dtos/Dtos';
+import {MaintenanceService} from 'src/app/services/maintenance/maintenance.service';
+import {PlaneMaintenance} from 'src/app/services/dtos/Dtos';
 
 @Component({
     selector: 'app-plane-maintenance',
@@ -10,7 +10,7 @@ import { PlaneMaintenance } from 'src/app/services/dtos/Dtos';
 export class PlaneMaintenanceComponent implements OnInit {
     planes: PlaneMaintenance[] = [];
 
-    constructor(private maintenanceService : MaintenanceService) {
+    constructor(private maintenanceService: MaintenanceService) {
 
     }
 
@@ -18,16 +18,16 @@ export class PlaneMaintenanceComponent implements OnInit {
         this.getPlanes();
     }
 
-    getPlanes(){
-        this.maintenanceService.getMaintenanceList().subscribe(result=>this.planes = result);
+    getPlanes() {
+        this.maintenanceService.getMaintenanceList().subscribe(result => this.planes = result);
     }
 
     getIndicatorLength(distance: number) {
         return {transform: `scaleX(${distance / 1000 % 1})`};
     }
 
-    onRepairButtonPressed(currentPlane: PlaneMaintenance){
-        this.maintenanceService.updateMaintenance(currentPlane.id).subscribe(result=> console.log);
+    onRepairButtonPressed(currentPlane: PlaneMaintenance) {
+        this.maintenanceService.updateMaintenance(currentPlane.id).subscribe();
         currentPlane.state = 'WAITING';
     }
 }

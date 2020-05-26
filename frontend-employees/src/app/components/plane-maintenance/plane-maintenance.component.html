@@ -9,7 +9,7 @@
             <div class="progress-indicator"
                  [ngStyle]="getIndicatorLength(plane.traveledDistance)"></div>
         </div>
-        <button (click)="onRepairButtonPressed(plane)" mat-raised-button>Reparieren</button>
+        <button [disabled]="plane.state !== 'IN_MAINTENANCE'" (click)="onRepairButtonPressed(plane)" mat-raised-button>Reparieren</button>
         <div>Zurückgelegte Strecke: {{ plane.traveledDistance }} km</div>
     </mat-card>
 </div>
