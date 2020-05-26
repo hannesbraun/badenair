@@ -12,7 +12,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class PlanService {
-
     private final StandbyScheduleRepository standbyScheduleRepository;
     private final ShiftPlanRepository shiftPlanRepository;
 
