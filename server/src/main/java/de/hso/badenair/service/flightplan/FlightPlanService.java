@@ -40,7 +40,15 @@ public class FlightPlanService {
         OffsetDateTime finalNow = now;
         planes.forEach(plane -> {
             hasConflict.set(false);
-            final List<FlightWithoutPriceDto> flights = flightplanRepository.findByStartDateBetweenAndPlane_IdEquals(finalNow, oneDayLater, plane.getId()).stream()
+
+            final List<FlightWithoutPriceDto> flights = flightplanRepository
+                .findByStartDateBetweenAndPlane_IdEquals(finalNow.withHour(0).withMinute(0).withSecond(0),
+                    oneDayLater.withHour(23).withMinute(59).withSecond(59), plane.getId())
+                .stream().filter(flight -> {
+                    OffsetDateTime fusionedStartDate = DateFusioner.fusionStartDate(flight.getStartDate(),
+                        flight.getScheduledFlight().getStartTime(), null);
+                    return fusionedStartDate.isAfter(finalNow) && fusionedStartDate.isBefore(oneDayLater);
+                })
                 .map(flight -> {
                     final ScheduledFlight scheduledFlight = flight.getScheduledFlight();
 
