@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import de.hso.badenair.service.boardingpass.BoardingPassService;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * This controller is responsible for retrieving the boarding pass pdf document for a traveler.
+ */
 @RestController
 @RequestMapping("/api/customer")
 @RequiredArgsConstructor
@@ -17,6 +20,12 @@ public class BoardingPassController {
 
 	private final BoardingPassService boardingPassService;
 
+	/**
+	 * Retrieves the boarding pass for the given traveler id.
+	 * @param travelerId the (internal) id of the traveler of which to retrieve the boarding pass from
+	 * @return Returns http status code 404 if the traveler was not found.
+	 * Else, the pdf document will be returned alongside with http status code 200.
+	 */
 	@GetMapping("/boardingpass")
 	public ResponseEntity<?> getBoardingPass(@RequestParam Long travelerId) {
 		final byte[] boardingPassPdf = boardingPassService

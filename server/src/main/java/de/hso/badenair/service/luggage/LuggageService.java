@@ -9,6 +9,9 @@ import de.hso.badenair.domain.booking.LuggageState;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Updates the luggage state.
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -16,6 +19,12 @@ public class LuggageService {
 
 	private final LuggageRepository luggageRepository;
 
+	/**
+	 * Updates the luggage state for a given piece of luggage.
+	 * @param id the id of the piece of luggage to update
+	 * @param state the new state to update to
+	 * @return true in case of success, false otherwise
+	 */
 	public boolean updateLuggageState(Long id, LuggageState state) {
 		Optional<Luggage> luggage = luggageRepository.findById(id);
 

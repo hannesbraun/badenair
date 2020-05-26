@@ -1,4 +1,4 @@
-import {Component, forwardRef, Input, OnDestroy, OnInit} from '@angular/core';
+import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
 import {
     ControlValueAccessor,
     FormBuilder,
@@ -6,10 +6,11 @@ import {
     FormGroup,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
-    Validators
+    Validators,
+    AbstractControl
 } from '@angular/forms';
-import {Subscription} from 'rxjs';
-import {AccountData} from '../../services/dtos/Dtos';
+import { Subscription } from 'rxjs';
+import { AccountData } from '../../services/dtos/Dtos';
 
 export interface ProfileFormValue {
     lastname: string;
@@ -45,7 +46,7 @@ export class ProfileFormComponent implements ControlValueAccessor, OnInit, OnDes
 
     private static readonly DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
 
-    @Input() initialData ?: AccountData;
+    @Input() initialData?: AccountData;
 
     profileForm: FormGroup | undefined;
 
@@ -53,8 +54,46 @@ export class ProfileFormComponent implements ControlValueAccessor, OnInit, OnDes
     minDateBirthDate: Date | undefined;
     minDateInvalidationDate: Date | undefined;
     subscriptions: Subscription[] = [];
-    onChange: any = () => {};
-    onTouched: any = () => {};
+    onChange: any = () => { };
+    onTouched: any = () => { };
+
+    creditCardNumberValidator(control: AbstractControl): { [key: string]: boolean } | null {
+        const digits = [...control.value.replace(/\D/g, '')];
+        if (digits.length !== 16) {
+            return { 'checkDigit': true };
+        }
+
+        // Only accept mastercard and visa
+        if (parseInt(digits[0]) !== 4 && parseInt(digits[0]) !== 5) {
+            // Definitely not a mastercard or visa credit card
+            return { 'checkDigit': true };
+        } else if (parseInt(digits[1]) < 1 || parseInt(digits[1]) > 5) {
+            // Could have been a mastercard, but second digit didn't match
+            return { 'checkDigit': true };
+        }
+
+        // Actual algorithm
+        let sum = 0;
+        for (let i = 0; i < digits.length - 1; i++) {
+            let cardNum = parseInt(digits[i]);
+
+            if ((digits.length - i) % 2 === 0) {
+                cardNum = cardNum * 2;
+
+                if (cardNum > 9) {
+                    cardNum = cardNum - 9;
+                }
+            }
+
+            sum += cardNum;
+        }
+
+        if ((10 - (sum % 10)) !== parseInt(digits[digits.length - 1])) {
+            return { 'checkDigit': true };
+        } else {
+            return null;
+        }
+    }
 
     constructor(private formBuilder: FormBuilder) {
         this.initDateBoundaries();
@@ -67,8 +106,8 @@ export class ProfileFormComponent implements ControlValueAccessor, OnInit, OnDes
             zipCode: [this.initialValue('zipCode'), [Validators.required, Validators.pattern('[0-9]{5}')]],
             placeOfResidence: [this.initialValue('placeOfResidence'), Validators.required],
             cardOwner: [this.initialValue('cardOwner'), Validators.required],
-            cardNumber: [this.initialValue('cardNumber'), Validators.required],
-            check: [this.initialValue('check'), Validators.required],
+            cardNumber: [this.initialValue('cardNumber'), [Validators.required, Validators.pattern('[0-9]{16}'), this.creditCardNumberValidator]],
+            check: [this.initialValue('check'), [Validators.required, Validators.pattern('[0-9]{3}')]],
             invalidationDate: [this.initialValue('invalidationDate'), Validators.required]
         });
 
@@ -99,7 +138,7 @@ export class ProfileFormComponent implements ControlValueAccessor, OnInit, OnDes
     }
 
     validate(_: FormControl) {
-        return this.profileForm?.valid ? null : {profileForm: {valid: false}};
+        return this.profileForm?.valid ? null : { profileForm: { valid: false } };
     }
 
     get value(): ProfileFormValue {

@@ -7,7 +7,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Small helper class to read and parse csv files.
+ */
 public class CsvHelper {
+	/**
+	 * Reads the given csv file and pases the document.
+	 * @param csvFile the csv file to read and parse
+	 * @return the parsed csv data: a list entry represents a line in the document,
+     * an element of the string array represents a single value
+	 */
 	public static List<String[]> getData(File csvFile) {
 		ArrayList<String[]> data = new ArrayList<String[]>();
 
