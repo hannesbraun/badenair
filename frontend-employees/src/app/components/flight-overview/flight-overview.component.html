@@ -30,9 +30,9 @@
             <rect [attr.x]="lengths.start" [attr.y]="23 + lineHeight * i"
                   [attr.width]="lengths.duration"
                   height="14" stroke="#00B0FF" fill="#FFFFFF"></rect>
-            <rect [attr.x]="lengths.start" [attr.y]="23 + lineHeight * i"
-                  [attr.width]="lengths.remaining"
-                  height="14" stroke="#01579B" fill="#FFFFFF"></rect>
+            <rect [attr.x]="lengths.realStart" [attr.y]="26 + lineHeight * i"
+                  [attr.width]="lengths.realDuration"
+                  height="8" stroke="#01579B" fill="#FFFFFF"></rect>
             <rect [attr.x]="lengths.start" [attr.y]="26 + lineHeight * i"
                   [attr.width]="lengths.remaining"
                   height="8" fill="#01579B"></rect>
