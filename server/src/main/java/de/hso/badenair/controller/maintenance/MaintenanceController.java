@@ -1,6 +1,8 @@
 package de.hso.badenair.controller.maintenance;
 
+import de.hso.badenair.controller.dto.maintenance.PlaneMaintenanceDto;
 import de.hso.badenair.domain.plane.Plane;
+import de.hso.badenair.util.mapper.PlaneMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import de.hso.badenair.service.maintenance.MaintenanceService;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/employee")
@@ -34,8 +37,11 @@ public class MaintenanceController {
     }
 
     @GetMapping("/maintenance")
-    public ResponseEntity<List<Plane>> getMaintenance() {
-        return ResponseEntity.ok(this.maintenanceService.getAllPlanes());
+    public ResponseEntity<List<PlaneMaintenanceDto>> getMaintenance() {
+        final List<PlaneMaintenanceDto> dtos = this.maintenanceService.getAllPlanes().stream()
+            .map(PlaneMapper::mapToDto)
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(dtos);
     }
 
 }
