@@ -102,7 +102,7 @@ export class SeatSelectionComponent implements OnInit {
             return true;
         }
         const rowValue = this.formArray.controls[passengerIndex]?.get('row')?.value;
-        if (!rowValue) {
+        if (rowValue === undefined || rowValue === '' || rowValue === null) {
             return true;
         }
         return !this.seats[rowValue][index];
