@@ -14,6 +14,7 @@ import de.hso.badenair.service.flight.FlightService;
 import de.hso.badenair.service.seat.SeatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -26,8 +27,9 @@ public class BookingService {
     private final FlightService flightService;
     private final SeatService seatService;
 
-    private final List<Integer> allowedWeights = List.of(15, 23, 30);
+	private final List<Integer> allowedWeights = List.of(15, 23, 30);
 
+	@Transactional
     public boolean bookFlight(String username, IncomingBookingDto dto) {
         Flight flight = flightService.getFlightById(dto.getFlightId());
         if (flight == null) {
