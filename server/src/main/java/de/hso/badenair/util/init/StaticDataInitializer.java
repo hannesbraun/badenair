@@ -334,6 +334,10 @@ public class StaticDataInitializer {
 		for (int i = 0; i < 20; i++) {
 			keycloakApiService.createEmployeeUser("ground" + (i + 1), EmployeeRole.GROUND);
 		}
+
+		for (int i = 0; i < 1; i++) {
+			keycloakApiService.createEmployeeUser("flightdirector" + (i + 1), EmployeeRole.FLIGHT_DIRECTOR);
+		}
 	}
 
 	/**
