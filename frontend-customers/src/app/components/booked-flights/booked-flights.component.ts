@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FlightDto} from '../../services/dtos/Dtos';
 import {Baggage, Person} from '../flight/flight.component';
-import { AccountService } from 'src/app/services/account/account.service';
+import {AccountService} from 'src/app/services/account/account.service';
+import {InfoService} from '../../services/info/info.service';
 
 export interface BookedFlight {
     flight: FlightDto;
@@ -18,12 +19,18 @@ export class BookedFlightsComponent implements OnInit {
 
     bookedFlights: BookedFlight[] = [];
 
-    constructor(private accountService: AccountService) {
+    constructor(
+        private accountService: AccountService,
+        private infoService: InfoService,
+    ) {
     }
 
     ngOnInit() {
         this.accountService.getBookings()
-            .subscribe((data: BookedFlight[]) => this.bookedFlights = data);
+            .subscribe(
+                (data: BookedFlight[]) => this.bookedFlights = data,
+                error => this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten')
+            );
     }
 
     checkInPossible(bookedFlight: BookedFlight): boolean {
