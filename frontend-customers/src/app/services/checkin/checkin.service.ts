@@ -3,6 +3,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {Observable} from 'rxjs';
 import {CheckInInfoDto} from '../dtos/Dtos';
+import {InfoService} from '../info/info.service';
 
 @Injectable({
     providedIn: 'root'
@@ -11,7 +12,7 @@ export class CheckInService {
 
     apiUrl = environment.backendApiRoot;
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private infoService: InfoService) {
     }
 
     updateCheckIn(planeId: number): Observable<void> {
@@ -28,7 +29,7 @@ export class CheckInService {
             .subscribe((pdfData) => {
                 const blob = new Blob([pdfData], {type: 'application/pdf'});
                 this.downloadBlob(blob, name);
-            });
+            }, error => this.infoService.showErrorMessage('Der Download konnte nicht abgerufen werden'));
     }
 
     private downloadBlob(blob: Blob, name: string): void {
