@@ -321,7 +321,6 @@ public class StaticDataInitializer {
 		}
 
 		// Cabin crew
-		// TODO: add cabin crew role
 		for (int i = 0; i < 200; i++) {
 			keycloakApiService.createEmployeeUser("cabin" + (i + 1), EmployeeRole.CABIN);
 		}
