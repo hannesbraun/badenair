@@ -9,7 +9,9 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public enum EmployeeRole {
     DEFAULT("badenair_employee"),
-    PILOT("PILOT"),
+    DASH_PILOT("DASH_PILOT"),
+    JET_PILOT("JET_PILOT"),
+    CABIN("CABIN"),
     FLIGHT_DIRECTOR("FLIGHT_DIRECTOR"),
     GROUND("GROUND"),
     TECHNICIAN("TECHNICIAN");

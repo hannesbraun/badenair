@@ -13,13 +13,17 @@ export class AccountSettingsPageComponent implements OnInit {
     accountData: AccountData | undefined;
 
 
-    constructor(private accountService: AccountService, private infoService: InfoService) {
+    constructor(
+        private accountService: AccountService,
+        private infoService: InfoService
+    ) {
     }
 
     ngOnInit(): void {
-        this.accountService.getAccountData().subscribe(data => {
-            this.accountData = data;
-        });
+        this.accountService.getAccountData().subscribe(
+            data => this.accountData = data,
+            error => this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten')
+        );
     }
 
     onSaveProfileSettings(updateAccountDataDto: UpdateAccountDataDto) {

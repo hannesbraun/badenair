@@ -1,11 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {BookingStateService} from '../../services/search/booking-state.service';
-import {Observable, Subscription} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {Observable, of, Subscription} from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
 import {Seat} from '../../components/seat-selection/seat-selection.component';
 import {SeatService} from '../../services/seat/seat.service';
 import {SeatDto} from '../../services/dtos/Dtos';
+import {InfoService} from '../../services/info/info.service';
 
 @Component({
     selector: 'app-seat-selection-page',
@@ -26,6 +27,7 @@ export class SeatSelectionPageComponent implements OnInit, OnDestroy {
         private router: Router,
         private bookingStateService: BookingStateService,
         private seatService: SeatService,
+        private infoService: InfoService,
     ) {
     }
 
@@ -51,9 +53,17 @@ export class SeatSelectionPageComponent implements OnInit, OnDestroy {
                 }
 
                 if (this.directionState) {
-                    this.seats = this.seatService.getSeats(state.selectedToFlight.id);
+                    this.seats = this.seatService.getSeats(state.selectedToFlight.id).pipe(
+                        catchError(error => {
+                            this.infoService.showErrorMessage('Die Flugdaten konnten nicht abgerufen werden');
+                            return of({type: '', freeSeats: []} as SeatDto);
+                        }));
                 } else {
-                    this.seats = this.seatService.getSeats(state.selectedReturnFlight.id);
+                    this.seats = this.seatService.getSeats(state.selectedReturnFlight.id).pipe(
+                        catchError(error => {
+                            this.infoService.showErrorMessage('Die Flugdaten konnten nicht abgerufen werden');
+                            return of({type: '', freeSeats: []} as SeatDto);
+                        }));
                 }
             });
     }

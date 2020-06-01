@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FlightDto, TravelerDto} from '../../services/dtos/Dtos';
 import {CheckInService} from '../../services/checkin/checkin.service';
 import {ActivatedRoute} from '@angular/router';
+import {InfoService} from '../../services/info/info.service';
 
 @Component({
     selector: 'app-check-in-page',
@@ -14,7 +15,11 @@ export class CheckInPageComponent implements OnInit {
     flight: FlightDto | undefined;
     isCheckInComplete = false;
 
-    constructor(private checkInService: CheckInService, private route: ActivatedRoute) {
+    constructor(
+        private checkInService: CheckInService,
+        private route: ActivatedRoute,
+        private infoService: InfoService,
+    ) {
     }
 
     ngOnInit(): void {
@@ -25,11 +30,14 @@ export class CheckInPageComponent implements OnInit {
                 return;
             }
 
-            this.checkInService.getCheckInInfo(id).subscribe(dto => {
-                this.passengers = dto.travelers;
-                this.flight = dto.flight;
-                this.isCheckInComplete = this.passengers.every(traveler => traveler.checkedIn);
-            });
+            this.checkInService.getCheckInInfo(id)
+                .subscribe(dto => {
+                        this.passengers = dto.travelers;
+                        this.flight = dto.flight;
+                        this.isCheckInComplete = this.passengers.every(traveler => traveler.checkedIn);
+                    },
+                    error => this.infoService.showErrorMessage('Ihre Daten konnten nicht abgerufen werden')
+                );
         });
     }
 
@@ -48,7 +56,11 @@ export class CheckInPageComponent implements OnInit {
     checkIn() {
         this.passengers.forEach(passenger => {
             if (passenger.checkedIn) {
-                this.checkInService.updateCheckIn(passenger.id).subscribe();
+                this.checkInService.updateCheckIn(passenger.id)
+                    .subscribe(
+                        res => null,
+                        error => this.infoService.showErrorMessage('Check-In Fehler')
+                    );
             }
         });
         this.isCheckInComplete = true;

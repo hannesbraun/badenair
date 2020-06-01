@@ -5,6 +5,7 @@ import {BookingDto, FlightDto, TravelerDto} from 'src/app/services/dtos/Dtos';
 import {BookingService} from 'src/app/services/booking/booking.service';
 import {Router} from '@angular/router';
 import {Seat} from 'src/app/components/seat-selection/seat-selection.component';
+import {InfoService} from '../../services/info/info.service';
 
 
 @Component({
@@ -24,7 +25,8 @@ export class BookingOverviewPageComponent implements OnInit, OnDestroy {
 
     constructor(private bookingStateService: BookingStateService,
                 private bookingService: BookingService,
-                private router: Router) {
+                private router: Router,
+                private infoService: InfoService) {
     }
 
     ngOnInit(): void {
@@ -86,7 +88,8 @@ export class BookingOverviewPageComponent implements OnInit, OnDestroy {
                     seats: this.toSeats,
                     price: this.calculatePrice(this.returnFlight)
                 } as BookingDto)
-            }).subscribe(() => this.router.navigate(['/success']));
+            }).subscribe(() => this.router.navigate(['/success']),
+                    error => this.infoService.showErrorMessage(('Die Buchung ist fehlgeschlagen.')));
         } else if (this.toFlight && (this.passengers.length > 0)) {
             this.bookingService.bookFlight({
                 flightId: this.toFlight.id,
@@ -94,9 +97,10 @@ export class BookingOverviewPageComponent implements OnInit, OnDestroy {
                 seats: this.toSeats,
                 price: this.calculatePrice(this.toFlight)
             } as BookingDto)
-                .subscribe(() => this.router.navigate(['/success']));
+                .subscribe(() => this.router.navigate(['/success']),
+                        error => this.infoService.showErrorMessage('Die Buchung ist fehlgeschlagen.'));
         } else {
-            console.error('Die Buchung ist fehlgeschlagen.');
+            this.infoService.showErrorMessage('Die Buchung ist fehlgeschlagen.');
         }
     }
 
@@ -113,11 +117,6 @@ export class BookingOverviewPageComponent implements OnInit, OnDestroy {
                 price += passenger.baggage4 * this.baggagePrice;
             });
         }
-
-
-
         return price;
     }
-
-
 }

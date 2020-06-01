@@ -6,7 +6,9 @@ import {OAuthService} from 'angular-oauth2-oidc';
 })
 export class AuthService {
 
-    private readonly PILOT_ROLE = 'ROLE_PILOT';
+    private readonly DASH_PILOT_ROLE = 'ROLE_DASH_PILOT';
+    private readonly JET_PILOT_ROLE = 'ROLE_JET_PILOT';
+    private readonly CABIN_ROLE = 'ROLE_CABIN';
     private readonly FLIGHT_DIRECTOR_ROLE = 'ROLE_FLIGHT_DIRECTOR';
     private readonly TECHNICIAN_ROLE = 'ROLE_TECHNICIAN';
     private readonly GROUND_ROLE = 'ROLE_GROUND';
@@ -27,7 +29,11 @@ export class AuthService {
     }
 
     isPilot(): boolean {
-        return this.userRoles.includes(this.PILOT_ROLE);
+        return this.userRoles.includes(this.DASH_PILOT_ROLE) || this.userRoles.includes(this.JET_PILOT_ROLE);
+    }
+
+    isCabin(): boolean {
+        return this.userRoles.includes(this.CABIN_ROLE);
     }
 
     isFlightDirector(): boolean {

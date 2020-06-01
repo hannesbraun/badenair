@@ -35,6 +35,7 @@ public class KeycloakApiService {
     private final RestTemplate restTemplate = new RestTemplate();
     private String accessToken;
     private Map<EmployeeRole, RoleRepresentation> employeeRoles;
+    private RoleRepresentation customerRole;
 
     /**
      * Retrieves access token from the keyloak server with the given credentials
@@ -81,6 +82,8 @@ public class KeycloakApiService {
             final UserRepresentation userRepresentation = getUser(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
             addRoleToUser(roles, userRepresentation.getId());
+            RoleRepresentation[] rolesToRemove = {customerRole};
+            removeRoleFromUser(rolesToRemove, userRepresentation.getId());
         } catch (HttpClientErrorException e) {
             log.warn("User {} could not be created: {}", username, e.getMessage());
         }
@@ -112,7 +115,7 @@ public class KeycloakApiService {
     public List<UserRepresentation> getCustomerUsers() {
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(getAuthHeader());
 
-        final String url = getBaseUrl() + "roles/" + CUSTOMER_ROLE_NAME + "/users";
+        final String url = getBaseUrl() + "roles/" + CUSTOMER_ROLE_NAME + "/users?max=2000";
         final ResponseEntity<UserRepresentation[]> exchange = restTemplate.exchange(url, HttpMethod.GET, entity, UserRepresentation[].class);
 
         final UserRepresentation[] body = Optional.ofNullable(exchange.getBody()).orElse(EMPTY_USER_LIST);
@@ -126,7 +129,7 @@ public class KeycloakApiService {
     public List<UserRepresentation> getEmployeeUsers() {
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(getAuthHeader());
 
-        final String url = getBaseUrl() + "roles/" + EmployeeRole.DEFAULT.getName() + "/users";
+        final String url = getBaseUrl() + "roles/" + EmployeeRole.DEFAULT.getName() + "/users?max=1000";
         final ResponseEntity<UserRepresentation[]> exchange = restTemplate.exchange(url, HttpMethod.GET, entity, UserRepresentation[].class);
 
         final UserRepresentation[] body = Optional.ofNullable(exchange.getBody()).orElse(EMPTY_USER_LIST);
@@ -170,6 +173,9 @@ public class KeycloakApiService {
                 role -> EmployeeRole.fromString(role.getName()),
                 Function.identity()
             ));
+
+        customerRole = Arrays.stream(roles).filter(role -> role.getName().equals(CUSTOMER_ROLE_NAME))
+            .findFirst().orElseThrow(GetRolesException::new);
     }
 
     /**
@@ -201,6 +207,18 @@ public class KeycloakApiService {
 
         final String url = "http://" + config.getHost() + "/auth/admin/realms/badenair/users/" + userId + "/role-mappings/realm";
         restTemplate.exchange(url, HttpMethod.POST, entity, Void.class);
+    }
+
+    /**
+     * Removes the specified roles to the user
+     * @param roleRepresentations Roles the user will be given
+     * @param userId ID of the user
+     */
+    private void removeRoleFromUser(RoleRepresentation[] roleRepresentations, String userId) {
+        HttpEntity<RoleRepresentation[]> entity = new HttpEntity<>(roleRepresentations, getAuthHeader());
+
+        final String url = "http://" + config.getHost() + "/auth/admin/realms/badenair/users/" + userId + "/role-mappings/realm";
+        restTemplate.exchange(url, HttpMethod.DELETE, entity, Void.class);
     }
 
     /**
