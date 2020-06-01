@@ -7,6 +7,6 @@ import java.time.OffsetDateTime;
 @Value
 public class TrackingDto {
     String action;
-    Long delay;
+    double delay;
     OffsetDateTime date;
 }
