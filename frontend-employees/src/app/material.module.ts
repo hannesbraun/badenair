@@ -14,6 +14,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatTableModule} from '@angular/material/table';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -32,6 +33,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
         MatProgressSpinnerModule,
         MatDatepickerModule,
         MatNativeDateModule,
+        MatSnackBarModule,
     ],
     exports: [
         MatButtonModule,
