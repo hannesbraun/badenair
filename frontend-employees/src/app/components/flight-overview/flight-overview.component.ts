@@ -23,6 +23,7 @@ import {
 import {ScheduleConflictService} from '../../services/conflicts/schedule-conflict-service.service';
 import {FlightService} from '../../services/flights/flight.service';
 import {timer} from 'rxjs';
+import {InfoService} from '../../services/info/info.service';
 
 interface LengthData {
     start: number;
@@ -45,7 +46,8 @@ export class FlightOverviewComponent implements OnInit {
 
     constructor(private dialog: MatDialog,
                 private scheduleConflictServiceService: ScheduleConflictService,
-                private flightService: FlightService) {
+                private flightService: FlightService,
+                private infoService: InfoService) {
     }
 
     ngOnInit() {
@@ -87,7 +89,7 @@ export class FlightOverviewComponent implements OnInit {
                             this.conflicts = conflicts;
                         });
                 }
-            });
+            }, error => this.infoService.showErrorMessage('Der Flugplan konnte nicht agerufen werden'));
 
         this.flightService.getPlaneSchedules();
     }

@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {VacationService} from '../../services/vacation/vacation.service';
 import {VacationPlanTableData, VacationState} from '../../components/vacation-planning/vacation-planning.component';
 import {RequestVacationDto} from '../../services/dtos/Dtos';
+import {InfoService} from '../../services/info/info.service';
 
 @Component({
     selector: 'app-vacation-planning-page',
@@ -18,7 +19,7 @@ export class VacationPlanningPageComponent implements OnInit {
     remainingVacationDays = 0;
     loading = false;
 
-    constructor(private vacationService: VacationService) {
+    constructor(private vacationService: VacationService, private infoService: InfoService) {
     }
 
     ngOnInit(): void {
@@ -57,14 +58,14 @@ export class VacationPlanningPageComponent implements OnInit {
             }
 
             this.loading = true;
-        });
+        },error => this.infoService.showErrorMessage('Die Urlaubsplanung konnte nicht abgerufen werden'));
     }
 
     onVacationRequest(dto: RequestVacationDto) {
         this.vacationService.requestVacation(dto).subscribe(() => {
             this.loading = false;
             this.ngOnInit();
-        });
+        }, error => this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten'));
     }
 
     private concat(x: any[], y: any[]) {
