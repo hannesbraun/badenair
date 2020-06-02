@@ -12,7 +12,7 @@ export class StartLandingComponent implements OnInit {
     isStarted = false;
     hasDelay = false;
     loaded = false;
-    delayTime !: number
+    delayTime =0;
     delayTransmitted = false;
 
     flight!: FlightDto;
