@@ -26,7 +26,7 @@
             
             <div *ngIf="hasDelay">Voraussichtliche Verzögerung:</div>
                 <mat-form-field *ngIf="hasDelay">
-                    <input type="number" matInput name="delay">
+                    <input type="number" matInput name="delayTime" [(ngModel)]="delayTime">
                 </mat-form-field>
             <div  *ngIf="hasDelay">
                 <button class="delay-transmission-content" mat-raised-button (click)="delay(flight)">Bestätigen</button>
