@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +24,10 @@ public class FlightPlanService {
 
     private final FlightplanRepository flightplanRepository;
     private final PlaneRepository planeRepository;
-    private ArrayList<ConflictDto> conflicts;
+    private ArrayList<ConflictDto> conflicts = new ArrayList<>();
 
     public ArrayList<PlaneScheduleDto> getPlaneSchedules() {
-        OffsetDateTime now = OffsetDateTime.now();
+        OffsetDateTime now = OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.of("+1"));;
         now = now.truncatedTo(ChronoUnit.DAYS);
         now = now.plusHours(6);
         OffsetDateTime oneDayLater = now.plusHours(21);
@@ -34,8 +35,6 @@ public class FlightPlanService {
 
         List<Plane> planes = (List<Plane>) planeRepository.findAll();
         ArrayList<PlaneScheduleDto> planeSchedules = new ArrayList<>(0);
-
-        //ConflictFinder.findConflicts(planes, conflicts);
 
         OffsetDateTime finalNow = now;
         planes.forEach(plane -> {
@@ -49,16 +48,17 @@ public class FlightPlanService {
                         flight.getScheduledFlight().getStartTime(), null);
                     return fusionedStartDate.isAfter(finalNow) && fusionedStartDate.isBefore(oneDayLater);
                 })
+
+
+
                 .map(flight -> {
                     final ScheduledFlight scheduledFlight = flight.getScheduledFlight();
 
-                    /*for (int i = 0; i < conflicts.size(); i++)
+                    for (int i = 0; i < conflicts.size(); i++)
                     {
                         if (flight.getId() == conflicts.get(i).getFlightID())
                             hasConflict.set(true);
                     }
-
-                    */
 
                     return new FlightWithoutPriceDto(flight.getId(),
                         scheduledFlight.getStartingAirport().getName(),
@@ -78,6 +78,9 @@ public class FlightPlanService {
                 hasConflict.get(),
                 flights));
         });
+
+        conflicts.clear();
+        ConflictFinder.findConflicts(planeSchedules, conflicts);
 
         return planeSchedules;
     }

@@ -29,17 +29,17 @@
            (click)="onClickFlight(schedule.flights[j], schedule.plane)">
             <rect [attr.x]="lengths.start" [attr.y]="23 + lineHeight * i"
                   [attr.width]="lengths.duration"
-                  height="14" stroke="#00B0FF" fill="#FFFFFF"></rect>
+                  height="14" stroke="#00B0FF" fill="#FFFFFF" [class.conflict] = "checkFlightForConflict(schedule.flights[j])"></rect>
             <rect [attr.x]="lengths.realStart" [attr.y]="26 + lineHeight * i"
                   [attr.width]="lengths.realDuration"
-                  height="8" stroke="#01579B" fill="#FFFFFF"></rect>
+                  height="8" stroke="#01579B" fill="#FFFFFF" [class.conflict] = "checkFlightForConflict(schedule.flights[j])"></rect>
             <rect [attr.x]="lengths.start" [attr.y]="26 + lineHeight * i"
                   [attr.width]="lengths.remaining"
-                  height="8" fill="#01579B"></rect>
+                  height="8" fill="#01579B" [class.conflict] = "checkFlightForConflict(schedule.flights[j])"></rect>
         </g>
 
         <!-- Schedule data -->
-        <g class="conflictButton" *ngIf="schedule.hasConflict" (click)="onClickConflict(schedule.id)">
+        <g class="conflictButton" *ngIf="schedule.hasConflict">
             <rect x="2" [attr.y]="22 + lineHeight * i" width="45" height="15" fill="#F44336"></rect>
             <text class="medium" x="14" [attr.y]="32 + lineHeight * i">Konflikt</text>
         </g>

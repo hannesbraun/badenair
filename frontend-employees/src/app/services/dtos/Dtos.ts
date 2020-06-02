@@ -33,6 +33,7 @@ export interface ScheduleConflictDto {
     flightDelayed: boolean;
     notEnoughPersonel: boolean;
     planeNotAvailable: boolean;
+    planeNotAvailableFixable: boolean;
 }
 
 export enum ScheduleConfigSolution {

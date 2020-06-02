@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Konflikt bei Flug von <!--{{data.conflict.flight.start}} nach {{data.conflict.flight.destination}}--></h1>
+<h1 mat-dialog-title>Konflikt bei Flug von {{data.flight.start}} nach {{data.flight.destination}}</h1>
 <mat-dialog-content>
     <!--<p>{{data.conflict.cause}}</p>-->
     <form [formGroup]="conflictForm" (ngSubmit)="onSubmit()">

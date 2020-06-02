@@ -8,7 +8,7 @@ import java.util.List;
 public class ConflictDto {
     long flightID;
     boolean flightDelayed;
-    boolean notEnoughPersonel;
+    boolean notEnoughPersonal;
     boolean planeNotAvailable;
     boolean planeNotAvailableFixable;
 }

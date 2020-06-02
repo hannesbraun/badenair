@@ -18,13 +18,9 @@ import {
     FlightInfoDialogComponent,
     FlightInfoDialogInput
 } from './dialogs/flight-info-dialog/flight-info-dialog.component';
-import {
-    ScheduleConflictDialogComponent,
-    ScheduleConflictDialogInput
-} from './dialogs/schedule-conflict-dialog/schedule-conflict-dialog.component';
-import {ScheduleConflictService} from '../../services/conflicts/schedule-conflict-service.service';
 import {FlightService} from '../../services/flights/flight.service';
 import {timer} from 'rxjs';
+import { ConflictService } from 'src/app/services/flights/conflict.service';
 
 interface LengthData {
     start: number;
@@ -48,7 +44,7 @@ export class FlightOverviewComponent implements OnInit {
     calculatedLengths: LengthData[][] = [];
 
     constructor(private dialog: MatDialog,
-                private scheduleConflictServiceService: ScheduleConflictService,
+                private conflictService: ConflictService,
                 private flightService: FlightService) {
     }
 
@@ -88,7 +84,7 @@ export class FlightOverviewComponent implements OnInit {
 
 
                 if (needToUpdateConflicts) {
-                    this.scheduleConflictServiceService.getConflicts()
+                    this.conflictService.getConflicts()
                         .subscribe(conflicts => {
                             this.conflicts = conflicts;
                         });
@@ -116,21 +112,39 @@ export class FlightOverviewComponent implements OnInit {
     }
 
     onClickFlight(flight: FlightDto, plane: string) {
+        const conflictDto = this.conflicts.find(value => (flight.id === value.flightID));
         const config: MatDialogConfig = {
             data: {
                 plane,
-                flight
+                flight,
+                conflict: conflictDto
             } as FlightInfoDialogInput
         };
         this.dialog.open(FlightInfoDialogComponent, config);
     }
 
+    checkFlightForConflict(flight: FlightDto) {
+        if (this.conflicts.find(value => (flight.id === value.flightID)))
+            return true;
+        return false;
+    }
+
+    /*
     onClickConflict(id: number) {
         const conflictDto = this.conflicts.find(value => (id === value.flightID));
+        var flightDto;
 
+        for (var i = 0; i < this.schedules.length; i++){
+            for (var j = 0; j < this.schedules[i].flights.length; j++){
+                if (this.schedules[i].flights[j].id === id)
+                    flightDto = this.schedules[i].flights[j];
+            }
+        }
+        
         const config: MatDialogConfig = {
             data: {
-                conflict: conflictDto
+                conflict: conflictDto,
+                flight: flightDto
             } as ScheduleConflictDialogInput
         };
         this.dialog.open(ScheduleConflictDialogComponent, config).afterClosed().subscribe(output => {
@@ -140,6 +154,7 @@ export class FlightOverviewComponent implements OnInit {
             }
         });
     }
+    */
 
     get displayableHours(): number[] {
         return displayableHours;

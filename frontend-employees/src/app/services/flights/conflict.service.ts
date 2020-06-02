@@ -7,14 +7,14 @@ import { environment } from 'src/environments/environment';
 @Injectable({
     providedIn: 'root'
 })
-export class FlightService {
+export class ConflictService {
 
     apiUrl = environment.backendApiRoot;
     
     constructor(private http: HttpClient) {
     }
 
-    getPlaneSchedules(): Observable<ScheduleConflictDto[]> {
+    getConflicts(): Observable<ScheduleConflictDto[]> {
         return this.http.get<ScheduleConflictDto[]>(`${environment.backendApiRoot}/flightplan/conflicts`);
     }
     
