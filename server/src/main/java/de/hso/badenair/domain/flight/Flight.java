@@ -1,6 +1,7 @@
 package de.hso.badenair.domain.flight;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -63,4 +64,25 @@ public class Flight extends BaseEntity {
 
 	@OneToMany(mappedBy = "flight", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Booking> bookings;
+
+	public OffsetDateTime getStartDate() {
+		if (startDate == null) {
+			return null;
+		}
+		return startDate.withOffsetSameInstant(ZoneOffset.of("+1"));
+	}
+
+	public OffsetDateTime getActualStartTime() {
+		if (actualStartTime == null) {
+			return null;
+		}
+		return actualStartTime.withOffsetSameInstant(ZoneOffset.of("+1"));
+	}
+
+	public OffsetDateTime getActualLandingTime() {
+		if (actualLandingTime == null) {
+			return null;
+		}
+		return actualLandingTime.withOffsetSameInstant(ZoneOffset.of("+1"));
+	}
 }
