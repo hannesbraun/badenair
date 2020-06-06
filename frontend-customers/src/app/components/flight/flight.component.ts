@@ -1,5 +1,6 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {FlightDto} from '../../services/dtos/Dtos';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FlightDto } from '../../services/dtos/Dtos';
+import { formatDuration } from '../../services/util/DurationFormatter';
 
 export interface Person {
     name: string;
@@ -47,6 +48,6 @@ export class FlightComponent {
     }
 
     getDuration() {
-        return this.flight.arrivalTime.getTime() - this.flight.startTime.getTime();
+        return formatDuration(this.flight.arrivalTime.getTime() - this.flight.startTime.getTime());
     }
 }

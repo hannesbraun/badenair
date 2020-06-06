@@ -3,6 +3,7 @@ import {FlightDto, TravelerDto} from '../../services/dtos/Dtos';
 import {CheckInService} from '../../services/checkin/checkin.service';
 import {ActivatedRoute} from '@angular/router';
 import {InfoService} from '../../services/info/info.service';
+import { formatDuration } from 'src/app/services/util/DurationFormatter';
 
 @Component({
     selector: 'app-check-in-page',
@@ -47,10 +48,10 @@ export class CheckInPageComponent implements OnInit {
 
     getDuration() {
         if (this.flight) {
-            return this.flight.arrivalTime.getTime() - this.flight.startTime.getTime();
+            return formatDuration(this.flight.arrivalTime.getTime() - this.flight.startTime.getTime());
         }
 
-        return 0;
+        return "00:00";
     }
 
     checkIn() {
