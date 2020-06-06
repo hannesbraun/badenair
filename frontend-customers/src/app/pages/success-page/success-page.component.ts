@@ -32,7 +32,7 @@ export class SuccessPageComponent implements OnInit{
         });
     }
 
-    getDuration(flight: FlightDto): number {
+    getDuration(flight: FlightDto): string {
         return formatDuration(flight.arrivalTime.getTime() - flight.startTime.getTime());
     } 
 
