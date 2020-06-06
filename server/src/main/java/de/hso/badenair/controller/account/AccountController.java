@@ -39,8 +39,7 @@ public class AccountController {
 	}
 
 	@PutMapping
-	public ResponseEntity<?> updateAccountData(Principal user,
-			@RequestBody @Valid UpdateAccountDataDto dto) {
+	public ResponseEntity<?> updateAccountData(Principal user, @RequestBody @Valid UpdateAccountDataDto dto) {
 		accountService.updateAccountData(user.getName(), dto);
 		return ResponseEntity.ok().build();
 	}
@@ -50,46 +49,35 @@ public class AccountController {
 		List<Booking> bookings = accountService.getBookings(user.getName());
 		List<BookingDto> bookingDtos = bookings.stream().map((booking) -> {
 			// Travelers
-			List<TravelerDto> travelerDtos = booking.getTravelers().stream()
-					.map((traveler) -> {
-						return new TravelerDto(
-								traveler.getFirstName() + " "
-										+ traveler.getLastName(),
-								traveler.getId(), traveler.isCheckedIn());
-					}).collect(Collectors.toList());
+			List<TravelerDto> travelerDtos = booking.getTravelers().stream().map((traveler) -> {
+				return new TravelerDto(traveler.getFirstName() + " " + traveler.getLastName(), traveler.getId(),
+						traveler.isCheckedIn());
+			}).collect(Collectors.toList());
 
 			// Luggage
 			List<LuggageStateDto> luggageDtos = booking.getTravelers().stream()
-					.flatMap(traveler -> traveler.getLuggage() == null
-							? null
-							: traveler.getLuggage().stream())
+					.flatMap(traveler -> traveler.getLuggage() == null ? null : traveler.getLuggage().stream())
 					.map((luggage) -> {
-						return new LuggageStateDto(luggage.getId(),
-								luggage.getState());
+						return new LuggageStateDto(luggage.getId(), luggage.getState());
 					}).collect(Collectors.toList());
 
 			Flight flight = booking.getFlight();
 
 			// Dates
-			OffsetDateTime startDate = DateFusioner.fusionStartDate(
-					flight.getStartDate(),
+			OffsetDateTime startDate = DateFusioner.fusionStartDate(flight.getStartDate(),
 					flight.getScheduledFlight().getStartTime(),
-					flight.getScheduledFlight().getStartingAirport()
-							.getTimezone());
-			OffsetDateTime arrivalDate = DateFusioner.fusionArrivalDate(
-					flight.getStartDate(),
-					flight.getScheduledFlight().getStartTime(),
-					flight.getScheduledFlight().getDurationInHours(),
-					flight.getScheduledFlight().getDestinationAirport()
-							.getTimezone());
+					flight.getScheduledFlight().getStartingAirport().getTimezone());
+			OffsetDateTime arrivalDate = DateFusioner.fusionArrivalDate(flight.getStartDate(),
+					flight.getScheduledFlight().getStartTime(), flight.getScheduledFlight().getDurationInHours(),
+					flight.getScheduledFlight().getDestinationAirport().getTimezone());
 
 			// Create final booking dto
-			return new BookingDto(new FlightDto(flight.getId(),
-					flight.getScheduledFlight().getStartingAirport().getName(),
-					flight.getScheduledFlight().getDestinationAirport()
-							.getName(),
-					startDate, arrivalDate, -1337.0), travelerDtos,
-					luggageDtos);
+			return new BookingDto(
+					new FlightDto(flight.getId(), flight.getScheduledFlight().getStartingAirport().getName(),
+							flight.getScheduledFlight().getDestinationAirport().getName(), startDate, arrivalDate,
+							"UTC" + flight.getScheduledFlight().getStartingAirport().getTimezone(),
+							"UTC" + flight.getScheduledFlight().getDestinationAirport().getTimezone(), -1337.0),
+					travelerDtos, luggageDtos);
 		}).collect(Collectors.toList());
 
 		return ResponseEntity.ok(bookingDtos);
