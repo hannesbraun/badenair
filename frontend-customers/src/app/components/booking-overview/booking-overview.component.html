@@ -3,9 +3,9 @@
 <div fxLayout="column">
     <h3 *ngIf="toFlight">Hinflug</h3>
     <div fxLayout="row" fxLayoutAlign="space-between center" *ngIf="toFlight">
-        <app-flight-info [time]="toFlight.startTime" [location]="toFlight.start"></app-flight-info>
+        <app-flight-info [time]="toFlight.startTime" [timezone]="toFlight.startTimezone" [location]="toFlight.start"></app-flight-info>
         <p class="duration">{{getDuration(toFlight) | date:'HH:mm'}}</p>
-        <app-flight-info [time]="toFlight.arrivalTime" [location]="toFlight.destination"></app-flight-info>
+        <app-flight-info [time]="toFlight.arrivalTime" [timezone]="toFlight.destinationTimezone" [location]="toFlight.destination"></app-flight-info>
         <ng-container *ngIf="passengers">
             <p class="medium">Passagiere: {{passengers.length}}</p>
             <div class="price">
@@ -16,9 +16,9 @@
     <mat-divider *ngIf="returnFlight"></mat-divider>
     <h3 *ngIf="returnFlight">Rückflug</h3>
     <div fxLayout="row" fxLayoutAlign="space-between center" *ngIf="returnFlight">
-        <app-flight-info [time]="returnFlight.startTime" [location]="returnFlight.start"></app-flight-info>
+        <app-flight-info [time]="returnFlight.startTime" [timezone]="returnFlight.startTimezone" [location]="returnFlight.start"></app-flight-info>
         <p class="duration">{{getDuration(returnFlight) | date:'HH:mm'}}</p>
-        <app-flight-info [time]="returnFlight.arrivalTime" [location]="returnFlight.destination"></app-flight-info>
+        <app-flight-info [time]="returnFlight.arrivalTime" [timezone]="returnFlight.destinationTimezone" [location]="returnFlight.destination"></app-flight-info>
         <ng-container *ngIf="passengers">
             <p class="medium">Passagiere: {{passengers.length}}</p>
             <div class="price">

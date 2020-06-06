@@ -1,9 +1,9 @@
 <h1>{{ isCheckInComplete ? 'Check-In erfolgreich' : 'Passagiere einchecken' }}</h1>
 <mat-card appHoverClass hoverClass="mat-elevation-z8" *ngIf="flight; else loading">
     <mat-card-content>
-        <app-flight-info [time]="flight.startTime" [location]="flight.start"></app-flight-info>
+        <app-flight-info [time]="flight.startTime" [timezone]="flight.startTimezone" [location]="flight.start"></app-flight-info>
         <p class="duration">{{getDuration() | date:'HH:mm'}}</p>
-        <app-flight-info [time]="flight.arrivalTime" [location]="flight.destination"></app-flight-info>
+        <app-flight-info [time]="flight.arrivalTime" [timezone]="flight.destinationTimezone" [location]="flight.destination"></app-flight-info>
     </mat-card-content>
 </mat-card>
 <p *ngIf="isCheckInComplete">
