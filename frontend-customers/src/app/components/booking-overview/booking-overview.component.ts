@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 
 import { FlightDto, TravelerDto } from 'src/app/services/dtos/Dtos';
 import { Seat } from '../seat-selection/seat-selection.component';
+import { formatDuration } from '../..//services/util/DurationFormatter';
 
 @Component({
   selector: 'app-booking-overview',
@@ -19,10 +20,10 @@ export class BookingOverviewComponent {
 
   getDuration(flight: FlightDto) {
     if (flight) {
-      return flight.arrivalTime.getTime() - flight.startTime.getTime();
+      return formatDuration(flight.arrivalTime.getTime() - flight.startTime.getTime());
     }
 
-    return 0;
+    return "00:00";
   }
 
   convertToSeatNumber(column: number): string {
