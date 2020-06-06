@@ -38,6 +38,7 @@ import de.hso.badenair.service.plan.vacation.VacationService;
 import de.hso.badenair.service.plane.repository.PlaneRepository;
 import de.hso.badenair.service.plane.repository.PlaneTypeDataRepository;
 import de.hso.badenair.util.csv.CsvHelper;
+import de.hso.badenair.util.time.DateFusioner;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -244,9 +245,13 @@ public class StaticDataInitializer {
 					OffsetDateTime startDate = now
 							.plusDays(Math.floorMod(Integer.valueOf(flightData[5]) - now.getDayOfWeek().getValue(), 7));
 					do {
-						// Add flights for the next 12 months
-						flights.add(Flight.builder().scheduledFlight(scheduledFlight).state(FlightState.OK).plane(plane)
-								.startDate(startDate).build());
+						// Add flights for the next 12 months (excluding flights that started in the
+						// past)
+						if (DateFusioner.fusionStartDate(startDate, scheduledFlight.getStartTime(), null)
+								.isAfter(OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.of("+1")))) {
+							flights.add(Flight.builder().scheduledFlight(scheduledFlight).state(FlightState.OK)
+									.plane(plane).startDate(startDate).build());
+						}
 						startDate = startDate.plusDays(7l);
 					} while (startDate.isBefore(endOfPlanDate));
 				}
