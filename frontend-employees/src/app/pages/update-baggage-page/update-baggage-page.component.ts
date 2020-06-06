@@ -20,7 +20,7 @@ export class UpdateBaggagePageComponent {
         this.baggageService.updateBaggageState(dto)
             .subscribe(
                 () => null,
-                error => this.infoService.showErrorMessage('Der Gepächstatus konnte nicht abgerufen werden')
+                error => this.infoService.showErrorMessage('Der Gepäckstatus konnte nicht abgerufen werden')
             );
     }
 }
