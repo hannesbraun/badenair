@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import { BookingStateService } from 'src/app/services/search/booking-state.service';
 import { FlightDto } from 'src/app/services/dtos/Dtos';
 import { Subscription } from 'rxjs';
+import { formatDuration } from 'src/app/services/util/DurationFormatter';
 
 
 
@@ -31,8 +32,8 @@ export class SuccessPageComponent implements OnInit{
         });
     }
 
-    getDuration(flight: FlightDto): number {
-        return flight.arrivalTime.getTime() - flight.startTime.getTime();
+    getDuration(flight: FlightDto): string {
+        return formatDuration(flight.arrivalTime.getTime() - flight.startTime.getTime());
     } 
 
     ngOnDestroy(): void {

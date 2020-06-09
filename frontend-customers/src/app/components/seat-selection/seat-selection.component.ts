@@ -51,7 +51,6 @@ export class SeatSelectionComponent implements OnInit {
         });
         this.freeSeats.subscribe(seats => {
             this.seats = seats.freeSeats;
-            console.log(seats);
             this.planeType = seats.type;
         });
     }

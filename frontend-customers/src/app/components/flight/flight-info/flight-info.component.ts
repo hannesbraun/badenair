@@ -4,9 +4,9 @@ import {Component, Input} from '@angular/core';
     selector: 'app-flight-info',
     template: `
         <div>
-            <p>{{time | date:'dd.MM.yyyy'}}</p>
+            <p>{{time | date:'dd.MM.yyyy':timezone}}</p>
             <p class="location">{{location}}</p>
-            <p>{{time | date:'HH:mm'}} Uhr</p>
+            <p>{{time | date:'HH:mm':timezone}} Uhr</p>
         </div>
     `,
     styles: [`
@@ -24,5 +24,6 @@ import {Component, Input} from '@angular/core';
 })
 export class FlightInfoComponent {
     @Input() time !: Date;
+    @Input() timezone !: string;
     @Input() location !: string;
 }

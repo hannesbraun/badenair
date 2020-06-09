@@ -89,7 +89,7 @@ export class FlightOverviewComponent implements OnInit {
                             this.conflicts = conflicts;
                         });
                 }
-            }, error => this.infoService.showErrorMessage('Der Flugplan konnte nicht agerufen werden'));
+            }, error => this.infoService.showErrorMessage('Der Flugplan konnte nicht abgerufen werden'));
 
         this.flightService.getPlaneSchedules();
     }
