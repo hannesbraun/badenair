@@ -245,12 +245,27 @@ public class StaticDataInitializer {
 					OffsetDateTime startDate = now
 							.plusDays(Math.floorMod(Integer.valueOf(flightData[5]) - now.getDayOfWeek().getValue(), 7));
 					do {
-						// Add flights for the next 12 months (excluding flights that started in the
-						// past)
+						// Add flights for the next 12 months
 						if (DateFusioner.fusionStartDate(startDate, scheduledFlight.getStartTime(), null)
 								.isAfter(OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.of("+1")))) {
 							flights.add(Flight.builder().scheduledFlight(scheduledFlight).state(FlightState.OK)
-									.plane(plane).startDate(startDate).build());
+									.plane(plane).startDate(startDate).delay(0.0).build());
+						} else if (DateFusioner
+								.fusionArrivalDate(startDate, scheduledFlight.getStartTime(),
+										Double.valueOf(flightData[3]), null)
+								.isAfter(OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.of("+1")))) {
+							flights.add(Flight.builder().scheduledFlight(scheduledFlight).state(FlightState.OK)
+									.plane(plane).startDate(startDate).actualStartTime(DateFusioner
+											.fusionStartDate(startDate, scheduledFlight.getStartTime(), null))
+									.delay(0.0).build());
+						} else {
+							flights.add(Flight.builder().scheduledFlight(scheduledFlight).state(FlightState.OK)
+									.plane(plane).startDate(startDate)
+									.actualStartTime(DateFusioner.fusionStartDate(startDate,
+											scheduledFlight.getStartTime(), null))
+									.actualLandingTime(DateFusioner.fusionArrivalDate(startDate,
+											scheduledFlight.getStartTime(), Double.valueOf(flightData[3]), null))
+									.delay(0.0).build());
 						}
 						startDate = startDate.plusDays(7l);
 					} while (startDate.isBefore(endOfPlanDate));
