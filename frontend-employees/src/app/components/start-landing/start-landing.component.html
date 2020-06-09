@@ -1,29 +1,41 @@
-<h1>Flugbericht - {{ name }}</h1>
+<h1>Flugbericht</h1>
 
-<div class="start-landing-container">
-    <h3>Von {{ dummyFlight.start }} nach {{ dummyFlight.destination }}</h3>
-    <mat-card>
-        <div>Start:</div>
-        <button mat-raised-button (click)="start(dummyFlight)" [disabled]="isStarted">Starten</button>
-        <div>
-            <div *ngIf="dummyFlight.startTime">Gestartet am: {{dummyFlight.startTime | date: 'dd.MM.yyyy'}} um {{dummyFlight.startTime | date: 'HH:mm'}}Uhr
+<div *ngIf="flight; else loading">
+    <div class="start-landing-container" *ngIf="loaded; else loading">
+        <h3>Von {{ flight.start }} nach {{ flight.destination }}</h3>
+        <mat-card>
+            <div>Start:</div>
+            <button mat-raised-button (click)="start(flight)" [disabled]="isStarted">Starten</button>
+            <div>
+                <div *ngIf="flight.startTime">Gestartet am: {{flight.startTime | date: 'dd.MM.yyyy'}} um
+                    {{flight.startTime | date: 'HH:mm'}}Uhr
 
+                </div>
             </div>
-        </div>
-        <div>Landung:</div>
-        <button mat-raised-button (click)="land(dummyFlight)" [disabled]="!isStarted">Landen</button>
-        <div>
-            <div *ngIf="dummyFlight.arrivalTime">Gelandet am: {{dummyFlight.arrivalTime | date: 'dd.MM.yyyy'}}
-                um {{dummyFlight.arrivalTime | date: 'HH:mm'}}
-                Uhr
+            <div>Landung:</div>
+            <button mat-raised-button (click)="land(flight)" [disabled]="!isStarted">Landen</button>
+            <div>
+                <div *ngIf="flight.arrivalTime">Gelandet am: {{flight.arrivalTime | date: 'dd.MM.yyyy'}}
+                    um {{flight.arrivalTime | date: 'HH:mm'}}
+                    Uhr
+                </div>
             </div>
-        </div>
-        <div>Panne:</div>
-        <button mat-raised-button (click)="hasDelay = true">Panne</button>
-        <div></div>
-        <div>Voraussichtliche Verzögerung:</div>
-        <mat-form-field>
-            <input type="number" matInput name="delay" [disabled]="!hasDelay">
-        </mat-form-field>
-    </mat-card>
+            <div>Panne:</div>
+            <button mat-raised-button (click)="hasDelay = true">Panne</button>
+            <div></div>
+            
+            <div *ngIf="hasDelay">Voraussichtliche Verzögerung:</div>
+                <mat-form-field *ngIf="hasDelay">
+                    <input type="number" matInput name="delayTime" [(ngModel)]="delayTime">
+                </mat-form-field>
+            <div  *ngIf="hasDelay">
+                <button class="delay-transmission-content" mat-raised-button (click)="delay(flight)">Bestätigen</button>
+                <div class="delay-transmission-content"><div class="delay-transmission-text" *ngIf="delayTransmitted">Verzögerung übermittelt</div></div>
+            </div>    
+        </mat-card>
+    </div>
 </div>
+
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>
