@@ -1,13 +1,31 @@
 package de.hso.badenair.domain.flight;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
 import de.hso.badenair.domain.base.BaseEntity;
 import de.hso.badenair.domain.booking.Booking;
 import de.hso.badenair.domain.plane.Plane;
-import lombok.*;
-
-import javax.persistence.*;
-import java.time.OffsetDateTime;
-import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -40,10 +58,10 @@ public class Flight extends BaseEntity {
 	@Column(name = "ACTUAL_LANDING_TIME")
 	private OffsetDateTime actualLandingTime;
 
-    @Column(name = "DELAY")
-    private double delay;
+	@Column(name = "DELAY")
+	private double delay;
 
-    @Enumerated(EnumType.STRING)
+	@Enumerated(EnumType.STRING)
 	@Column(name = "STATE")
 	private FlightState state;
 
