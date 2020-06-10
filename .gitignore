@@ -147,3 +147,5 @@ modules.xml
 .vagrant/
 
 *.log
+
+server/src/main/resources/static/

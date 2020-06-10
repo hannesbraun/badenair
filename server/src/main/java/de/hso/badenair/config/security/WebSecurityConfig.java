@@ -20,6 +20,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .mvcMatchers("/api/customer/public/**").permitAll()
             .mvcMatchers("/api/customer/**").hasAuthority("SCOPE_customers")
             .mvcMatchers("/api/employee/**").hasAuthority("SCOPE_employees")
+            .mvcMatchers("/customer/**").permitAll()
+            .mvcMatchers("/employee/**").permitAll()
             .anyRequest().authenticated()
             .and()
             .oauth2ResourceServer()
