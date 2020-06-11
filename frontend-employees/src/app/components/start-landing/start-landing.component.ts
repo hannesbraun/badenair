@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FlightService } from 'src/app/services/flights/flight.service';
 import { FlightDto, TrackingDto } from 'src/app/services/dtos/Dtos';
-import {InfoService} from '../../services/info/info.service';
+import { InfoService } from '../../services/info/info.service';
 
 @Component({
     selector: 'app-start-landing',
@@ -12,17 +12,17 @@ export class StartLandingComponent implements OnInit {
     isStarted = false;
     hasDelay = false;
     loaded = false;
-    delayTime =0;
+    delayTime = 0;
     delayTransmitted = false;
 
     flight!: FlightDto;
 
-    constructor(private flightService: FlightService, private infoService: InfoService){}
+    constructor(private flightService: FlightService, private infoService: InfoService) { }
 
 
     ngOnInit() {
         this.flightService.getCurrentFlightforPilot().subscribe(res => { this.flight = res },
-            err => { },
+            err => { this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten.') },
             () => {
                 this.flightService.getCurrentTrackingAction(this.flight.id).subscribe(res => {
                     if (res.action === "Start") {
@@ -34,7 +34,7 @@ export class StartLandingComponent implements OnInit {
                         this.flight.arrivalTime = res.date as Date;
                     }
                 },
-                    err => { },
+                    err => { this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten.') },
                     () => {
                         this.loaded = true;
                     });
@@ -52,7 +52,7 @@ export class StartLandingComponent implements OnInit {
 
     land(flight: FlightDto) {
         this.isStarted = false;
-        this.flightService.updateFlightTracking(flight.id, { action: "Landung", delay: 0} as TrackingDto)
+        this.flightService.updateFlightTracking(flight.id, { action: "Landung", delay: 0 } as TrackingDto)
             .subscribe(
                 res => flight.arrivalTime = res as Date,
                 error => this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten')
@@ -61,7 +61,7 @@ export class StartLandingComponent implements OnInit {
 
     delay(flight: FlightDto) {
         this.flightService.updateFlightTracking(flight.id, { action: "Verspätung", delay: this.delayTime } as TrackingDto).subscribe();
-        this.delayTransmitted= true;
+        this.delayTransmitted = true;
     }
 
     /* get name() {

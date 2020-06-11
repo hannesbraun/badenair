@@ -89,6 +89,7 @@ public class FlightService {
 
 		for (Flight flight : flights) {
 			if (flight.getActualStartTime() != null && flight.getActualLandingTime() == null) {
+				// Plane is in the air
 				return new FlightDto(flight.getId(), flight.getScheduledFlight().getStartingAirport().getName(),
 						flight.getScheduledFlight().getDestinationAirport().getName(), flight.getActualStartTime(),
 						DateFusioner.fusionArrivalDate(flight.getStartDate(),
@@ -98,7 +99,8 @@ public class FlightService {
 						"UTC" + flight.getScheduledFlight().getDestinationAirport().getTimezone(), 0.0);
 			} else if (DateFusioner
 					.fusionStartDate(flight.getStartDate(), flight.getScheduledFlight().getStartTime(), null)
-					.isAfter(OffsetDateTime.now())) {
+					.isAfter(OffsetDateTime.now()) && flight.getActualStartTime() == null) {
+				// Flight is in the future
 				return new FlightDto(flight.getId(), flight.getScheduledFlight().getStartingAirport().getName(),
 						flight.getScheduledFlight().getDestinationAirport().getName(),
 						DateFusioner.fusionStartDate(flight.getStartDate(), flight.getScheduledFlight().getStartTime(),

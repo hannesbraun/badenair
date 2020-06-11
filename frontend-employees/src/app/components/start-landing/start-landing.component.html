@@ -8,7 +8,7 @@
             <button mat-raised-button (click)="start(flight)" [disabled]="isStarted">Starten</button>
             <div>
                 <div *ngIf="flight.startTime">Gestartet am: {{flight.startTime | date: 'dd.MM.yyyy'}} um
-                    {{flight.startTime | date: 'HH:mm'}}Uhr
+                    {{flight.startTime | date: 'HH:mm'}} Uhr
 
                 </div>
             </div>
@@ -16,8 +16,7 @@
             <button mat-raised-button (click)="land(flight)" [disabled]="!isStarted">Landen</button>
             <div>
                 <div *ngIf="flight.arrivalTime">Gelandet am: {{flight.arrivalTime | date: 'dd.MM.yyyy'}}
-                    um {{flight.arrivalTime | date: 'HH:mm'}}
-                    Uhr
+                    um {{flight.arrivalTime | date: 'HH:mm'}} Uhr
                 </div>
             </div>
             <div>Panne:</div>
