@@ -133,10 +133,7 @@ export class BookingOverviewPageComponent implements OnInit, OnDestroy {
     private confirmBooking(bookingIds: number[]) {
         // Confirm booking
         this.bookingService.confirmBooking(bookingIds)
-            .subscribe(() => {
-                    this.router.navigate(['/success']);
-                    this.bookingStateService.resetState();
-                },
+            .subscribe(() => this.router.navigate(['/success']),
                 this.onError);
     }
 
