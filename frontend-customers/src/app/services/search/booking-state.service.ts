@@ -114,4 +114,8 @@ export class BookingStateService {
     get state() {
         return this.bookingState;
     }
+
+    resetState() {
+        this.bookingState.next({} as BookingState);
+    }
 }
