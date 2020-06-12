@@ -89,3 +89,9 @@ export interface WorkingHoursDto {
     startTime: Date;
     endTime: Date;
 }
+
+export interface TrackingDto{
+    action: "Start"| "Landung" | "Verspätung" | "Bereit";
+    delay?: number;
+    date ?: Date;
+}

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {PlaneScheduleDto} from '../dtos/Dtos';
+import {PlaneScheduleDto, TrackingDto, FlightDto} from '../dtos/Dtos';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
@@ -18,9 +18,16 @@ export class FlightService {
         return this.http.get<PlaneScheduleDto[]>(`${environment.backendApiRoot}/flightplan`);
     }
 
-    updateFlightTracking(flightId: number, action : string){
-        return this.http.patch(`${this.apiUrl}/flight/tracking/${flightId}`, action);
+    updateFlightTracking(flightId: number, dto : TrackingDto){
+        return this.http.patch(`${this.apiUrl}/flight/tracking/${flightId}`, dto);
         //Todo: Error-handling
     }
     
+    getCurrentTrackingAction(flightId: number):Observable<TrackingDto>{
+        return this.http.get<TrackingDto>(`${this.apiUrl}/flight/tracking/action/${flightId}`);
+    }
+
+    getCurrentFlightforPilot(): Observable<FlightDto>{
+        return this.http.get<FlightDto>(`${this.apiUrl}/flight/pilot`);
+    }
 }
