@@ -55,12 +55,15 @@ public class FlightController {
 		FlightDto result = flightService.getCurrentFlightForPilot(user.getName());
 
 		// Fix timezone for corrct displaying in the frontend
-		FlightDto resultFixed = new FlightDto(result.getId(), result.getStart(), result.getDestination(),
-				result.getStartTime().withOffsetSameLocal(
-						ZoneOffset.of(TimeZone.getDefault().inDaylightTime(new Date()) ? "+2" : "+1")),
-				result.getArrivalTime().withOffsetSameLocal(
-						ZoneOffset.of(TimeZone.getDefault().inDaylightTime(new Date()) ? "+2" : "+1")),
-				result.getPrice());
+		FlightDto resultFixed = null;
+		if (result != null) {
+			resultFixed = new FlightDto(result.getId(), result.getStart(), result.getDestination(),
+					result.getStartTime().withOffsetSameLocal(
+							ZoneOffset.of(TimeZone.getDefault().inDaylightTime(new Date()) ? "+2" : "+1")),
+					result.getArrivalTime().withOffsetSameLocal(
+							ZoneOffset.of(TimeZone.getDefault().inDaylightTime(new Date()) ? "+2" : "+1")),
+					result.getStartTimezone(), result.getDestinationTimezone(), result.getPrice());
+		}
 
 		if (result != null) {
 			return ResponseEntity.ok(resultFixed);
