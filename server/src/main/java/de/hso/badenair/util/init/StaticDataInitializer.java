@@ -1,16 +1,19 @@
 package de.hso.badenair.util.init;
 
 import java.io.FileNotFoundException;
+import java.time.DayOfWeek;
+import java.time.Month;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
+import de.hso.badenair.domain.schedule.ShiftSchedule;
+import de.hso.badenair.domain.schedule.StandbySchedule;
+import de.hso.badenair.service.plan.repository.StandbyScheduleRepository;
+import de.hso.badenair.service.plan.shift.ShiftPlanRepository;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
@@ -60,6 +63,10 @@ public class StaticDataInitializer {
 
 	private final KeycloakApiService keycloakApiService;
 
+	private final ShiftPlanRepository shiftPlanRepository;
+
+	private final StandbyScheduleRepository standbyScheduleRepository;
+
 	private final BookingService bookingService;
 
 	private final VacationService vacationService;
@@ -96,6 +103,8 @@ public class StaticDataInitializer {
 		// generateFlightplan();
 
 		initEmployees();
+		initShiftPlan();
+		initStandbyPlan();
 
 		if (DEMO_MODE) {
 			initCustomers();
@@ -337,6 +346,143 @@ public class StaticDataInitializer {
 			keycloakApiService.createEmployeeUser("flightdirector" + (i + 1), EmployeeRole.FLIGHT_DIRECTOR);
 		}
 	}
+
+    /**
+     * Creates initial shift plan.
+     */
+    private void initShiftPlan() {
+        int pilotCount = 50;
+        int cabinCount = 200;
+        int technicianCount = 30;
+        int groundCount = 20;
+
+        List<UserRepresentation> employees = keycloakApiService.getEmployeeUsers();
+
+        OffsetDateTime date = OffsetDateTime.now().withDayOfMonth(1);
+        Month currentMonth = date.getMonth();
+
+        while (date.getMonth() == currentMonth) {
+            ShiftSchedule.ShiftScheduleBuilder fruehschicht = ShiftSchedule.builder()
+                .startTime(date.withHour(6).withMinute(0).withSecond(0).withNano(0))
+                .endTime(OffsetDateTime.now().withHour(14).withMinute(0).withSecond(0).withNano(0));
+            ShiftSchedule.ShiftScheduleBuilder spaetschicht = ShiftSchedule.builder()
+                .startTime(date.withHour(14).withMinute(0).withSecond(0).withNano(0))
+                .endTime(date.withHour(22).withMinute(0).withSecond(0).withNano(0));
+            ShiftSchedule.ShiftScheduleBuilder nachtschicht = ShiftSchedule.builder()
+                .startTime(date.withHour(22).withMinute(0).withSecond(0).withNano(0))
+                .endTime(date.withHour(23).plusHours(7).withMinute(0).withSecond(0).withNano(0));
+
+            int pilotsPlanned = 0;
+            int cabinsPlanned = 0;
+            int techniciansPlanned = 0;
+            int groundsPlanned = 0;
+
+            for (UserRepresentation employee : employees) {
+                String username = employee.getUsername();
+
+                if (date.getDayOfWeek().getValue() <= 5) {
+                    if (username.contains("pilot")) {
+                        if (pilotsPlanned < pilotCount / 3) {
+                            shiftPlanRepository.save(fruehschicht.employeeUserId(employee.getId()).build());
+                        } else if (pilotsPlanned < (2 * pilotCount) / 3) {
+                            shiftPlanRepository.save(spaetschicht.employeeUserId(employee.getId()).build());
+                        } else {
+                            shiftPlanRepository.save(nachtschicht.employeeUserId(employee.getId()).build());
+                        }
+
+                        pilotsPlanned++;
+                    } else if (username.contains("cabin")) {
+                        if (cabinsPlanned < cabinCount / 3) {
+                            shiftPlanRepository.save(fruehschicht.employeeUserId(employee.getId()).build());
+                        } else if (cabinsPlanned < (2 * cabinCount) / 3) {
+                            shiftPlanRepository.save(spaetschicht.employeeUserId(employee.getId()).build());
+                        } else {
+                            shiftPlanRepository.save(nachtschicht.employeeUserId(employee.getId()).build());
+                        }
+
+                        cabinsPlanned++;
+                    } else if (username.contains("ground")) {
+                        if (groundsPlanned < groundCount / 3) {
+                            shiftPlanRepository.save(fruehschicht.employeeUserId(employee.getId()).build());
+                        } else if (groundsPlanned < (2 * groundCount)  / 3) {
+                            shiftPlanRepository.save(spaetschicht.employeeUserId(employee.getId()).build());
+                        } else {
+                            shiftPlanRepository.save(nachtschicht.employeeUserId(employee.getId()).build());
+                        }
+
+                        groundsPlanned++;
+                    }
+                }
+
+                if (username.contains("technician")) {
+                    if (techniciansPlanned < technicianCount / 3) {
+                        shiftPlanRepository.save(fruehschicht.employeeUserId(employee.getId()).build());
+                    } else if (techniciansPlanned < (2 * technicianCount) / 3) {
+                        shiftPlanRepository.save(spaetschicht.employeeUserId(employee.getId()).build());
+                    } else {
+                        shiftPlanRepository.save(nachtschicht.employeeUserId(employee.getId()).build());
+                    }
+
+                    techniciansPlanned++;
+                }
+
+                if (username.contains("flightdirector")) {
+                    shiftPlanRepository.save(fruehschicht.employeeUserId(employee.getId()).build());
+                    shiftPlanRepository.save(spaetschicht.employeeUserId(employee.getId()).build());
+                    shiftPlanRepository.save(nachtschicht.employeeUserId(employee.getId()).build());
+                }
+            }
+
+            date = date.plusDays(1);
+        }
+    }
+
+    /**
+     * Creates initial shift plan.
+     */
+    private void initStandbyPlan() {
+        List<UserRepresentation> employees = keycloakApiService.getEmployeeUsers();
+        List<UserRepresentation> pilots = employees.stream().filter(e -> e.getUsername().contains("pilot")).collect(Collectors.toList());
+        List<UserRepresentation> cabins = employees.stream().filter(e -> e.getUsername().contains("cabin")).collect(Collectors.toList());
+        List<UserRepresentation> technicians = employees.stream().filter(e -> e.getUsername().contains("technician")).collect(Collectors.toList());
+        List<UserRepresentation> grounds = employees.stream().filter(e -> e.getUsername().contains("ground")).collect(Collectors.toList());
+
+        int pilotsPlanned = 0;
+        int cabinsPlanned = 0;
+        int techniciansPlanned = 0;
+        int groundsPlanned = 0;
+
+        OffsetDateTime date = OffsetDateTime.now().withDayOfMonth(1);
+        Month currentMonth = date.getMonth();
+
+        while (date.getMonth() == currentMonth) {
+            StandbySchedule.StandbyScheduleBuilder standbySchedule = StandbySchedule.builder()
+                .startTime(date.withHour(0).withMinute(0).withSecond(0).withNano(0))
+                .endTime(date.withHour(23).plusHours(1).withMinute(0).withSecond(0).withNano(0));
+
+            for (int i = 0; i < 1; i++) {
+                standbyScheduleRepository.save(standbySchedule.employeeUserId(pilots.get(pilotsPlanned).getId()).build());
+                pilotsPlanned = (pilotsPlanned + 1) % pilots.size();
+            }
+
+            for (int i = 0; i < 2; i++) {
+                standbyScheduleRepository.save(standbySchedule.employeeUserId(cabins.get(cabinsPlanned).getId()).build());
+                cabinsPlanned = (cabinsPlanned + 1) % cabins.size();
+            }
+
+            for (int i = 0; i < 1; i++) {
+                standbyScheduleRepository.save(standbySchedule.employeeUserId(technicians.get(techniciansPlanned).getId()).build());
+                techniciansPlanned = (techniciansPlanned + 1) % technicians.size();
+            }
+
+            for (int i = 0; i < 1; i++) {
+                standbyScheduleRepository.save(standbySchedule.employeeUserId(grounds.get(groundsPlanned).getId()).build());
+                groundsPlanned = (groundsPlanned + 1) % grounds.size();
+            }
+
+            date = date.plusDays(1);
+        }
+    }
 
 	/**
 	 * Requests a vacation for every employee.
