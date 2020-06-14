@@ -1,12 +1,12 @@
 package de.hso.badenair.service.flight;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -32,7 +32,7 @@ public class FlightService {
 	public OffsetDateTime updateFlightTracking(Long flightId, TrackingDto dto) {
 		Optional<Flight> flight = flightRepository.findById(flightId);
 
-		final OffsetDateTime currentTime = OffsetDateTime.now();
+		final OffsetDateTime currentTime = OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.of("+1"));
 
 		if (!flight.isPresent()) {
 			return null;
@@ -69,10 +69,12 @@ public class FlightService {
 			return new TrackingDto(FlightAction.LANDING.getName(), flight.getDelay(), flight.getActualLandingTime());
 		} else if (flight.getActualStartTime() == null && flight.getActualLandingTime() == null
 				&& flight.getState() == FlightState.DELAYED) {
-			return new TrackingDto(FlightAction.DELAY.getName(), flight.getDelay(), OffsetDateTime.now());
+			return new TrackingDto(FlightAction.DELAY.getName(), flight.getDelay(),
+					OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.of("+1")));
 		}
 
-		return new TrackingDto(FlightAction.STANDBY.getName(), flight.getDelay(), OffsetDateTime.now());
+		return new TrackingDto(FlightAction.STANDBY.getName(), flight.getDelay(),
+				OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.of("+1")));
 	}
 
 	public FlightDto getCurrentFlightForPilot(String userName) {
@@ -95,11 +97,11 @@ public class FlightService {
 						DateFusioner.fusionArrivalDate(flight.getStartDate(),
 								flight.getScheduledFlight().getStartTime(),
 								flight.getScheduledFlight().getDurationInHours(), null),
-						"UTC" + flight.getScheduledFlight().getStartingAirport().getTimezone(),
-						"UTC" + flight.getScheduledFlight().getDestinationAirport().getTimezone(), 0.0);
+						"UTC+1", "UTC+1", 0.0);
 			} else if (DateFusioner
 					.fusionStartDate(flight.getStartDate(), flight.getScheduledFlight().getStartTime(), null)
-					.isAfter(OffsetDateTime.now()) && flight.getActualStartTime() == null) {
+					.isAfter(OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.of("+1")))
+					&& flight.getActualStartTime() == null) {
 				// Flight is in the future
 				return new FlightDto(flight.getId(), flight.getScheduledFlight().getStartingAirport().getName(),
 						flight.getScheduledFlight().getDestinationAirport().getName(),
@@ -108,8 +110,7 @@ public class FlightService {
 						DateFusioner.fusionArrivalDate(flight.getStartDate(),
 								flight.getScheduledFlight().getStartTime(),
 								flight.getScheduledFlight().getDurationInHours(), null),
-						"UTC" + (TimeZone.getDefault().inDaylightTime(new Date()) ? "+2" : "+1"),
-						"UTC" + (TimeZone.getDefault().inDaylightTime(new Date()) ? "+2" : "+1"), 0.0);
+						"UTC+1", "UTC+1", 0.0);
 			}
 		}
 

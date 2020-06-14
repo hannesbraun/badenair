@@ -32,6 +32,8 @@ public class FlightController {
 		OffsetDateTime updateSuccess = flightService.updateFlightTracking(id, dto);
 
 		if (updateSuccess != null) {
+			updateSuccess = updateSuccess
+					.withOffsetSameLocal(ZoneOffset.of(TimeZone.getDefault().inDaylightTime(new Date()) ? "+2" : "+1"));
 			return ResponseEntity.ok(updateSuccess);
 		} else {
 			return new ResponseEntity<OffsetDateTime>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -43,6 +45,9 @@ public class FlightController {
 		TrackingDto resultDto = flightService.getFlightAction(id);
 
 		if (resultDto != null) {
+			resultDto = new TrackingDto(resultDto.getAction(), resultDto.getDelay(),
+					resultDto.getDate().withOffsetSameLocal(
+							ZoneOffset.of(TimeZone.getDefault().inDaylightTime(new Date()) ? "+2" : "+1")));
 			return ResponseEntity.ok(resultDto);
 		} else {
 			return new ResponseEntity<TrackingDto>(HttpStatus.INTERNAL_SERVER_ERROR);
