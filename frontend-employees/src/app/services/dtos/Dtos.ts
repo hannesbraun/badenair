@@ -3,6 +3,8 @@ export interface FlightDto {
     start: string;
     destination: string;
     startTime: Date;
+    startTimezone: string;
+    detinationTimezone: string;
     arrivalTime: Date;
 }
 
