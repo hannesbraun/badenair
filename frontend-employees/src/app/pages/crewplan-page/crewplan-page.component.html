@@ -1,0 +1,29 @@
+<h1>Nächste Flüge</h1>
+<mat-table *ngIf="nextFlights; else loading" [dataSource]="nextFlights" class="mat-elevation-z8">
+    <ng-container matColumnDef="start">
+        <mat-header-cell *matHeaderCellDef>Start</mat-header-cell>
+        <mat-cell *matCellDef="let flight">{{flight.start}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="startTime">
+        <mat-header-cell *matHeaderCellDef>Startzeit</mat-header-cell>
+        <mat-cell *matCellDef="let flight"> {{flight.startTime | date:'dd.MM.yyyy, HH:mm'}} Uhr</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="destination">
+        <mat-header-cell *matHeaderCellDef>Ziel</mat-header-cell>
+        <mat-cell *matCellDef="let flight">{{flight.destination}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="arrivalTime">
+        <mat-header-cell *matHeaderCellDef>Ankunftszeit</mat-header-cell>
+        <mat-cell *matCellDef="let flight">{{flight.arrivalTime | date:'dd.MM.yyyy, HH:mm'}} Uhr</mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
+
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>

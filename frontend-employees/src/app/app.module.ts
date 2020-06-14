@@ -15,6 +15,7 @@ import {UpdateBaggageComponent} from './components/update-baggage/update-baggage
 import {ServiceSchedulePageComponent} from './pages/service-schedule-page/service-schedule-page.component';
 import {UpdateBaggagePageComponent} from './pages/update-baggage-page/update-baggage-page.component';
 import {StartLandingComponent} from './components/start-landing/start-landing.component';
+import {CrewplanPageComponent} from './pages/crewplan-page/crewplan-page.component';
 import {VacationPlanningComponent} from './components/vacation-planning/vacation-planning.component';
 import {ShiftSchedulePageComponent} from './pages/shift-schedule-page/shift-schedule-page.component';
 import {AuthModule} from './auth/auth.module';
@@ -38,6 +39,7 @@ import {DateInterceptor} from './services/util/date.interceptor';
         ServiceSchedulePageComponent,
         UpdateBaggagePageComponent,
         StartLandingComponent,
+        CrewplanPageComponent,
         VacationPlanningComponent,
         ShiftSchedulePageComponent,
         LandingPageComponent,
