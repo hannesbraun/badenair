@@ -30,4 +30,8 @@ export class FlightService {
     getCurrentFlightforPilot(): Observable<FlightDto>{
         return this.http.get<FlightDto>(`${this.apiUrl}/flight/pilot`);
     }
+
+    getNextFlights(): Observable<FlightDto[]>{
+        return this.http.get<FlightDto[]>(`${this.apiUrl}/flight/crewplan`);
+    }
 }
