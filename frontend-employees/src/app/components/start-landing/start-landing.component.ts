@@ -22,7 +22,7 @@ export class StartLandingComponent implements OnInit {
 
     ngOnInit() {
         this.flightService.getCurrentFlightforPilot().subscribe(res => { this.flight = res },
-            err => { this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten.') },
+            err => { this.infoService.showErrorMessage('Ihnen ist kein weiterer Flug zugeordnet.') },
             () => {
                 this.flightService.getCurrentTrackingAction(this.flight.id).subscribe(res => {
                     if (res.action === "Start") {
@@ -46,7 +46,7 @@ export class StartLandingComponent implements OnInit {
         this.flightService.updateFlightTracking(flight.id, { action: "Start", delay: 0 } as TrackingDto)
             .subscribe(
                 (res) => flight.startTime = res as Date,
-                error => this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten')
+                error => this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten.')
             );
     }
 
@@ -55,7 +55,7 @@ export class StartLandingComponent implements OnInit {
         this.flightService.updateFlightTracking(flight.id, { action: "Landung", delay: 0 } as TrackingDto)
             .subscribe(
                 res => flight.arrivalTime = res as Date,
-                error => this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten')
+                error => this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten.')
             );
     }
 
