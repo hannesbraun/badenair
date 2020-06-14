@@ -3,7 +3,9 @@ package de.hso.badenair.controller.flight;
 import java.security.Principal;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import org.springframework.http.HttpStatus;
@@ -76,5 +78,23 @@ public class FlightController {
 			return new ResponseEntity<FlightDto>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
+	}
+
+	@GetMapping("/crewplan")
+	public ResponseEntity<List<FlightDto>> getNextFlights(Principal user) {
+		List<FlightDto> nextFlights = flightService.getNextFlights(user.getName());
+
+		// Fix timezone for corrct displaying in the frontend
+		List<FlightDto> nextFlightsFixed = new ArrayList<>();
+		for (FlightDto flight : nextFlights) {
+			nextFlightsFixed.add(new FlightDto(flight.getId(), flight.getStart(), flight.getDestination(),
+					flight.getStartTime().withOffsetSameLocal(
+							ZoneOffset.of(TimeZone.getDefault().inDaylightTime(new Date()) ? "+2" : "+1")),
+					flight.getArrivalTime().withOffsetSameLocal(
+							ZoneOffset.of(TimeZone.getDefault().inDaylightTime(new Date()) ? "+2" : "+1")),
+					flight.getStartTimezone(), flight.getDestinationTimezone(), flight.getPrice()));
+		}
+
+		return ResponseEntity.ok(nextFlightsFixed);
 	}
 }

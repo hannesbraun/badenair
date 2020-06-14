@@ -117,6 +117,36 @@ public class FlightService {
 		return null;
 	}
 
+	public List<FlightDto> getNextFlights(String userName) {
+		List<FlightDto> nextFlights = new ArrayList<>();
+
+		List<Flight> flightsRaw = flightCrewMemberRepository.findByEmployeeUserId(userName).stream()
+				.map(assignment -> assignment.getFlight()).collect(Collectors.toList());
+
+		flightsRaw.sort(Comparator.comparing(flight -> DateFusioner.fusionStartDate(flight.getStartDate(),
+				flight.getScheduledFlight().getStartTime(), null)));
+
+		for (Flight flight : flightsRaw) {
+			if (flight.getActualStartTime() == null && flight.getActualLandingTime() == null
+					&& DateFusioner
+							.fusionStartDate(flight.getStartDate(), flight.getScheduledFlight().getStartTime(), null)
+							.isAfter(OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.of("+1")))) {
+				// Flight is in the future
+				nextFlights.add(new FlightDto(flight.getId(),
+						flight.getScheduledFlight().getStartingAirport().getName(),
+						flight.getScheduledFlight().getDestinationAirport().getName(),
+						DateFusioner.fusionStartDate(flight.getStartDate(), flight.getScheduledFlight().getStartTime(),
+								null),
+						DateFusioner.fusionArrivalDate(flight.getStartDate(),
+								flight.getScheduledFlight().getStartTime(),
+								flight.getScheduledFlight().getDurationInHours(), null),
+						"UTC+1", "UTC+1", 0.0));
+			}
+		}
+
+		return nextFlights;
+	}
+
 	public Flight getFlightById(Long id) {
 		Optional<Flight> flight = flightRepository.findById(id);
 
