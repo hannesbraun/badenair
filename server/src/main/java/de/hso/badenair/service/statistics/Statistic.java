@@ -28,7 +28,7 @@ public class Statistic {
     public void saveStatistic()
     {
         double totalSales = 0;
-        System.out.println("Generating Statistics");
+        //System.out.println("Generating Statistics");
         OffsetDateTime startDate = OffsetDateTime.now().withSecond(0).withMinute(0).withHour(0);
 
 		List<Flight> flights = flightRepository.findByStartDateAfter(startDate);
