@@ -1,79 +1,115 @@
 package de.hso.badenair.service.statistics;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.time.Duration;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import de.hso.badenair.domain.booking.Booking;
 import de.hso.badenair.domain.flight.Flight;
 import de.hso.badenair.domain.plane.PlaneType;
 import de.hso.badenair.service.flight.repository.FlightRepository;
 import de.hso.badenair.util.time.DateFusioner;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class Statistic {
-    private final FlightRepository flightRepository;
+	private final FlightRepository flightRepository;
 
-    //@Scheduled (fixedRate = 86_400_000)
-    @Scheduled (fixedRate = 10_000)
-    @Transactional
-    public void saveStatistic()
-    {
-        double totalSales = 0;
-        //System.out.println("Generating Statistics");
-        OffsetDateTime startDate = OffsetDateTime.now().withSecond(0).withMinute(0).withHour(0);
+	// This is not perfect since we have to start the server at midnight to get the
+	// statistics at midnight.
+	// But for our purpose, this is probably okay.
+	@Scheduled(fixedRate = 86_400_000)
+	@Transactional
+	public void saveStatistic() {
+		double totalSales = 0;
+		OffsetDateTime startDate = OffsetDateTime.now().withNano(0).withSecond(0).withMinute(0).withHour(0)
+				.minusDays(1l).withOffsetSameLocal(ZoneOffset.of("+1")).plusDays(1l);
 
-		List<Flight> flights = flightRepository.findByStartDateAfter(startDate);
+		// Get flights (getting a bit more flights from the database to avoid timezone
+		// problems, filtering the wrong ones out afterwards)
+		List<Flight> flights = flightRepository.findByActualLandingTimeBetween(startDate.minusDays(1l),
+				startDate.plusDays(2l));
+		System.out.println(flights.size());
+		flights = flights.stream()
+				.filter(flight -> flight.getActualLandingTime() != null
+						&& flight.getActualLandingTime().isAfter(startDate)
+						&& flight.getActualLandingTime().isBefore(startDate.plusDays(1)))
+				.collect(Collectors.toList());
 
-		try{
-            FileWriter fileWriter = new FileWriter("statistics.txt", false);
-            PrintWriter printWriter = new PrintWriter(fileWriter);
-            printWriter.printf("Statistics for %s\n\n", OffsetDateTime.now().withSecond(0).withNano(0).toString());
+		try {
+			FileWriter fileWriter = new FileWriter(
+					"statistics-" + startDate.format(DateTimeFormatter.ofPattern("YYYY-MM-dd")) + ".txt", false);
+			PrintWriter printWriter = new PrintWriter(fileWriter);
+			printWriter.print(
+					"  ____            _                     _\n" + " |  _ \\          | |              /\\   (_)\n"
+							+ " | |_) | __ _  __| | ___ _ __    /  \\   _ _ __\n"
+							+ " |  _ < / _` |/ _` |/ _ \\ '_ \\  / /\\ \\ | | '__|\n"
+							+ " | |_) | (_| | (_| |  __/ | | |/ ____ \\| | |\n"
+							+ " |____/ \\__,_|\\__,_|\\___|_| |_/_/    \\_\\_|_|\n\n\n");
+			printWriter.printf("Statistics for %s\n\n", startDate.format(DateTimeFormatter.ofPattern("YYYY-MM-dd")));
 
-                fileWriter.close();
-            fileWriter = new FileWriter("statistics.txt", true);
-            printWriter = new PrintWriter(fileWriter);
+			for (Flight flight : flights) {
+				OffsetDateTime scheduledStartTime = DateFusioner
+						.fusionStartDate(flight.getStartDate(), flight.getScheduledFlight().getStartTime(), null)
+						.withSecond(0).withNano(0);
+				OffsetDateTime scheduledLandingTime = DateFusioner
+						.fusionArrivalDate(flight.getStartDate(), flight.getScheduledFlight().getStartTime(),
+								flight.getScheduledFlight().getDurationInHours(), null)
+						.withSecond(0).withNano(0);
+				OffsetDateTime actualStartTime = flight.getActualStartTime();
+				OffsetDateTime actualLandingTime = flight.getActualLandingTime();
 
-            for(int i = 0; i < flights.size(); i++) {
-                OffsetDateTime startTime = DateFusioner.fusionStartDate(flights.get(i).getStartDate(),
-                    flights.get(i).getScheduledFlight().getStartTime(),
-                    null);
-                OffsetDateTime landingTime = DateFusioner.fusionArrivalDate(flights.get(i).getStartDate(),
-                    flights.get(i).getScheduledFlight().getStartTime(),
-                    flights.get(i).getScheduledFlight().getDurationInHours(),
-                    null);
-                Long id = flights.get(i).getId();
+				// Calculate delay
+				long takeoffDelay = 0;
+				if (actualStartTime != null) {
+					takeoffDelay = Duration.between(scheduledStartTime, actualStartTime).getSeconds() / 60;
+				}
+				long janDelay = 0; // Wait... what? Lul :D
+				if (actualLandingTime != null) {
+					janDelay = Duration.between(scheduledLandingTime, actualLandingTime).getSeconds() / 60;
+				}
 
-                double sales = 0;
-                Set<Booking> bookings = flights.get(i).getBookings();
+				// Plane id
+				Long id = flight.getPlane().getId();
 
-                for (Booking b : bookings) {
-                    sales += b.getPrice();
-                }
-                totalSales += sales;
+				// Calculate sales
+				double sales = 0;
+				Set<Booking> bookings = flight.getBookings();
 
-                PlaneType planeType = flights.get(i).getPlane().getTypeData().getType();
+				for (Booking b : bookings) {
+					sales += b.getPrice();
+				}
+				totalSales += sales;
 
-                printWriter.printf("PlaneID:\t\t%d\nPlaneType:\t\t%s\nStartTime:\t\t%s\nLandingTime:\t%s\nSales:\t\t\t%f\n\n",
-                    id,
-                    planeType.toString(),
-                    startTime.toString(),
-                    landingTime.toString(),
-                    sales);
-            }
-            printWriter.printf("Total sales: %f\n", totalSales);
-            fileWriter.flush();
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+				// Plane type
+				PlaneType planeType = flight.getPlane().getTypeData().getType();
+
+				// Write flight to file
+				printWriter.printf(
+						"PlaneID:        %d\nPlaneType:      %s\nStartTime:      %s\nDelay:          %s minutes\nLandingTime:    %s\nDelay:          %s minutes\nSales:          %.2f euros\n\n",
+						id, planeType.toString(),
+						actualStartTime != null ? actualStartTime.toString() : "no data available", takeoffDelay,
+						actualLandingTime != null ? actualLandingTime.toString() : "no data available", janDelay,
+						sales);
+			}
+			printWriter.printf("\nTotal sales: %f\n", totalSales);
+
+			fileWriter.flush();
+			fileWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
