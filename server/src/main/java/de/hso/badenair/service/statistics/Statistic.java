@@ -27,46 +27,53 @@ public class Statistic {
     @Transactional
     public void saveStatistic()
     {
+        double totalSales = 0;
         System.out.println("Generating Statistics");
         OffsetDateTime startDate = OffsetDateTime.now().withSecond(0).withMinute(0).withHour(0);
 
 		List<Flight> flights = flightRepository.findByStartDateAfter(startDate);
 
-        for(int i = 0; i < flights.size(); i++) {
-            OffsetDateTime startTime = DateFusioner.fusionStartDate(flights.get(i).getStartDate(),
-                flights.get(i).getScheduledFlight().getStartTime(),
-                null);
-            OffsetDateTime landingTime = DateFusioner.fusionArrivalDate(flights.get(i).getStartDate(),
-                flights.get(i).getScheduledFlight().getStartTime(),
-                flights.get(i).getScheduledFlight().getDurationInHours(),
-                null);
-            Long id = flights.get(i).getId();
+		try{
+            FileWriter fileWriter = new FileWriter("statistics.txt", false);
+            PrintWriter printWriter = new PrintWriter(fileWriter);
+            printWriter.printf("Statistics for %s\n\n", OffsetDateTime.now().withSecond(0).withNano(0).toString());
 
-			double sales = 0;
-			Set<Booking> bookings = flights.get(i).getBookings();
+                fileWriter.close();
+            fileWriter = new FileWriter("statistics.txt", true);
+            printWriter = new PrintWriter(fileWriter);
 
-			for (Booking b : bookings) {
-				sales += b.getPrice();
-			}
+            for(int i = 0; i < flights.size(); i++) {
+                OffsetDateTime startTime = DateFusioner.fusionStartDate(flights.get(i).getStartDate(),
+                    flights.get(i).getScheduledFlight().getStartTime(),
+                    null);
+                OffsetDateTime landingTime = DateFusioner.fusionArrivalDate(flights.get(i).getStartDate(),
+                    flights.get(i).getScheduledFlight().getStartTime(),
+                    flights.get(i).getScheduledFlight().getDurationInHours(),
+                    null);
+                Long id = flights.get(i).getId();
 
-			PlaneType planeType = flights.get(i).getPlane().getTypeData().getType();
+                double sales = 0;
+                Set<Booking> bookings = flights.get(i).getBookings();
 
-            try {
-                FileWriter fileWriter = new FileWriter("statistics.txt", false);
-                PrintWriter printWriter = new PrintWriter(fileWriter);
-                printWriter.printf("Statistics for %s\n\nPlaneID:\t\t%d\nPlaneType:\t\t%s\nStartTime:\t\t%s\nLandingTime:\t%s\nSales:\t\t\t%f\n",
-                    OffsetDateTime.now().toString(),
+                for (Booking b : bookings) {
+                    sales += b.getPrice();
+                }
+                totalSales += sales;
+
+                PlaneType planeType = flights.get(i).getPlane().getTypeData().getType();
+
+                printWriter.printf("PlaneID:\t\t%d\nPlaneType:\t\t%s\nStartTime:\t\t%s\nLandingTime:\t%s\nSales:\t\t\t%f\n\n",
                     id,
                     planeType.toString(),
                     startTime.toString(),
                     landingTime.toString(),
                     sales);
-
-				fileWriter.flush();
-				fileWriter.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+            }
+            printWriter.printf("Total sales: %f\n", totalSales);
+            fileWriter.flush();
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 	}
 }
