@@ -1,0 +1,7 @@
+Statistics for 2020-05-26T17:59:12.536360+02:00
+
+PlaneID:		34257
+PlaneType:		Dash_8_400
+StartTime:		2021-05-24T20:17:22.065697+02:00
+LandingTime:	2021-05-24T21:04:22.065697+02:00
+Sales:		    0.000000
