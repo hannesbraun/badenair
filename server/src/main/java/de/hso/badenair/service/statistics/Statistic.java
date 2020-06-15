@@ -27,10 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class Statistic {
 	private final FlightRepository flightRepository;
 
-	// This is not perfect since we have to start the server at midnight to get the
-	// statistics at midnight.
-	// But for our purpose, this is probably okay.
-	@Scheduled(fixedRate = 86_400_000)
+	@Scheduled(cron = "0 0 0 * * ?")
 	@Transactional
 	public void saveStatistic() {
 		double totalSales = 0;
