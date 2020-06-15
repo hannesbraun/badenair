@@ -35,13 +35,12 @@ public class Statistic {
 	public void saveStatistic() {
 		double totalSales = 0;
 		OffsetDateTime startDate = OffsetDateTime.now().withNano(0).withSecond(0).withMinute(0).withHour(0)
-				.minusDays(1l).withOffsetSameLocal(ZoneOffset.of("+1")).plusDays(1l);
+				.minusDays(1l).withOffsetSameLocal(ZoneOffset.of("+1"));
 
 		// Get flights (getting a bit more flights from the database to avoid timezone
 		// problems, filtering the wrong ones out afterwards)
 		List<Flight> flights = flightRepository.findByActualLandingTimeBetween(startDate.minusDays(1l),
 				startDate.plusDays(2l));
-		System.out.println(flights.size());
 		flights = flights.stream()
 				.filter(flight -> flight.getActualLandingTime() != null
 						&& flight.getActualLandingTime().isAfter(startDate)
