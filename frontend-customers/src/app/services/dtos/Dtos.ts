@@ -26,6 +26,8 @@ export interface FlightDto {
     destination: string;
     startTime: Date;
     arrivalTime: Date;
+    startTimezone: string;
+    destinationTimezone: string;
     price: number;
 }
 

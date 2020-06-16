@@ -1,34 +1,67 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FlightService } from 'src/app/services/flights/flight.service';
-import { FlightDto } from 'src/app/services/dtos/Dtos';
+import { FlightDto, TrackingDto } from 'src/app/services/dtos/Dtos';
+import { InfoService } from '../../services/info/info.service';
 
 @Component({
     selector: 'app-start-landing',
     templateUrl: './start-landing.component.html',
     styleUrls: ['./start-landing.component.scss']
 })
-export class StartLandingComponent implements OnInit{
+export class StartLandingComponent implements OnInit {
     isStarted = false;
     hasDelay = false;
-    name = "Max Mustermann"; //TODO: get Pilot's Name
+    loaded = false;
+    delayTime = 0;
+    delayTransmitted = false;
 
-    dummyFlight!: FlightDto;
+    flight!: FlightDto;
 
-    constructor(private flightService: FlightService){}
+    constructor(private flightService: FlightService, private infoService: InfoService) { }
 
 
-    ngOnInit(){
-        this.dummyFlight = { id: 1, start: "Baden-Baden", destination: "Frankfurt"} as FlightDto;
+    ngOnInit() {
+        this.flightService.getCurrentFlightforPilot().subscribe(res => { this.flight = res },
+            err => { this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten.') },
+            () => {
+                this.flightService.getCurrentTrackingAction(this.flight.id).subscribe(res => {
+                    if (res.action === "Start") {
+                        this.isStarted = true
+                        this.flight.startTime = res.date as Date;
+                    }
+                    else if (res.action === "Landung") {
+                        this.isStarted = false
+                        this.flight.arrivalTime = res.date as Date;
+                    }
+                },
+                    err => { this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten.') },
+                    () => {
+                        this.loaded = true;
+                    });
+            });
     }
 
     start(flight: FlightDto) {
         this.isStarted = true;
-        this.flightService.updateFlightTracking(flight.id, "Start").subscribe((res) => flight.startTime = res as Date);
+        this.flightService.updateFlightTracking(flight.id, { action: "Start", delay: 0 } as TrackingDto)
+            .subscribe(
+                (res) => flight.startTime = res as Date,
+                error => this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten')
+            );
     }
 
     land(flight: FlightDto) {
         this.isStarted = false;
-        this.flightService.updateFlightTracking(flight.id, "Landung").subscribe(res => flight.arrivalTime = res as Date);
+        this.flightService.updateFlightTracking(flight.id, { action: "Landung", delay: 0 } as TrackingDto)
+            .subscribe(
+                res => flight.arrivalTime = res as Date,
+                error => this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten')
+            );
+    }
+
+    delay(flight: FlightDto) {
+        this.flightService.updateFlightTracking(flight.id, { action: "Verspätung", delay: this.delayTime } as TrackingDto).subscribe();
+        this.delayTransmitted = true;
     }
 
     /* get name() {

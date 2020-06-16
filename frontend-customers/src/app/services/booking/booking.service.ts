@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {environment} from '../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 import { BookingDto } from '../dtos/Dtos';
 import { Observable } from 'rxjs';
 @Injectable({
@@ -12,8 +12,12 @@ export class BookingService {
 
   constructor(private http: HttpClient) { }
 
-  bookFlight(booking: BookingDto):Observable<BookingDto>{
-    return this.http.post<BookingDto>(`${this.apiUrl}/flight/booking`, booking);
+  bookFlight(booking: BookingDto): Observable<number> {
+    return this.http.post<number>(`${this.apiUrl}/flight/booking`, booking);
+  }
+
+  confirmBooking(bookingIds: number[]): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/flight/confirmBooking`, bookingIds);
   }
 
 }

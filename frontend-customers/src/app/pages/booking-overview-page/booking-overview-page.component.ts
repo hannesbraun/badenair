@@ -1,10 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BookingStateService} from '../../services/search/booking-state.service';
-import {forkJoin, Subscription} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {BookingDto, FlightDto, TravelerDto} from 'src/app/services/dtos/Dtos';
 import {BookingService} from 'src/app/services/booking/booking.service';
 import {Router} from '@angular/router';
 import {Seat} from 'src/app/components/seat-selection/seat-selection.component';
+import {InfoService} from '../../services/info/info.service';
 
 
 @Component({
@@ -24,11 +25,11 @@ export class BookingOverviewPageComponent implements OnInit, OnDestroy {
 
     constructor(private bookingStateService: BookingStateService,
                 private bookingService: BookingService,
-                private router: Router) {
+                private router: Router,
+                private infoService: InfoService) {
     }
 
     ngOnInit(): void {
-        // TODO: fill Overview with State Data
         this.passengers = [];
         this.toSeats = [];
         this.returnSeats = [];
@@ -71,32 +72,45 @@ export class BookingOverviewPageComponent implements OnInit, OnDestroy {
     }
 
     bookFlights() {
+        const bookingIds: number[] = [];
 
         if (this.toFlight && this.returnFlight && (this.passengers.length > 0)) {
-            forkJoin({
-                to: this.bookingService.bookFlight({
-                    flightId: this.toFlight.id,
-                    passengers: this.passengers,
-                    seats: this.toSeats,
-                    price: this.calculatePrice(this.toFlight)
-                } as BookingDto),
-                return: this.bookingService.bookFlight({
-                    flightId: this.returnFlight.id,
-                    passengers: this.passengers,
-                    seats: this.toSeats,
-                    price: this.calculatePrice(this.returnFlight)
-                } as BookingDto)
-            }).subscribe(() => this.router.navigate(['/success']));
-        } else if (this.toFlight && (this.passengers.length > 0)) {
+            // Book to flight
             this.bookingService.bookFlight({
                 flightId: this.toFlight.id,
                 passengers: this.passengers,
                 seats: this.toSeats,
                 price: this.calculatePrice(this.toFlight)
-            } as BookingDto)
-                .subscribe(() => this.router.navigate(['/success']));
+            } as BookingDto).subscribe(id => {
+                bookingIds.push(id);
+
+                // Book return flight
+                this.bookingService.bookFlight({
+                    flightId: this.returnFlight.id,
+                    passengers: this.passengers,
+                    seats: this.returnSeats,
+                    price: this.calculatePrice(this.returnFlight)
+                } as BookingDto).subscribe(id => {
+                    bookingIds.push(id);
+                    this.confirmBooking(bookingIds);
+                }, this.onError);
+
+            }, this.onError);
+
+        } else if (this.toFlight && (this.passengers.length > 0)) {
+            // Book flight
+            this.bookingService.bookFlight({
+                flightId: this.toFlight.id,
+                passengers: this.passengers,
+                seats: this.toSeats,
+                price: this.calculatePrice(this.toFlight)
+            } as BookingDto).subscribe(id => {
+                bookingIds.push(id);
+                this.confirmBooking(bookingIds);
+            }, this.onError);
+
         } else {
-            console.error('Die Buchung ist fehlgeschlagen.');
+            this.onError();
         }
     }
 
@@ -113,11 +127,15 @@ export class BookingOverviewPageComponent implements OnInit, OnDestroy {
                 price += passenger.baggage4 * this.baggagePrice;
             });
         }
-
-
-
         return price;
     }
 
+    private confirmBooking(bookingIds: number[]) {
+        // Confirm booking
+        this.bookingService.confirmBooking(bookingIds)
+            .subscribe(() => this.router.navigate(['/success']),
+                this.onError);
+    }
 
+    private onError = () => this.infoService.showErrorMessage('Die Buchung ist fehlgeschlagen.');
 }

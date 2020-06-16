@@ -1,5 +1,17 @@
 package de.hso.badenair.service.flight.booking;
 
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import de.hso.badenair.controller.dto.flight.IncomingBookingDto;
 import de.hso.badenair.controller.dto.seat.SelectedSeatDto;
 import de.hso.badenair.controller.dto.traveler.IncomingTravelerDto;
@@ -11,86 +23,145 @@ import de.hso.badenair.domain.booking.Traveler;
 import de.hso.badenair.domain.flight.Flight;
 import de.hso.badenair.service.booking.repository.BookingRepository;
 import de.hso.badenair.service.flight.FlightService;
+import de.hso.badenair.service.seat.SeatService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class BookingService {
 	private final BookingRepository bookingRepository;
 	private final FlightService flightService;
+	private final SeatService seatService;
 
 	private final List<Integer> allowedWeights = List.of(15, 23, 30);
 
+	private static String currentUser = null;
+	private static final Map<Integer, Booking> bookingDrafts = new HashMap<>();
+	private static OffsetDateTime lastBookingDraft;
+	private static final long TIMEOUT = 5l;
+
+	private static final Random random = new Random();
+
 	@Transactional
-	public boolean bookFlight(String username, IncomingBookingDto dto) {
-		Flight flight = flightService.getFlightById(dto.getFlightId());
-		if (flight != null) {
+	public int bookFlight(String username, IncomingBookingDto dto) {
+		synchronized (bookingDrafts) {
+			if (currentUser != null && !currentUser.equals(username)) {
+				// Currently locked by another user
+
+				if (!lastBookingDraft.isBefore(OffsetDateTime.now().minusSeconds(TIMEOUT))) {
+					return 0;
+				} else {
+					// Timeout, delete drafts
+					unlock();
+				}
+			}
+
+			Flight flight = flightService.getFlightById(dto.getFlightId());
+			if (flight == null) {
+				unlock();
+				return 0;
+			}
+
 			Set<Traveler> travelers = new HashSet<>();
-			Booking newBooking = Booking.builder().flight(flight)
-					.customerUserId(username).build();
+			Booking newBooking = Booking.builder().flight(flight).customerUserId(username).build();
 
 			for (int i = 0; i < dto.getPassengers().length; i++) {
 				IncomingTravelerDto travelerDto = dto.getPassengers()[i];
-				// TODO: check if seat is available (reject booking otherwise)
 				SelectedSeatDto selectedSeat = dto.getSeats()[i];
-				Traveler traveler = Traveler.builder()
-                    .firstName(travelerDto.getName())
-                    .lastName(travelerDto.getSurname())
-                    .checkedIn(travelerDto.isCheckedIn())
-                    .booking(newBooking)
-                    .seatRow(selectedSeat.getRow())
-                    .seatColumn(selectedSeat.getColumn())
-                    .build();
-                travelers.add(traveler);
 
-                Set<Luggage> luggages = new HashSet<>();
+				if (this.seatService.isSeatTaken(flight, selectedSeat)) {
+					unlock();
+					return 0;
+				}
+
+				Traveler traveler = Traveler.builder().firstName(travelerDto.getName())
+						.lastName(travelerDto.getSurname()).checkedIn(travelerDto.isCheckedIn()).booking(newBooking)
+						.seatRow(selectedSeat.getRow()).seatColumn(selectedSeat.getColumn()).build();
+				travelers.add(traveler);
+
+				Set<Luggage> luggages = new HashSet<>();
 				if (allowedWeights.contains(travelerDto.getBaggage1())) {
-					Luggage luggage1 = Luggage.builder()
-							.state(LuggageState.AT_TRAVELLER)
-							.weight(travelerDto.getBaggage1())
-							.traveler(traveler).build();
+					Luggage luggage1 = Luggage.builder().state(LuggageState.AT_TRAVELLER)
+							.weight(travelerDto.getBaggage1()).traveler(traveler).build();
 					luggages.add(luggage1);
 				}
 
 				if (allowedWeights.contains(travelerDto.getBaggage2())) {
-					Luggage luggage2 = Luggage.builder()
-							.state(LuggageState.AT_TRAVELLER)
-							.weight(travelerDto.getBaggage2())
-							.traveler(traveler).build();
+					Luggage luggage2 = Luggage.builder().state(LuggageState.AT_TRAVELLER)
+							.weight(travelerDto.getBaggage2()).traveler(traveler).build();
 					luggages.add(luggage2);
 				}
 				if (allowedWeights.contains(travelerDto.getBaggage3())) {
-					Luggage luggage3 = Luggage.builder()
-							.state(LuggageState.AT_TRAVELLER)
-							.weight(travelerDto.getBaggage3())
-							.traveler(traveler).build();
+					Luggage luggage3 = Luggage.builder().state(LuggageState.AT_TRAVELLER)
+							.weight(travelerDto.getBaggage3()).traveler(traveler).build();
 					luggages.add(luggage3);
 				}
 				if (allowedWeights.contains(travelerDto.getBaggage4())) {
-					Luggage luggage4 = Luggage.builder()
-							.state(LuggageState.AT_TRAVELLER)
-							.weight(travelerDto.getBaggage4())
-							.traveler(traveler).build();
+					Luggage luggage4 = Luggage.builder().state(LuggageState.AT_TRAVELLER)
+							.weight(travelerDto.getBaggage4()).traveler(traveler).build();
 					luggages.add(luggage4);
 				}
 				if (!luggages.isEmpty()) {
 					traveler.setLuggage(luggages);
 				}
 			}
-			if (!travelers.isEmpty()) {
-				newBooking.setTravelers(travelers);
-				PriceCalculator.calculateFinalPrice(newBooking);
-				bookingRepository.save(newBooking);
-				return true;
+
+			if (travelers.isEmpty()) {
+				unlock();
+				return 0;
 			}
+			newBooking.setTravelers(travelers);
+
+			PriceCalculator.calculateFinalPrice(newBooking);
+
+			// Generate temporary booking id for frontend
+			int rand;
+			do {
+				rand = random.nextInt();
+			} while (!bookingDrafts.containsKey(rand) && rand == 0);
+
+			// Save draft
+			currentUser = username;
+			lastBookingDraft = OffsetDateTime.now();
+			bookingDrafts.put(rand, newBooking);
+
+			return rand;
+		}
+	}
+
+	public boolean finishBooking(String username, Integer[] bookingIds) {
+		synchronized (bookingDrafts) {
+			if (currentUser != null && !currentUser.equals(username)) {
+				// Locked by someone else
+				return false;
+			}
+
+			// Additional list: user may have timed out and provide a invalid bookingId
+			// Note: these ids don't correspond to the given id for the booking in the
+			// database
+			List<Booking> bookings = new ArrayList<>();
+
+			// Get booking drafts
+			for (int bookingId : bookingIds) {
+				Booking draft = bookingDrafts.get(bookingId);
+				if (draft != null) {
+					bookings.add(draft);
+				} else {
+					return false;
+				}
+			}
+
+			// Finally: save the bookings
+			bookingRepository.saveAll(bookings);
+
+			unlock();
 		}
 
-		return false;
+		return true;
+	}
+
+	private void unlock() {
+		bookingDrafts.clear();
+		currentUser = null;
 	}
 }

@@ -1,8 +1,8 @@
 <mat-card appHoverClass hoverClass="mat-elevation-z8">
     <mat-card-content>
-        <app-flight-info [time]="flight.startTime" [location]="flight.start"></app-flight-info>
-        <p class="duration">{{getDuration() | date:'HH:mm'}}</p>
-        <app-flight-info [time]="flight.arrivalTime" [location]="flight.destination"></app-flight-info>
+        <app-flight-info [time]="flight.startTime" [timezone]="flight.startTimezone" [location]="flight.start"></app-flight-info>
+        <p class="duration">{{getDuration()}}</p>
+        <app-flight-info [time]="flight.arrivalTime" [timezone]="flight.destinationTimezone" [location]="flight.destination"></app-flight-info>
         <ng-container *ngIf="!persons">
             <p class="large">Personen: {{numberOfPassengers}}</p>
             <div>

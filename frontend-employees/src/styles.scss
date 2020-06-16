@@ -15,3 +15,13 @@ body {
   max-width: 1024px;
   padding: 10px;
 }
+
+.error-message {
+  background-color: red;
+  color: white;
+  font-weight: bold;
+
+  .mat-simple-snackbar-action {
+    color: white;
+  }
+}

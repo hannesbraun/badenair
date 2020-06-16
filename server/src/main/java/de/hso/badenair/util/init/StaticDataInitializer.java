@@ -313,18 +313,16 @@ public class StaticDataInitializer {
 	 */
 	private void initEmployees() {
 		// Pilots
-		// TODO: differentiate dash and jet pilots
 		for (int i = 0; i < 40; i++) {
-			keycloakApiService.createEmployeeUser("dashpilot" + (i + 1), EmployeeRole.PILOT);
+			keycloakApiService.createEmployeeUser("dashpilot" + (i + 1), EmployeeRole.DASH_PILOT);
 		}
 		for (int i = 0; i < 10; i++) {
-			keycloakApiService.createEmployeeUser("jetpilot" + (i + 1), EmployeeRole.PILOT);
+			keycloakApiService.createEmployeeUser("jetpilot" + (i + 1), EmployeeRole.JET_PILOT);
 		}
 
 		// Cabin crew
-		// TODO: add cabin crew role
 		for (int i = 0; i < 200; i++) {
-			keycloakApiService.createEmployeeUser("cabin" + (i + 1), EmployeeRole.DEFAULT);
+			keycloakApiService.createEmployeeUser("cabin" + (i + 1), EmployeeRole.CABIN);
 		}
 
 		for (int i = 0; i < 30; i++) {
@@ -333,6 +331,10 @@ public class StaticDataInitializer {
 
 		for (int i = 0; i < 20; i++) {
 			keycloakApiService.createEmployeeUser("ground" + (i + 1), EmployeeRole.GROUND);
+		}
+
+		for (int i = 0; i < 1; i++) {
+			keycloakApiService.createEmployeeUser("flightdirector" + (i + 1), EmployeeRole.FLIGHT_DIRECTOR);
 		}
 	}
 

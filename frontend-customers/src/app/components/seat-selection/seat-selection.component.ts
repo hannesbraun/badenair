@@ -51,7 +51,6 @@ export class SeatSelectionComponent implements OnInit {
         });
         this.freeSeats.subscribe(seats => {
             this.seats = seats.freeSeats;
-            console.log(seats);
             this.planeType = seats.type;
         });
     }
@@ -102,7 +101,7 @@ export class SeatSelectionComponent implements OnInit {
             return true;
         }
         const rowValue = this.formArray.controls[passengerIndex]?.get('row')?.value;
-        if (!rowValue) {
+        if (rowValue === undefined || rowValue === '' || rowValue === null) {
             return true;
         }
         return !this.seats[rowValue][index];

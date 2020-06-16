@@ -34,6 +34,8 @@ export class NavigationComponent {
 
     isPilot = () => this.authService.isPilot();
 
+    isCabin = () => this.authService.isCabin();
+
     isTechnician = () => this.authService.isTechnician();
 
     isGround = () => this.authService.isGround();
