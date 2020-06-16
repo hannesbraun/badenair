@@ -94,9 +94,10 @@ public class Statistic {
 
 				// Write flight to file
 				printWriter.printf(
-						"PlaneID:        %d\nPlaneType:      %s\nStartTime:      %s\nDelay:          %s minutes\nLandingTime:    %s\nDelay:          %s minutes\nSales:          %.2f euros\n\n",
-						id, planeType.toString(),
+						"PlaneID:        %d\nPlaneType:      %s\nDeparture:      %s\nStartTime:      %s\nDelay:          %s minutes\nDestination:    %s\nLandingTime:    %s\nDelay:          %s minutes\nSales:          %.2f euros\n\n",
+						id, planeType.toString(), flight.getScheduledFlight().getStartingAirport().getName(),
 						actualStartTime != null ? actualStartTime.toString() : "no data available", takeoffDelay,
+						flight.getScheduledFlight().getDestinationAirport().getName(),
 						actualLandingTime != null ? actualLandingTime.toString() : "no data available", janDelay,
 						sales);
 			}
