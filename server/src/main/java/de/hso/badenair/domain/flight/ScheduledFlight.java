@@ -1,5 +1,6 @@
 package de.hso.badenair.domain.flight;
 
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
@@ -57,4 +58,15 @@ public class ScheduledFlight extends BaseEntity {
 		}
 		return startTime.withOffsetSameInstant(ZoneOffset.of("+1"));
 	}
+
+    public OffsetDateTime getLandingTime(LocalDate startDate) {
+        int hours = (int)durationInHours.doubleValue();
+        int minutes = (int)((durationInHours * 60) % 60);
+
+        if(startDate == null) {
+            return startTime.plusHours(hours).plusMinutes(minutes);
+        } else {
+            return startDate.atTime(startTime.toOffsetTime()).plusHours(hours).plusMinutes(minutes);
+        }
+    }
 }
