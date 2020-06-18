@@ -3,6 +3,8 @@ export interface FlightDto {
     start: string;
     destination: string;
     startTime: Date;
+    startTimezone: string;
+    detinationTimezone: string;
     arrivalTime: Date;
 }
 
@@ -88,4 +90,10 @@ export interface PlaneMaintenance {
 export interface WorkingHoursDto {
     startTime: Date;
     endTime: Date;
+}
+
+export interface TrackingDto{
+    action: "Start"| "Landung" | "Verspätung" | "Bereit";
+    delay?: number;
+    date ?: Date;
 }
