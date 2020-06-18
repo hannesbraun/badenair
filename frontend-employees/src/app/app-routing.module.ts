@@ -6,6 +6,7 @@ import {PlaneMaintenanceComponent} from './components/plane-maintenance/plane-ma
 import {UpdateBaggagePageComponent} from './pages/update-baggage-page/update-baggage-page.component';
 import {ServiceSchedulePageComponent} from './pages/service-schedule-page/service-schedule-page.component';
 import {StartLandingComponent} from './components/start-landing/start-landing.component';
+import {CrewplanPageComponent} from './pages/crewplan-page/crewplan-page.component';
 import {ShiftSchedulePageComponent} from './pages/shift-schedule-page/shift-schedule-page.component';
 import {AuthGuard} from './auth/auth.guard';
 import {LandingPageComponent} from './pages/landing-page/landing-page.component';
@@ -19,6 +20,7 @@ const routes: Routes = [
     {path: 'baggage', component: UpdateBaggagePageComponent, canActivate: [AuthGuard]},
     {path: 'serviceSchedule', component: ServiceSchedulePageComponent, canActivate: [AuthGuard]},
     {path: 'start-landing', component: StartLandingComponent, canActivate: [AuthGuard]},
+    {path: 'crewplan', component: CrewplanPageComponent, canActivate: [AuthGuard]},
     {path: 'vacation-planning', component: VacationPlanningPageComponent, canActivate: [AuthGuard]},
     {path: 'shiftSchedule', component: ShiftSchedulePageComponent, canActivate: [AuthGuard]},
 ];

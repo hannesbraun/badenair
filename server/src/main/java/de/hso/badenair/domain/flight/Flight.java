@@ -58,6 +58,9 @@ public class Flight extends BaseEntity {
 	@Column(name = "ACTUAL_LANDING_TIME")
 	private OffsetDateTime actualLandingTime;
 
+	@Column(name = "DELAY")
+	private double delay;
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "STATE")
 	private FlightState state;

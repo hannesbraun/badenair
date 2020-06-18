@@ -6,7 +6,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum FlightAction {
     START("Start"),
-    LANDING("Landung");
+    LANDING("Landung"),
+    DELAY("Verspätung"),
+    STANDBY("Bereit");
 
     @Getter
     private String name;

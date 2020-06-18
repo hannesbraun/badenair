@@ -38,6 +38,7 @@ import de.hso.badenair.service.plan.vacation.VacationService;
 import de.hso.badenair.service.plane.repository.PlaneRepository;
 import de.hso.badenair.service.plane.repository.PlaneTypeDataRepository;
 import de.hso.badenair.util.csv.CsvHelper;
+import de.hso.badenair.util.time.DateFusioner;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -257,8 +258,30 @@ public class StaticDataInitializer {
 							.plusDays(Math.floorMod(Integer.valueOf(flightData[5]) - now.getDayOfWeek().getValue(), 7));
 					do {
 						// Add flights for the next 12 months
-						flights.add(Flight.builder().scheduledFlight(scheduledFlight).state(FlightState.OK).plane(plane)
-								.startDate(startDate).build());
+						if (DateFusioner.fusionStartDate(startDate, scheduledFlight.getStartTime(), null)
+								.isAfter(OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.of("+1")))) {
+							// Flight is in the future
+							flights.add(Flight.builder().scheduledFlight(scheduledFlight).state(FlightState.OK)
+									.plane(plane).startDate(startDate).delay(0.0).build());
+						} else if (DateFusioner
+								.fusionArrivalDate(startDate, scheduledFlight.getStartTime(),
+										Double.valueOf(flightData[3]), null)
+								.isAfter(OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.of("+1")))) {
+							// Plane is flying
+							flights.add(Flight.builder().scheduledFlight(scheduledFlight).state(FlightState.OK)
+									.plane(plane).startDate(startDate).actualStartTime(DateFusioner
+											.fusionStartDate(startDate, scheduledFlight.getStartTime(), null))
+									.delay(0.0).build());
+						} else {
+							// Flight is already finished
+							flights.add(Flight.builder().scheduledFlight(scheduledFlight).state(FlightState.OK)
+									.plane(plane).startDate(startDate)
+									.actualStartTime(DateFusioner.fusionStartDate(startDate,
+											scheduledFlight.getStartTime(), null))
+									.actualLandingTime(DateFusioner.fusionArrivalDate(startDate,
+											scheduledFlight.getStartTime(), Double.valueOf(flightData[3]), null))
+									.delay(0.0).build());
+						}
 						startDate = startDate.plusDays(7l);
 					} while (startDate.isBefore(endOfPlanDate));
 				}

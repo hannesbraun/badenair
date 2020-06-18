@@ -11,6 +11,7 @@
                 <a mat-list-item routerLink="/vacation-planning">Urlaubsplanung</a>
                 <a mat-list-item routerLink="/time">Zeiterfassung</a>
                 <a *ngIf="isPilot()" mat-list-item routerLink="/start-landing">Start/Landung</a>
+                <a *ngIf="isPilot() || isCabin()" mat-list-item routerLink="/crewplan">Nächste Flüge</a>
                 <a *ngIf="isFlightDirector()" mat-list-item routerLink="/flightoverview">Flugplan</a>
                 <a *ngIf="isTechnician()" mat-list-item routerLink="/maintenance">Wartungsergebnisse</a>
                 <a mat-list-item routerLink="/serviceSchedule">Bereitschaftsdienst</a>
@@ -56,6 +57,12 @@
                     routerLink="/start-landing"
                     mat-button>
                     Start/Landung
+                </button>
+                <button
+                    *ngIf="isPilot() || isCabin()"
+                    routerLink="/crewplan"
+                    mat-button>
+                    Nächste Flüge
                 </button>
                 <button
                     *ngIf="isFlightDirector()"
