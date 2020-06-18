@@ -2,6 +2,8 @@ package de.hso.badenair.util.init;
 
 import java.io.FileNotFoundException;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -506,8 +508,7 @@ public class StaticDataInitializer {
         crews.get("dash").remove(crews.get("dash").size() - 1);
         crews.get("jet").remove(crews.get("jet").size() - 1);
 
-        List<Flight> flights = new ArrayList<>();
-        List<Flight> returnFlights = new ArrayList<>();
+        List<FlightGroup> flightGroups = new ArrayList<>();
 
         for (ScheduledFlight scheduledFlight : scheduledFlightRepository.findByStartingAirportId(1)) {
             Airport startingAirport = scheduledFlight.getStartingAirport();
@@ -539,18 +540,16 @@ public class StaticDataInitializer {
 
                 flight.setStartDate(flight.getStartDate().toLocalDate().atTime(flightStartTime));
                 returnFlight.setStartDate(scheduledReturnFlight.getLandingTime(returnFlight.getStartDate().toLocalDate()));
-            }
 
-            flights.addAll(currentFlights);
-            returnFlights.addAll(currentReturnFlights);
+                flightGroups.add(new FlightGroup(flight, returnFlight));
+            }
         }
 
-        flights.sort(Comparator.comparing(Flight::getStartDate));
-        returnFlights.sort(Comparator.comparing(Flight::getStartDate));
+        flightGroups.sort(Comparator.comparing(g -> g.getFlight().getStartDate()));
 
-        for (int i = 0; i < flights.size(); i++) {
-            Flight flight = flights.get(i);
-            Flight returnFlight = returnFlights.get(i);
+        for(FlightGroup flightGroup : flightGroups) {
+            Flight flight = flightGroup.getFlight();
+            Flight returnFlight = flightGroup.getReturnFlight();
 
             OffsetDateTime flightStartDateTime = flight.getStartDate();
             OffsetDateTime returnFlightLandingDateTime = returnFlight.getStartDate();
