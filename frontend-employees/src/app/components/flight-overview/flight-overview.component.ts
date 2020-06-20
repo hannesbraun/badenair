@@ -12,7 +12,7 @@ import {
     lineHeight,
     totalWidth
 } from '../../services/util/SVGUtil';
-import {FlightDto, PlaneScheduleDto, ScheduleConflictDto} from '../../services/dtos/Dtos';
+import {FlightDto, PlaneScheduleDto, ScheduleConflictDto, ScheduleConfigSolution, ReservePlaneSolutionDto} from '../../services/dtos/Dtos';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {
     FlightInfoDialogComponent,
@@ -22,6 +22,7 @@ import {FlightService} from '../../services/flights/flight.service';
 import {timer} from 'rxjs';
 import { ConflictService } from 'src/app/services/flights/conflict.service';
 import {InfoService} from '../../services/info/info.service';
+import { ScheduleConflictDialogOutput } from './dialogs/schedule-conflict-dialog/schedule-conflict-dialog.component';
 
 interface LengthData {
     start: number;
@@ -46,7 +47,6 @@ export class FlightOverviewComponent implements OnInit {
 
     constructor(private dialog: MatDialog,
                 private conflictService: ConflictService,
-                private scheduleConflictServiceService: ScheduleConflictService,
                 private flightService: FlightService,
                 private infoService: InfoService) {
     }
@@ -123,7 +123,28 @@ export class FlightOverviewComponent implements OnInit {
                 conflict: conflictDto
             } as FlightInfoDialogInput
         };
-        this.dialog.open(FlightInfoDialogComponent, config);
+        this.dialog.open(FlightInfoDialogComponent, config).afterClosed().subscribe((value: ScheduleConflictDialogOutput) => {
+            if (value){
+                if (value.selectedOption == ScheduleConfigSolution.USE_BACKUP_PLANE){
+                    if (!value.reservePlane)
+                        return;
+
+                    let data: ReservePlaneSolutionDto={
+                        flightID: flight.id,
+                        reservePlaneID: value.reservePlane
+                    }
+                    this.conflictService.useReservePlane(data).subscribe();
+                }
+
+                else if (value.selectedOption == ScheduleConfigSolution.CANCEL_FLIGHT){
+                    this.conflictService.cancelFlight(flight.id).subscribe();
+                }
+
+                else if (value.selectedOption == ScheduleConfigSolution.DO_NOTHING){
+                    this.conflictService.ignoreDelay(flight.id).subscribe();
+                }
+            }
+        });
     }
 
     checkFlightForConflict(flight: FlightDto) {

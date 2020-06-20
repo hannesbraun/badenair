@@ -23,27 +23,4 @@ public class FlightPlanController {
     public ResponseEntity<List<PlaneScheduleDto>> getPlaneSchedules() {
         return ResponseEntity.ok(flightplanService.getPlaneSchedules());
     }
-    /*
-
-    @GetMapping("/conflicts")
-    public ResponseEntity<List<ConflictDto>> getConflicts() {
-        return ResponseEntity.ok(flightplanService.getConflicts());
-    }
-
-    @PostMapping
-    public void acceptDelay() {
-
-    }
-
-    @PostMapping
-    public void cancelFlight() {
-
-    }
-
-    @PostMapping
-    public void solveUnavailablePlane(){
-
-    }
-
-     */
 }

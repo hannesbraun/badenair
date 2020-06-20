@@ -50,10 +50,14 @@ export function calculateRealStart(flight: FlightDto): number {
 }
 
 export function calculateRealDurationLength(flight: FlightDto): number {
-    if (!flight.realStartTime)
-        return 0;
-    if (!flight.realLandingTime)
-        return calculateDurationLength(flight);
+    let start = flight.startTime;
+    
+    //losgeflogen
+    if (flight.realStartTime)
+        start = flight.realStartTime;
+    if (!flight.realLandingTime){
+        return (toHours(flight.arrivalTime.getTime() - start.getTime()) + flight.delay / 60) * hourWidth;   
+    }
 
     const duration = toHours(flight.realLandingTime.getTime() - flight.realStartTime.getTime());
 

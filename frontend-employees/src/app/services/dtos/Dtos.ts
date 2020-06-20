@@ -2,6 +2,7 @@ export interface FlightDto {
     id: number;
     start: string;
     destination: string;
+    delay: number;
     startTime: Date;
     arrivalTime: Date;
     realStartTime: Date;
@@ -34,6 +35,17 @@ export interface ScheduleConflictDto {
     notEnoughPersonel: boolean;
     planeNotAvailable: boolean;
     planeNotAvailableFixable: boolean;
+    reservePlanes: PlaneDto[];
+}
+
+export interface ReservePlaneSolutionDto{
+    flightID: number;
+    reservePlaneID: number;
+}
+
+export interface PlaneDto {
+    id: number;
+    type: string;
 }
 
 export enum ScheduleConfigSolution {

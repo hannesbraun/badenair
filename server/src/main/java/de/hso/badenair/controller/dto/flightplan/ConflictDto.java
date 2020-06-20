@@ -11,4 +11,5 @@ public class ConflictDto {
     boolean notEnoughPersonal;
     boolean planeNotAvailable;
     boolean planeNotAvailableFixable;
+    List<PlaneDto> reservePlanes;
 }

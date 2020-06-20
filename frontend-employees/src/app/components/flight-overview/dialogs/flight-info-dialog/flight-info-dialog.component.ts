@@ -21,7 +21,8 @@ export class FlightInfoDialogComponent {
 
     constructor(private dialog: MatDialogRef<FlightInfoDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: FlightInfoDialogInput, private fb: FormBuilder) {
         this.conflictForm = this.fb.group({
-            conflictOptionSelect: ['', Validators.required]});
+            conflictOptionSelect: ['', Validators.required],
+            reservePlaneSelect: ['']});
     }
 
     onClickClose(event: Event) {
@@ -31,9 +32,11 @@ export class FlightInfoDialogComponent {
 
     onSubmit() {
         const conflictOptionSelect = this.conflictForm.get('conflictOptionSelect');
+        const reservePlaneSelect = this.conflictForm.get('reservePlaneSelect');
         if (this.conflictForm.valid && conflictOptionSelect) {
             const output: ScheduleConflictDialogOutput = {
-                selectedOption: conflictOptionSelect.value
+                selectedOption: conflictOptionSelect.value,
+                reservePlane: reservePlaneSelect?.value
             };
             this.dialog.close(output);
         }

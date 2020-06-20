@@ -10,6 +10,7 @@ export interface ScheduleConflictDialogInput {
 
 export interface ScheduleConflictDialogOutput {
     selectedOption: ScheduleConfigSolution;
+    reservePlane?: number;
 }
 
 @Component({
