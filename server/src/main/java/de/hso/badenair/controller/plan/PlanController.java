@@ -9,6 +9,9 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import de.hso.badenair.controller.dto.plan.*;
+import de.hso.badenair.service.keycloakapi.KeycloakApiService;
+import de.hso.badenair.service.keycloakapi.dto.UserRepresentation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,10 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.hso.badenair.controller.dto.plan.RequestVacationDto;
-import de.hso.badenair.controller.dto.plan.ShiftDto;
-import de.hso.badenair.controller.dto.plan.VacationDto;
-import de.hso.badenair.controller.dto.plan.VacationPlanDto;
 import de.hso.badenair.domain.schedule.StandbySchedule;
 import de.hso.badenair.service.plan.PlanService;
 import de.hso.badenair.service.plan.shift.ShiftPlanService;
@@ -35,6 +34,7 @@ public class PlanController {
 	private final PlanService planService;
 	private final VacationService vacationService;
 	private final ShiftPlanService shiftPlanService;
+    private final KeycloakApiService keycloakApiService;
 
 	@GetMapping("/shift")
 	public ResponseEntity<List<ShiftDto>> getShiftPlan(Principal user) {
@@ -73,7 +73,7 @@ public class PlanController {
 	}
 
 	@GetMapping("/standby")
-	public ResponseEntity<List<StandbySchedule>> getStandbyPlan() {
+	public ResponseEntity<List<StandbyDto>> getStandbyPlan() {
 		List<StandbySchedule> standbyScheduleList = this.planService.getStandbyPlan();
 		standbyScheduleList.stream().forEach(standbySchedule -> {
 			standbySchedule.setStartTime(standbySchedule.getStartTime().withOffsetSameLocal(
@@ -81,6 +81,16 @@ public class PlanController {
 			standbySchedule.setEndTime(standbySchedule.getEndTime().withOffsetSameLocal(
 					ZoneOffset.of(TimeZone.getDefault().inDaylightTime(new Date()) ? "+2" : "+1")));
 		});
-		return ResponseEntity.ok(standbyScheduleList);
+
+        final List<UserRepresentation> employees = keycloakApiService.getEmployeeUsers();
+
+        final List<StandbyDto> standbyDtos = standbyScheduleList.stream().map(s -> {
+            UserRepresentation employee = employees.stream().filter(e -> e.getId().equals(s.getEmployeeUserId())).findFirst().get();
+
+            return new StandbyDto(employee.getFirstName() + " " + employee.getLastName(), s.getStartTime(), s.getEndTime());
+        }).collect(Collectors.toList());
+
+
+        return ResponseEntity.ok(standbyDtos);
 	}
 }
