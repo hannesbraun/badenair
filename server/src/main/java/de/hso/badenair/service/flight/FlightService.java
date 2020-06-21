@@ -144,7 +144,24 @@ public class FlightService {
 			}
 		}
 
-		return nextFlights;
+		int currentMonth = OffsetDateTime.now().getMonthValue();
+		int nextMonth = (currentMonth % 12) + 1;
+		int currentMonthYear = OffsetDateTime.now().getYear();
+		int nextMonthYear = currentMonth < 12 ? currentMonthYear : currentMonthYear + 1;
+
+		if (OffsetDateTime.now().getDayOfMonth() < 10) {
+			// Show plan for current
+			return nextFlights.stream().filter(flight -> flight.getStartTime().getMonthValue() == currentMonth
+					&& flight.getStartTime().getYear() == currentMonthYear).collect(Collectors.toList());
+		} else {
+			// Also show plan for next month
+			return nextFlights.stream()
+					.filter(flight -> (flight.getStartTime().getMonthValue() == currentMonth
+							|| flight.getStartTime().getMonthValue() == nextMonth)
+							&& (flight.getStartTime().getYear() == currentMonthYear
+									|| flight.getStartTime().getYear() == nextMonthYear))
+					.collect(Collectors.toList());
+		}
 	}
 
 	public Flight getFlightById(Long id) {
