@@ -3,7 +3,6 @@ package de.hso.badenair.util.init;
 import java.io.FileNotFoundException;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.ZoneOffset;
@@ -402,9 +401,15 @@ public class StaticDataInitializer {
 		List<UserRepresentation> employees = keycloakApiService.getEmployeeUsers();
 
 		OffsetDateTime date = OffsetDateTime.now().withDayOfMonth(1);
-		Month currentMonth = date.getMonth();
+		OffsetDateTime nextMonth = OffsetDateTime.now();
+		if (nextMonth.getDayOfMonth() < 10) {
+			nextMonth = nextMonth.plusMonths(1);
+		} else {
+			nextMonth = nextMonth.plusMonths(2);
+		}
+		nextMonth = nextMonth.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
 
-		while (date.getMonth() == currentMonth) {
+		while (date.isBefore(nextMonth)) {
 			ShiftSchedule.ShiftScheduleBuilder fruehschicht = ShiftSchedule.builder()
 					.startTime(date.withHour(6).withMinute(0).withSecond(0).withNano(0))
 					.endTime(OffsetDateTime.now().withHour(14).withMinute(0).withSecond(0).withNano(0));
@@ -483,9 +488,15 @@ public class StaticDataInitializer {
 
 		OffsetDateTime date = OffsetDateTime.now().withDayOfMonth(1);
 		OffsetDateTime previousDate = null;
-		Month currentMonth = date.getMonth();
+		OffsetDateTime nextMonth = OffsetDateTime.now();
+		if (nextMonth.getDayOfMonth() < 10) {
+			nextMonth = nextMonth.plusMonths(1);
+		} else {
+			nextMonth = nextMonth.plusMonths(2);
+		}
+		nextMonth = nextMonth.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
 
-		while (date.getMonth() == currentMonth) {
+		while (date.isBefore(nextMonth)) {
 			StandbySchedule.StandbyScheduleBuilder standbySchedule = StandbySchedule.builder()
 					.startTime(date.withHour(0).withMinute(0).withSecond(0).withNano(0))
 					.endTime(date.withHour(23).plusHours(1).withMinute(0).withSecond(0).withNano(0));
@@ -603,7 +614,13 @@ public class StaticDataInitializer {
 			List<Flight> currentReturnFlights = flightRepository.findByScheduledFlightId(scheduledReturnFlight.getId());
 
 			OffsetTime flightStartTime = scheduledFlight.getStartTime().toOffsetTime();
-			OffsetDateTime nextMonth = OffsetDateTime.now().plusMonths(1);
+			OffsetDateTime nextMonth = OffsetDateTime.now();
+			if (nextMonth.getDayOfMonth() < 10) {
+				nextMonth = nextMonth.plusMonths(1);
+			} else {
+				nextMonth = nextMonth.plusMonths(2);
+			}
+			nextMonth = nextMonth.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
 
 			for (int i = 0; i < currentFlights.size(); i++) {
 				Flight flight = currentFlights.get(i);
@@ -659,7 +676,7 @@ public class StaticDataInitializer {
 
 			Optional<CrewData> foundCrewOpt = possibleCrews.stream().filter(c -> c.assignments < finalMaxCrewAssignments).findFirst();
 
-			if(foundCrewOpt.isEmpty()) {
+			if (foundCrewOpt.isEmpty()) {
 			    foundCrewOpt = possibleCrews.stream().filter(c -> c.assignments <= finalMaxCrewAssignments).findFirst();
             }
 
@@ -667,9 +684,9 @@ public class StaticDataInitializer {
 				CrewData foundCrew = foundCrewOpt.get();
 				foundCrew.assignments++;
 
-				if(foundCrew.assignments > finalMaxCrewAssignments) {
-				    maxCrewAssignments.put(planeName, foundCrew.assignments);
-                }
+				if (foundCrew.assignments > finalMaxCrewAssignments) {
+					maxCrewAssignments.put(planeName, foundCrew.assignments);
+				}
 
 				for (String employeeId : foundCrew.getEmployees()) {
 					shiftPlanRepository.save(ShiftSchedule.builder().startTime(flightStartDateTime.minusMinutes(30l))
