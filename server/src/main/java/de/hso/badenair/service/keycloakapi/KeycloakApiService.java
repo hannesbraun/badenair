@@ -10,6 +10,7 @@ import de.hso.badenair.service.keycloakapi.dto.UserRepresentation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -32,6 +33,7 @@ public class KeycloakApiService {
     private static final UserRepresentation[] EMPTY_USER_LIST = {};
     private static final String CUSTOMER_ROLE_NAME = "badenair_customer";
     private final KeycloakApiConfig config;
+    private final TaskScheduler taskScheduler;
     private final RestTemplate restTemplate = new RestTemplate();
     private String accessToken;
     private Map<EmployeeRole, RoleRepresentation> employeeRoles;
@@ -42,7 +44,17 @@ public class KeycloakApiService {
      */
     @PostConstruct
     private void getToken() {
-        RestTemplate restTemplate = new RestTemplate();
+        final KeycloakAccessToken tokenBody = getKeycloakAccessToken();
+
+        final int refreshDelayInMs = (int)((tokenBody.getExpires_in() * 0.75) * 1000);
+        taskScheduler.scheduleWithFixedDelay(this::getKeycloakAccessToken, refreshDelayInMs); // Try to get a new access token after 75% of the tokens lifespan has passed
+        getRolesForInit();
+    }
+
+    /**
+     * @return Returns the needed attributes of the access token request as an object
+     */
+    private KeycloakAccessToken getKeycloakAccessToken() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -60,7 +72,8 @@ public class KeycloakApiService {
             .orElseThrow(KeycloakApiAuthenticationException::new);
 
         accessToken = tokenBody.getAccess_token();
-        getRolesForInit();
+
+        return tokenBody;
     }
 
     /**
