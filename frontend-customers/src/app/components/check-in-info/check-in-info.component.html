@@ -6,10 +6,9 @@
     </mat-card-header>
     <mat-card-content>
         <div>
-            <p *ngIf="passenger.baggage1 !== 0">1x Gepäckstück ({{passenger.baggage1}}kg)</p>
-            <p *ngIf="passenger.baggage2 !== 0">1x Gepäckstück ({{passenger.baggage2}}kg)</p>
-            <p *ngIf="passenger.baggage3 !== 0">1x Gepäckstück ({{passenger.baggage3}}kg)</p>
-            <p *ngIf="passenger.baggage4 !== 0">1x Gepäckstück ({{passenger.baggage4}}kg)</p>
+            <p *ngFor="let baggage of passenger.baggage; index as i">
+                {{i + 1}}. Gepäckstück ({{baggage.weight}}kg), Status: {{getBaggageState(baggage.state)}}
+            </p>
         </div>
         <div *ngIf="passenger.checkedIn">
             <button mat-raised-button color="primary" (click)="onDownload()">Download PDF</button>

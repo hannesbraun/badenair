@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FlightDto, TravelerDto} from '../../services/dtos/Dtos';
+import {CheckInTraverDto, FlightDto} from '../../services/dtos/Dtos';
 import {CheckInService} from '../../services/checkin/checkin.service';
 import {ActivatedRoute} from '@angular/router';
 import {InfoService} from '../../services/info/info.service';
@@ -12,7 +12,7 @@ import {formatDuration} from 'src/app/services/util/DurationFormatter';
 })
 export class CheckInPageComponent implements OnInit {
 
-    passengers: TravelerDto[] = [];
+    passengers: CheckInTraverDto[] = [];
     flight: FlightDto | undefined;
 
     constructor(
@@ -44,7 +44,7 @@ export class CheckInPageComponent implements OnInit {
         return this.passengers.every(traveler => traveler.checkedIn);
     }
 
-    onDownload(passenger: TravelerDto) {
+    onDownload(passenger: CheckInTraverDto) {
         this.checkInService.downloadPdf(passenger.id, passenger.name + '_' + passenger.surname);
     }
 
@@ -56,7 +56,7 @@ export class CheckInPageComponent implements OnInit {
         return '00:00';
     }
 
-    checkIn(passenger: TravelerDto) {
+    checkIn(passenger: CheckInTraverDto) {
         if (passenger.checkedIn) {
             this.checkInService.updateCheckIn(passenger.id)
                 .subscribe(
