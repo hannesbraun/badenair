@@ -18,7 +18,8 @@ import java.util.List;
 public class VacationService {
 
     private final VacationRepository vacationRepository;
-    private final Integer MAX_VACATION_DAYS = 30;
+    private final Integer MAX_VACATION_DAYS = 36;
+    private final Integer LAST_POSSIBLE_REQUEST_DAY_OF_MONTH = 10;
 
     public List<Vacation> getVacation(String employeeUserId) {
         return vacationRepository.findByEmployeeUserIdOrderByStartTimeAsc(employeeUserId);
@@ -36,11 +37,11 @@ public class VacationService {
 
     @Transactional
     public void requestVacation(String employeeUserId, RequestVacationDto requestVacationDto) {
-        final OffsetDateTime startDate = requestVacationDto.getStartDate().withOffsetSameLocal(ZoneOffset.of("+1"));
-        final OffsetDateTime endDate = requestVacationDto.getEndDate().withOffsetSameLocal(ZoneOffset.of("+1"));
+        final OffsetDateTime startDate = requestVacationDto.getStartDate().withHour(0).withOffsetSameLocal(ZoneOffset.of("+1"));
+        final OffsetDateTime endDate = requestVacationDto.getEndDate().withHour(0).withOffsetSameLocal(ZoneOffset.of("+1"));
         final int differenceInDays = getDifferenceInDays(startDate, endDate);
 
-        if (endDate.isBefore(startDate) || differenceInDays <= 0) {
+        if (isRequestValid(startDate, endDate, differenceInDays)) {
             return;
         }
 
@@ -73,6 +74,10 @@ public class VacationService {
             .build();
 
         vacationRepository.save(vacation);
+    }
+
+    private boolean isRequestValid(OffsetDateTime startDate, OffsetDateTime endDate, int differenceInDays) {
+        return endDate.isBefore(startDate) || differenceInDays <= 0 || OffsetDateTime.now().getDayOfMonth() < LAST_POSSIBLE_REQUEST_DAY_OF_MONTH;
     }
 
     private int getDifferenceInDays(Vacation vacation) {

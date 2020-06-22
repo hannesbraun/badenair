@@ -53,6 +53,12 @@ export class VacationPlanningComponent {
         return new Date();
     }
 
+    get tommorow() {
+        const date = new Date();
+        date.setDate(date.getDate() + 1);
+        return date;
+    }
+
     getSelectedDates(calenderNumber: number) {
         const approvedDate = this.approvedDates[calenderNumber];
         const pendingDate = this.pendingDates[calenderNumber];
