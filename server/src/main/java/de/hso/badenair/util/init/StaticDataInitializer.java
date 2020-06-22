@@ -8,6 +8,7 @@ import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -466,15 +467,22 @@ public class StaticDataInitializer {
 	 */
 	private void initStandbyPlan() {
 		List<UserRepresentation> employees = keycloakApiService.getEmployeeUsers();
+        List<UserRepresentation> pilots = employees.stream().filter(e -> e.getUsername().contains("pilot"))
+            .collect(Collectors.toList());
+        List<UserRepresentation> cabins = employees.stream().filter(e -> e.getUsername().contains("cabin"))
+            .collect(Collectors.toList());
 		List<UserRepresentation> technicians = employees.stream().filter(e -> e.getUsername().contains("technician"))
 				.collect(Collectors.toList());
 		List<UserRepresentation> grounds = employees.stream().filter(e -> e.getUsername().contains("ground"))
 				.collect(Collectors.toList());
 
+		int pilotsPlanned = 0;
+		int cabinsPlanned = 0;
 		int techniciansPlanned = 0;
 		int groundsPlanned = 0;
 
 		OffsetDateTime date = OffsetDateTime.now().withDayOfMonth(1);
+		OffsetDateTime previousDate = null;
 		Month currentMonth = date.getMonth();
 
 		while (date.getMonth() == currentMonth) {
@@ -483,6 +491,16 @@ public class StaticDataInitializer {
 					.endTime(date.withHour(23).plusHours(1).withMinute(0).withSecond(0).withNano(0));
 
 			OffsetDateTime finalDate = date;
+
+			if (previousDate == null || ChronoUnit.DAYS.between(previousDate, date) > 3) {
+                standbyScheduleRepository.save(standbySchedule.employeeUserId(pilots.get(pilotsPlanned).getId()).build());
+                pilotsPlanned = (pilotsPlanned + 1) % pilots.size();
+
+                standbyScheduleRepository.save(standbySchedule.employeeUserId(cabins.get(cabinsPlanned).getId()).build());
+                cabinsPlanned = (cabinsPlanned + 1) % cabins.size();
+
+                previousDate = date;
+            }
 
 			for (int i = 0; i < 1; i++) {
 				String employeeId = technicians.get(techniciansPlanned).getId();
