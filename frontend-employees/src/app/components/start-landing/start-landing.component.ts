@@ -33,6 +33,7 @@ export class StartLandingComponent implements OnInit {
                         this.isStarted = false
                         this.flight.arrivalTime = res.date as Date;
                     }
+                    this.delayTime = res.delay;
                 },
                     err => { this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten.') },
                     () => {
@@ -62,6 +63,10 @@ export class StartLandingComponent implements OnInit {
     delay(flight: FlightDto) {
         this.flightService.updateFlightTracking(flight.id, { action: "Verspätung", delay: this.delayTime } as TrackingDto).subscribe();
         this.delayTransmitted = true;
+    }
+
+    setMaintenance(flightId: number) {
+    this.flightService.setMaintenance(flightId).subscribe(() => {/* This is fine*/}, error => this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten.'));
     }
 
     /* get name() {
