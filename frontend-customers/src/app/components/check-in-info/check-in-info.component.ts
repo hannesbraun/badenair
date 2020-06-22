@@ -10,13 +10,11 @@ export class CheckInInfoComponent {
 
     @Input() passenger !: TravelerDto;
     @Output() download = new EventEmitter<void>();
-    @Input() isCheckInComplete !: boolean;
+    @Output() onCheckIn = new EventEmitter<TravelerDto>();
 
-    constructor() {
-    }
-
-    get isPassengerSelected(): boolean {
-        return this.passenger.checkedIn;
+    checkIn() {
+        this.passenger.checkedIn = true;
+        this.onCheckIn.emit(this.passenger);
     }
 
     onDownload() {

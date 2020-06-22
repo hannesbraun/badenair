@@ -3,7 +3,7 @@ import {FlightDto, TravelerDto} from '../../services/dtos/Dtos';
 import {CheckInService} from '../../services/checkin/checkin.service';
 import {ActivatedRoute} from '@angular/router';
 import {InfoService} from '../../services/info/info.service';
-import { formatDuration } from 'src/app/services/util/DurationFormatter';
+import {formatDuration} from 'src/app/services/util/DurationFormatter';
 
 @Component({
     selector: 'app-check-in-page',
@@ -14,7 +14,6 @@ export class CheckInPageComponent implements OnInit {
 
     passengers: TravelerDto[] = [];
     flight: FlightDto | undefined;
-    isCheckInComplete = false;
 
     constructor(
         private checkInService: CheckInService,
@@ -35,11 +34,14 @@ export class CheckInPageComponent implements OnInit {
                 .subscribe(dto => {
                         this.passengers = dto.travelers;
                         this.flight = dto.flight;
-                        this.isCheckInComplete = this.passengers.every(traveler => traveler.checkedIn);
                     },
                     error => this.infoService.showErrorMessage('Ihre Daten konnten nicht abgerufen werden')
                 );
         });
+    }
+
+    get isCheckInComplete() {
+        return this.passengers.every(traveler => traveler.checkedIn);
     }
 
     onDownload(passenger: TravelerDto) {
@@ -51,19 +53,19 @@ export class CheckInPageComponent implements OnInit {
             return formatDuration(this.flight.arrivalTime.getTime() - this.flight.startTime.getTime());
         }
 
-        return "00:00";
+        return '00:00';
     }
 
-    checkIn() {
-        this.passengers.forEach(passenger => {
-            if (passenger.checkedIn) {
-                this.checkInService.updateCheckIn(passenger.id)
-                    .subscribe(
-                        res => null,
-                        error => this.infoService.showErrorMessage('Check-In Fehler')
-                    );
-            }
-        });
-        this.isCheckInComplete = true;
+    checkIn(passenger: TravelerDto) {
+        if (passenger.checkedIn) {
+            this.checkInService.updateCheckIn(passenger.id)
+                .subscribe(
+                    res => this.infoService.showSuccessMessage('Check-In Erfolgreich'),
+                    error => {
+                        this.infoService.showErrorMessage('Check-In Fehler');
+                        passenger.checkedIn = false;
+                    }
+                );
+        }
     }
 }
