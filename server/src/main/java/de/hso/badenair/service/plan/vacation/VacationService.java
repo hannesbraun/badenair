@@ -2,6 +2,9 @@ package de.hso.badenair.service.plan.vacation;
 
 import de.hso.badenair.controller.dto.plan.RequestVacationDto;
 import de.hso.badenair.domain.schedule.Vacation;
+import de.hso.badenair.service.keycloakapi.EmployeeRole;
+import de.hso.badenair.service.keycloakapi.KeycloakApiService;
+import de.hso.badenair.service.keycloakapi.dto.UserRepresentation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -10,7 +13,10 @@ import javax.transaction.Transactional;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +24,7 @@ import java.util.List;
 public class VacationService {
 
     private final VacationRepository vacationRepository;
+    private final KeycloakApiService keycloakApiService;
     private final Integer MAX_VACATION_DAYS = 36;
     private final Integer LAST_POSSIBLE_REQUEST_DAY_OF_MONTH = 10;
 
@@ -42,6 +49,10 @@ public class VacationService {
         final int differenceInDays = getDifferenceInDays(startDate, endDate);
 
         if (isRequestValid(startDate, endDate, differenceInDays)) {
+            return;
+        }
+
+        if (!canPilotRequestVacation(employeeUserId, startDate, endDate)) {
             return;
         }
 
@@ -74,6 +85,22 @@ public class VacationService {
             .build();
 
         vacationRepository.save(vacation);
+    }
+
+    private boolean canPilotRequestVacation(String employeeUserId, OffsetDateTime startDate, OffsetDateTime endDate) {
+        if (keycloakApiService.isPilot(employeeUserId)) {
+            final List<String> userIds = Stream.concat(keycloakApiService.getEmployeeUsersWithRole(EmployeeRole.DASH_PILOT).stream(),
+                keycloakApiService.getEmployeeUsersWithRole(EmployeeRole.JET_PILOT).stream())
+                .map(UserRepresentation::getId)
+                .collect(Collectors.toList());
+
+            return userIds.stream()
+                .map(vacationRepository::findByEmployeeUserIdOrderByStartTimeAsc)
+                .flatMap(Collection::stream)
+                .noneMatch(vacation -> isOverlapping(vacation, startDate.minusHours(1), endDate.plusHours(1)));
+        }
+
+        return true;
     }
 
     private boolean isRequestValid(OffsetDateTime startDate, OffsetDateTime endDate, int differenceInDays) {
