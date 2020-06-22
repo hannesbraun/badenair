@@ -1,22 +1,26 @@
 package de.hso.badenair.util.init;
 
 import java.io.FileNotFoundException;
-import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.*;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
-import de.hso.badenair.domain.flight.*;
-import de.hso.badenair.domain.schedule.ShiftSchedule;
-import de.hso.badenair.domain.schedule.StandbySchedule;
-import de.hso.badenair.service.flight.repository.FlightCrewMemberRepository;
-import de.hso.badenair.service.plan.repository.StandbyScheduleRepository;
-import de.hso.badenair.service.plan.shift.ShiftPlanRepository;
-import de.hso.badenair.service.plan.vacation.VacationRepository;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
@@ -25,17 +29,28 @@ import de.hso.badenair.controller.dto.flight.IncomingBookingDto;
 import de.hso.badenair.controller.dto.plan.RequestVacationDto;
 import de.hso.badenair.controller.dto.seat.SelectedSeatDto;
 import de.hso.badenair.controller.dto.traveler.IncomingTravelerDto;
+import de.hso.badenair.domain.flight.Airport;
+import de.hso.badenair.domain.flight.Flight;
+import de.hso.badenair.domain.flight.FlightCrewMember;
+import de.hso.badenair.domain.flight.FlightState;
+import de.hso.badenair.domain.flight.ScheduledFlight;
 import de.hso.badenair.domain.plane.Plane;
 import de.hso.badenair.domain.plane.PlaneState;
 import de.hso.badenair.domain.plane.PlaneType;
 import de.hso.badenair.domain.plane.PlaneTypeData;
+import de.hso.badenair.domain.schedule.ShiftSchedule;
+import de.hso.badenair.domain.schedule.StandbySchedule;
 import de.hso.badenair.service.airport.AirportRepository;
 import de.hso.badenair.service.flight.booking.BookingService;
+import de.hso.badenair.service.flight.repository.FlightCrewMemberRepository;
 import de.hso.badenair.service.flight.repository.FlightRepository;
 import de.hso.badenair.service.flight.repository.ScheduledFlightRepository;
 import de.hso.badenair.service.keycloakapi.EmployeeRole;
 import de.hso.badenair.service.keycloakapi.KeycloakApiService;
 import de.hso.badenair.service.keycloakapi.dto.UserRepresentation;
+import de.hso.badenair.service.plan.repository.StandbyScheduleRepository;
+import de.hso.badenair.service.plan.shift.ShiftPlanRepository;
+import de.hso.badenair.service.plan.vacation.VacationRepository;
 import de.hso.badenair.service.plan.vacation.VacationService;
 import de.hso.badenair.service.plane.repository.PlaneRepository;
 import de.hso.badenair.service.plane.repository.PlaneTypeDataRepository;
@@ -115,9 +130,9 @@ public class StaticDataInitializer {
 			initVacation();
 		}
 
-        initShiftPlan();
-        initStandbyPlan();
-        initFlightCrews();
+		initShiftPlan();
+		initStandbyPlan();
+		initFlightCrews();
 	}
 
 	/**
@@ -155,18 +170,18 @@ public class StaticDataInitializer {
 
 		// Create planes
 		for (int i = 0; i < dash_8_200_count; i++) {
-			planes.add(Plane.builder().typeData(planeTypeDataDash_8_200).state(PlaneState.WAITING).traveledDistance(0)
+			planes.add(Plane.builder().typeData(planeTypeDataDash_8_200).state(PlaneState.WAITING).flightHours(0.0)
 					.build());
 		}
 
 		for (int i = 0; i < dash_8_400_count; i++) {
-			planes.add(Plane.builder().typeData(planeTypeDataDash_8_400).state(PlaneState.WAITING).traveledDistance(0)
+			planes.add(Plane.builder().typeData(planeTypeDataDash_8_400).state(PlaneState.WAITING).flightHours(0.0)
 					.build());
 		}
 
 		for (int i = 0; i < b737_400_count; i++) {
-			planes.add(Plane.builder().typeData(planeTypeDataB737_400).state(PlaneState.WAITING).traveledDistance(0)
-					.build());
+			planes.add(
+					Plane.builder().typeData(planeTypeDataB737_400).state(PlaneState.WAITING).flightHours(0.0).build());
 		}
 
 		planeRepository.saveAll(planes);
@@ -375,232 +390,249 @@ public class StaticDataInitializer {
 		}
 	}
 
-    /**
-     * Creates initial shift plan.
-     */
-    private void initShiftPlan() {
-        int technicianCount = 30;
-        int groundCount = 20;
+	/**
+	 * Creates initial shift plan.
+	 */
+	private void initShiftPlan() {
+		int technicianCount = 30;
+		int groundCount = 20;
 
-        List<UserRepresentation> employees = keycloakApiService.getEmployeeUsers();
+		List<UserRepresentation> employees = keycloakApiService.getEmployeeUsers();
 
-        OffsetDateTime date = OffsetDateTime.now().withDayOfMonth(1);
-        Month currentMonth = date.getMonth();
+		OffsetDateTime date = OffsetDateTime.now().withDayOfMonth(1);
+		Month currentMonth = date.getMonth();
 
-        while (date.getMonth() == currentMonth) {
-            ShiftSchedule.ShiftScheduleBuilder fruehschicht = ShiftSchedule.builder()
-                .startTime(date.withHour(6).withMinute(0).withSecond(0).withNano(0))
-                .endTime(OffsetDateTime.now().withHour(14).withMinute(0).withSecond(0).withNano(0));
-            ShiftSchedule.ShiftScheduleBuilder spaetschicht = ShiftSchedule.builder()
-                .startTime(date.withHour(14).withMinute(0).withSecond(0).withNano(0))
-                .endTime(date.withHour(22).withMinute(0).withSecond(0).withNano(0));
-            ShiftSchedule.ShiftScheduleBuilder nachtschicht = ShiftSchedule.builder()
-                .startTime(date.withHour(22).withMinute(0).withSecond(0).withNano(0))
-                .endTime(date.withHour(23).plusHours(7).withMinute(0).withSecond(0).withNano(0));
+		while (date.getMonth() == currentMonth) {
+			ShiftSchedule.ShiftScheduleBuilder fruehschicht = ShiftSchedule.builder()
+					.startTime(date.withHour(6).withMinute(0).withSecond(0).withNano(0))
+					.endTime(OffsetDateTime.now().withHour(14).withMinute(0).withSecond(0).withNano(0));
+			ShiftSchedule.ShiftScheduleBuilder spaetschicht = ShiftSchedule.builder()
+					.startTime(date.withHour(14).withMinute(0).withSecond(0).withNano(0))
+					.endTime(date.withHour(22).withMinute(0).withSecond(0).withNano(0));
+			ShiftSchedule.ShiftScheduleBuilder nachtschicht = ShiftSchedule.builder()
+					.startTime(date.withHour(22).withMinute(0).withSecond(0).withNano(0))
+					.endTime(date.withHour(23).plusHours(7).withMinute(0).withSecond(0).withNano(0));
 
-            int techniciansPlanned = 0;
-            int groundsPlanned = 0;
+			int techniciansPlanned = 0;
+			int groundsPlanned = 0;
 
-            for (UserRepresentation employee : employees) {
-                String username = employee.getUsername();
+			for (UserRepresentation employee : employees) {
+				String username = employee.getUsername();
 
-                OffsetDateTime finalDate = date;
-                if (vacationRepository.findByEmployeeUserIdOrderByStartTimeAsc(employee.getId()).stream().anyMatch(v -> v.isOverlapping(finalDate, finalDate))) {
-                    continue;
-                }
+				OffsetDateTime finalDate = date;
+				if (vacationRepository.findByEmployeeUserIdOrderByStartTimeAsc(employee.getId()).stream()
+						.anyMatch(v -> v.isOverlapping(finalDate, finalDate))) {
+					continue;
+				}
 
-                if (date.getDayOfWeek().getValue() <= 5) {
-                     if (username.contains("ground")) {
-                        if (groundsPlanned < groundCount / 3) {
-                            shiftPlanRepository.save(fruehschicht.employeeUserId(employee.getId()).build());
-                        } else if (groundsPlanned < (2 * groundCount)  / 3) {
-                            shiftPlanRepository.save(spaetschicht.employeeUserId(employee.getId()).build());
-                        } else {
-                            shiftPlanRepository.save(nachtschicht.employeeUserId(employee.getId()).build());
-                        }
+				if (date.getDayOfWeek().getValue() <= 5) {
+					if (username.contains("ground")) {
+						if (groundsPlanned < groundCount / 3) {
+							shiftPlanRepository.save(fruehschicht.employeeUserId(employee.getId()).build());
+						} else if (groundsPlanned < (2 * groundCount) / 3) {
+							shiftPlanRepository.save(spaetschicht.employeeUserId(employee.getId()).build());
+						} else {
+							shiftPlanRepository.save(nachtschicht.employeeUserId(employee.getId()).build());
+						}
 
-                        groundsPlanned++;
-                    }
-                }
+						groundsPlanned++;
+					}
+				}
 
-                if (username.contains("technician")) {
-                    if (techniciansPlanned < technicianCount / 3) {
-                        shiftPlanRepository.save(fruehschicht.employeeUserId(employee.getId()).build());
-                    } else if (techniciansPlanned < (2 * technicianCount) / 3) {
-                        shiftPlanRepository.save(spaetschicht.employeeUserId(employee.getId()).build());
-                    } else {
-                        shiftPlanRepository.save(nachtschicht.employeeUserId(employee.getId()).build());
-                    }
+				if (username.contains("technician")) {
+					if (techniciansPlanned < technicianCount / 3) {
+						shiftPlanRepository.save(fruehschicht.employeeUserId(employee.getId()).build());
+					} else if (techniciansPlanned < (2 * technicianCount) / 3) {
+						shiftPlanRepository.save(spaetschicht.employeeUserId(employee.getId()).build());
+					} else {
+						shiftPlanRepository.save(nachtschicht.employeeUserId(employee.getId()).build());
+					}
 
-                    techniciansPlanned++;
-                } else if (username.contains("flightdirector")) {
-                    shiftPlanRepository.save(fruehschicht.employeeUserId(employee.getId()).build());
-                    shiftPlanRepository.save(spaetschicht.employeeUserId(employee.getId()).build());
-                    shiftPlanRepository.save(nachtschicht.employeeUserId(employee.getId()).build());
-                }
-            }
+					techniciansPlanned++;
+				} else if (username.contains("flightdirector")) {
+					shiftPlanRepository.save(fruehschicht.employeeUserId(employee.getId()).build());
+					shiftPlanRepository.save(spaetschicht.employeeUserId(employee.getId()).build());
+					shiftPlanRepository.save(nachtschicht.employeeUserId(employee.getId()).build());
+				}
+			}
 
-            date = date.plusDays(1);
-        }
-    }
+			date = date.plusDays(1);
+		}
+	}
 
-    /**
-     * Creates initial standby plan.
-     */
-    private void initStandbyPlan() {
-        List<UserRepresentation> employees = keycloakApiService.getEmployeeUsers();
-        List<UserRepresentation> technicians = employees.stream().filter(e -> e.getUsername().contains("technician")).collect(Collectors.toList());
-        List<UserRepresentation> grounds = employees.stream().filter(e -> e.getUsername().contains("ground")).collect(Collectors.toList());
+	/**
+	 * Creates initial standby plan.
+	 */
+	private void initStandbyPlan() {
+		List<UserRepresentation> employees = keycloakApiService.getEmployeeUsers();
+		List<UserRepresentation> technicians = employees.stream().filter(e -> e.getUsername().contains("technician"))
+				.collect(Collectors.toList());
+		List<UserRepresentation> grounds = employees.stream().filter(e -> e.getUsername().contains("ground"))
+				.collect(Collectors.toList());
 
-        int techniciansPlanned = 0;
-        int groundsPlanned = 0;
+		int techniciansPlanned = 0;
+		int groundsPlanned = 0;
 
-        OffsetDateTime date = OffsetDateTime.now().withDayOfMonth(1);
-        Month currentMonth = date.getMonth();
+		OffsetDateTime date = OffsetDateTime.now().withDayOfMonth(1);
+		Month currentMonth = date.getMonth();
 
-        while (date.getMonth() == currentMonth) {
-            StandbySchedule.StandbyScheduleBuilder standbySchedule = StandbySchedule.builder()
-                .startTime(date.withHour(0).withMinute(0).withSecond(0).withNano(0))
-                .endTime(date.withHour(23).plusHours(1).withMinute(0).withSecond(0).withNano(0));
+		while (date.getMonth() == currentMonth) {
+			StandbySchedule.StandbyScheduleBuilder standbySchedule = StandbySchedule.builder()
+					.startTime(date.withHour(0).withMinute(0).withSecond(0).withNano(0))
+					.endTime(date.withHour(23).plusHours(1).withMinute(0).withSecond(0).withNano(0));
 
-            OffsetDateTime finalDate = date;
+			OffsetDateTime finalDate = date;
 
-            for (int i = 0; i < 1; i++) {
-                String employeeId = technicians.get(techniciansPlanned).getId();
+			for (int i = 0; i < 1; i++) {
+				String employeeId = technicians.get(techniciansPlanned).getId();
 
-                if (vacationRepository.findByEmployeeUserIdOrderByStartTimeAsc(employeeId).stream().anyMatch(v -> v.isOverlapping(finalDate, finalDate))) {
-                    continue;
-                }
+				if (vacationRepository.findByEmployeeUserIdOrderByStartTimeAsc(employeeId).stream()
+						.anyMatch(v -> v.isOverlapping(finalDate, finalDate))) {
+					continue;
+				}
 
-                standbyScheduleRepository.save(standbySchedule.employeeUserId(employeeId).build());
-                techniciansPlanned = (techniciansPlanned + 1) % technicians.size();
-            }
+				standbyScheduleRepository.save(standbySchedule.employeeUserId(employeeId).build());
+				techniciansPlanned = (techniciansPlanned + 1) % technicians.size();
+			}
 
-            for (int i = 0; i < 2; i++) {
-                String employeeId = grounds.get(groundsPlanned).getId();
+			for (int i = 0; i < 2; i++) {
+				String employeeId = grounds.get(groundsPlanned).getId();
 
-                if (vacationRepository.findByEmployeeUserIdOrderByStartTimeAsc(employeeId).stream().anyMatch(v -> v.isOverlapping(finalDate, finalDate))) {
-                    continue;
-                }
+				if (vacationRepository.findByEmployeeUserIdOrderByStartTimeAsc(employeeId).stream()
+						.anyMatch(v -> v.isOverlapping(finalDate, finalDate))) {
+					continue;
+				}
 
-                standbyScheduleRepository.save(standbySchedule.employeeUserId(employeeId).build());
-                groundsPlanned = (groundsPlanned + 1) % grounds.size();
-            }
+				standbyScheduleRepository.save(standbySchedule.employeeUserId(employeeId).build());
+				groundsPlanned = (groundsPlanned + 1) % grounds.size();
+			}
 
-            date = date.plusDays(1);
-        }
-    }
+			date = date.plusDays(1);
+		}
+	}
 
-    /**
-     * Creates flight crews and assigns them to flights.
-     */
-    private void initFlightCrews() {
-        List<UserRepresentation> employees = keycloakApiService.getEmployeeUsers();
-        Iterator<UserRepresentation> pilots = employees.stream().filter(e -> e.getUsername().contains("pilot")).iterator();
-        Iterator<UserRepresentation> cabins = employees.stream().filter(e -> e.getUsername().contains("cabin")).iterator();
+	/**
+	 * Creates flight crews and assigns them to flights.
+	 */
+	private void initFlightCrews() {
+		List<UserRepresentation> employees = keycloakApiService.getEmployeeUsers();
+		Iterator<UserRepresentation> pilots = employees.stream().filter(e -> e.getUsername().contains("pilot"))
+				.iterator();
+		Iterator<UserRepresentation> cabins = employees.stream().filter(e -> e.getUsername().contains("cabin"))
+				.iterator();
 
-        Map<String, List<CrewData>> crews = new HashMap<>(){{
-            put("dash", new ArrayList<>());
-            put("jet", new ArrayList<>());
-        }};
+		Map<String, List<CrewData>> crews = new HashMap<>() {
+			{
+				put("dash", new ArrayList<>());
+				put("jet", new ArrayList<>());
+			}
+		};
 
-        crews.get("dash").add(new CrewData());
-        crews.get("jet").add(new CrewData());
+		crews.get("dash").add(new CrewData());
+		crews.get("jet").add(new CrewData());
 
-        while(pilots.hasNext()) {
-            UserRepresentation pilot = pilots.next();
+		while (pilots.hasNext()) {
+			UserRepresentation pilot = pilots.next();
 
-            List<CrewData> currentCrewSet = crews.get(pilot.getUsername().contains("dash") ? "dash" : "jet");
-            List<String> currentCrew = currentCrewSet.get(currentCrewSet.size() - 1).getEmployees();
+			List<CrewData> currentCrewSet = crews.get(pilot.getUsername().contains("dash") ? "dash" : "jet");
+			List<String> currentCrew = currentCrewSet.get(currentCrewSet.size() - 1).getEmployees();
 
-            currentCrew.add(pilot.getId());
+			currentCrew.add(pilot.getId());
 
-            if(currentCrew.size() == 2) {
-                for(int i = 0; i < 4; i++) {
-                    if(!cabins.hasNext()) {
-                        break;
-                    }
+			if (currentCrew.size() == 2) {
+				for (int i = 0; i < 4; i++) {
+					if (!cabins.hasNext()) {
+						break;
+					}
 
-                    currentCrew.add(cabins.next().getId());
-                }
+					currentCrew.add(cabins.next().getId());
+				}
 
-                currentCrewSet.add(new CrewData());
-            }
-        }
+				currentCrewSet.add(new CrewData());
+			}
+		}
 
-        crews.get("dash").remove(crews.get("dash").size() - 1);
-        crews.get("jet").remove(crews.get("jet").size() - 1);
+		crews.get("dash").remove(crews.get("dash").size() - 1);
+		crews.get("jet").remove(crews.get("jet").size() - 1);
 
-        List<FlightGroup> flightGroups = new ArrayList<>();
+		List<FlightGroup> flightGroups = new ArrayList<>();
 
-        for (ScheduledFlight scheduledFlight : scheduledFlightRepository.findByStartingAirportId(1)) {
-            Airport startingAirport = scheduledFlight.getStartingAirport();
-            Airport destinationAirport = scheduledFlight.getDestinationAirport();
+		for (ScheduledFlight scheduledFlight : scheduledFlightRepository.findByStartingAirportId(1)) {
+			Airport startingAirport = scheduledFlight.getStartingAirport();
+			Airport destinationAirport = scheduledFlight.getDestinationAirport();
 
-            LocalDate firstFlightDate = flightRepository.findByScheduledFlightId(scheduledFlight.getId()).get(0).getStartDate().toLocalDate();
-            OffsetDateTime landingTime = scheduledFlight.getLandingTime(null);
+			LocalDate firstFlightDate = flightRepository.findByScheduledFlightId(scheduledFlight.getId()).get(0)
+					.getStartDate().toLocalDate();
+			OffsetDateTime landingTime = scheduledFlight.getLandingTime(null);
 
-            Optional<ScheduledFlight> scheduledReturnFlightOpt = scheduledFlightRepository.findByStartingAirportIdAndDestinationAirportId(destinationAirport.getId(), startingAirport.getId()).stream()
-                .filter(f -> Duration.between(landingTime, f.getStartTime()).getSeconds() > 0)
-                .sorted(Comparator.comparing(f -> Duration.between(landingTime, f.getStartTime())))
-                .filter(f -> firstFlightDate.isEqual(flightRepository.findByScheduledFlightId(f.getId()).get(0).getStartDate().toLocalDate()))
-                .findFirst();
+			Optional<ScheduledFlight> scheduledReturnFlightOpt = scheduledFlightRepository
+					.findByStartingAirportIdAndDestinationAirportId(destinationAirport.getId(), startingAirport.getId())
+					.stream().filter(f -> Duration.between(landingTime, f.getStartTime()).getSeconds() > 0)
+					.sorted(Comparator.comparing(f -> Duration.between(landingTime, f.getStartTime())))
+					.filter(f -> firstFlightDate.isEqual(
+							flightRepository.findByScheduledFlightId(f.getId()).get(0).getStartDate().toLocalDate()))
+					.findFirst();
 
-            if (scheduledReturnFlightOpt.isEmpty()) {
-                continue;
-            }
+			if (scheduledReturnFlightOpt.isEmpty()) {
+				continue;
+			}
 
-            ScheduledFlight scheduledReturnFlight = scheduledReturnFlightOpt.get();
+			ScheduledFlight scheduledReturnFlight = scheduledReturnFlightOpt.get();
 
-            List<Flight> currentFlights = flightRepository.findByScheduledFlightId(scheduledFlight.getId());
-            List<Flight> currentReturnFlights = flightRepository.findByScheduledFlightId(scheduledReturnFlight.getId());
+			List<Flight> currentFlights = flightRepository.findByScheduledFlightId(scheduledFlight.getId());
+			List<Flight> currentReturnFlights = flightRepository.findByScheduledFlightId(scheduledReturnFlight.getId());
 
-            OffsetTime flightStartTime = scheduledFlight.getStartTime().toOffsetTime();
+			OffsetTime flightStartTime = scheduledFlight.getStartTime().toOffsetTime();
 
-            for (int i = 0; i < currentFlights.size(); i++) {
-                Flight flight = currentFlights.get(i);
-                Flight returnFlight = currentReturnFlights.get(i);
+			for (int i = 0; i < currentFlights.size(); i++) {
+				Flight flight = currentFlights.get(i);
+				Flight returnFlight = currentReturnFlights.get(i);
 
-                flight.setStartDate(flight.getStartDate().toLocalDate().atTime(flightStartTime));
-                returnFlight.setStartDate(scheduledReturnFlight.getLandingTime(returnFlight.getStartDate().toLocalDate()));
+				flight.setStartDate(flight.getStartDate().toLocalDate().atTime(flightStartTime));
+				returnFlight
+						.setStartDate(scheduledReturnFlight.getLandingTime(returnFlight.getStartDate().toLocalDate()));
 
-                flightGroups.add(new FlightGroup(flight, returnFlight));
-            }
-        }
+				flightGroups.add(new FlightGroup(flight, returnFlight));
+			}
+		}
 
-        flightGroups.sort(Comparator.comparing(g -> g.getFlight().getStartDate()));
+		flightGroups.sort(Comparator.comparing(g -> g.getFlight().getStartDate()));
 
-        for(FlightGroup flightGroup : flightGroups) {
-            Flight flight = flightGroup.getFlight();
-            Flight returnFlight = flightGroup.getReturnFlight();
+		for (FlightGroup flightGroup : flightGroups) {
+			Flight flight = flightGroup.getFlight();
+			Flight returnFlight = flightGroup.getReturnFlight();
 
-            OffsetDateTime flightStartDateTime = flight.getStartDate();
-            OffsetDateTime returnFlightLandingDateTime = returnFlight.getStartDate();
+			OffsetDateTime flightStartDateTime = flight.getStartDate();
+			OffsetDateTime returnFlightLandingDateTime = returnFlight.getStartDate();
 
-            Stream<CrewData> crewsStream = crews.get(flight.getPlane().getTypeData().getType().getName().contains("Dash") ? "dash" : "jet").stream();
+			Stream<CrewData> crewsStream = crews
+					.get(flight.getPlane().getTypeData().getType().getName().contains("Dash") ? "dash" : "jet")
+					.stream();
 
-            Optional<CrewData> foundCrewOpt = crewsStream.filter(c ->
-                (c.busyUntil == null || c.busyUntil.isBefore(flightStartDateTime)) &&
-                    c.getEmployees().stream().allMatch(e ->
-                        vacationRepository.findByEmployeeUserIdOrderByStartTimeAsc(e).stream().noneMatch(v -> v.isOverlapping(flightStartDateTime, returnFlightLandingDateTime))
-                    )
-            ).findFirst();
+			Optional<CrewData> foundCrewOpt = crewsStream
+					.filter(c -> (c.busyUntil == null || c.busyUntil.isBefore(flightStartDateTime)) && c.getEmployees()
+							.stream()
+							.allMatch(e -> vacationRepository.findByEmployeeUserIdOrderByStartTimeAsc(e).stream()
+									.noneMatch(v -> v.isOverlapping(flightStartDateTime, returnFlightLandingDateTime))))
+					.findFirst();
 
-            if (foundCrewOpt.isPresent()) {
-                CrewData foundCrew = foundCrewOpt.get();
+			if (foundCrewOpt.isPresent()) {
+				CrewData foundCrew = foundCrewOpt.get();
 
-                for (String employeeId : foundCrew.getEmployees()) {
-                    shiftPlanRepository.save(ShiftSchedule.builder().startTime(flightStartDateTime).endTime(returnFlightLandingDateTime).employeeUserId(employeeId).build());
+				for (String employeeId : foundCrew.getEmployees()) {
+					shiftPlanRepository.save(ShiftSchedule.builder().startTime(flightStartDateTime)
+							.endTime(returnFlightLandingDateTime).employeeUserId(employeeId).build());
 
-                    flightCrewMemberRepository.save(FlightCrewMember.builder().flight(flight).employeeUserId(employeeId).build());
-                    flightCrewMemberRepository.save(FlightCrewMember.builder().flight(returnFlight).employeeUserId(employeeId).build());
-                }
+					flightCrewMemberRepository
+							.save(FlightCrewMember.builder().flight(flight).employeeUserId(employeeId).build());
+					flightCrewMemberRepository
+							.save(FlightCrewMember.builder().flight(returnFlight).employeeUserId(employeeId).build());
+				}
 
-                foundCrew.setBusyUntil(returnFlightLandingDateTime.plusHours(2));
-            }
-        }
-    }
-
+				foundCrew.setBusyUntil(returnFlightLandingDateTime.plusHours(2));
+			}
+		}
+	}
 
 	/**
 	 * Requests a vacation for every employee.

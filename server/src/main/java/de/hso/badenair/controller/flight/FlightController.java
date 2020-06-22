@@ -57,6 +57,17 @@ public class FlightController {
 
 	}
 
+	@PatchMapping("/maintenance/{flightId}")
+	public ResponseEntity<Object> setMaintenance(@PathVariable Long flightId) {
+		boolean success = flightService.setMaintenance(flightId);
+
+		if (success) {
+			return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
+		} else {
+			return new ResponseEntity<Object>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 	@GetMapping("/pilot")
 	public ResponseEntity<FlightDto> getCurrentFlightForPilot(Principal user) {
 		FlightDto result = flightService.getCurrentFlightForPilot(user.getName());

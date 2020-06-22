@@ -5,7 +5,7 @@ import lombok.Value;
 
 @Value
 public class PlaneMaintenanceDto {
-    Long id;
-    PlaneState state;
-    Integer traveledDistance;
+	Long id;
+	PlaneState state;
+	Integer flightHours;
 }

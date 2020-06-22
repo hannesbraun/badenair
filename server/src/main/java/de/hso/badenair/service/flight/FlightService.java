@@ -1,5 +1,6 @@
 package de.hso.badenair.service.flight;
 
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import de.hso.badenair.domain.flight.Flight;
 import de.hso.badenair.domain.flight.FlightAction;
 import de.hso.badenair.domain.flight.FlightCrewMember;
 import de.hso.badenair.domain.flight.FlightState;
+import de.hso.badenair.domain.plane.PlaneState;
 import de.hso.badenair.service.flight.repository.FlightCrewMemberRepository;
 import de.hso.badenair.service.flight.repository.FlightRepository;
 import de.hso.badenair.util.time.DateFusioner;
@@ -41,9 +43,24 @@ public class FlightService {
 		if (dto.getAction().equals(FlightAction.START.getName())) {
 			flight.get().setActualStartTime(currentTime);
 			flight.get().setState(FlightState.OK);
+			flight.get().getPlane().setState(PlaneState.ON_FLIGHT);
 			flightRepository.save(flight.get());
 		} else if (dto.getAction().equals(FlightAction.LANDING.getName())) {
 			flight.get().setActualLandingTime(currentTime);
+
+			// Add flight hours
+			flight.get().getPlane().addFlightHours(
+					Double.valueOf(Duration.between(flight.get().getActualStartTime(), currentTime).getSeconds())
+							/ 3600.0);
+
+			// Update state
+			if (flight.get().getPlane().getFlightHours() > 2000.0) {
+				// Cyclic maintenance
+				flight.get().getPlane().setState(PlaneState.IN_MAINTENANCE);
+			} else {
+				flight.get().getPlane().setState(PlaneState.WAITING);
+			}
+
 			flightRepository.save(flight.get());
 		} else if (dto.getAction().equals(FlightAction.DELAY.getName())) {
 			flight.get().setState(FlightState.DELAYED);
@@ -77,6 +94,19 @@ public class FlightService {
 				OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.of("+1")));
 	}
 
+	public boolean setMaintenance(Long flightId) {
+		Optional<Flight> flight = flightRepository.findById(flightId);
+
+		if (!flight.isPresent()) {
+			return false;
+		}
+
+		flight.get().getPlane().setState(PlaneState.IN_MAINTENANCE);
+		flightRepository.save(flight.get());
+
+		return true;
+	}
+
 	public FlightDto getCurrentFlightForPilot(String userName) {
 
 		List<FlightCrewMember> members = flightCrewMemberRepository.findByEmployeeUserId(userName);
@@ -85,6 +115,10 @@ public class FlightService {
 		for (FlightCrewMember member : members) {
 			flights.add(member.getFlight());
 		}
+
+		// Filter out flights with plane in maintenance
+		flights = flights.stream().filter(flight -> flight.getPlane().getState() != PlaneState.IN_MAINTENANCE
+				|| flight.getActualStartTime() != null).collect(Collectors.toList());
 
 		flights.sort(Comparator.comparing(flight -> DateFusioner.fusionStartDate(flight.getStartDate(),
 				flight.getScheduledFlight().getStartTime(), null)));
