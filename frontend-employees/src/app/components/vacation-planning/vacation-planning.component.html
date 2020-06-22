@@ -1,9 +1,9 @@
 <div class="planner-container">
-    <ng-container *ngIf="canRequestVacation">
+    <ng-container *ngIf="!canRequestVacation">
         <h3>Neue Anfrage</h3>
         <ng-container [formGroup]="requestVacationForm">
             <mat-form-field>
-                <input matInput [matDatepicker]="pickerFromDate" [min]="currentDate"
+                <input matInput [matDatepicker]="pickerFromDate" [min]="tommorow"
                        formControlName="fromDate"
                        placeholder="Von">
                 <mat-datepicker-toggle matSuffix [for]="pickerFromDate"></mat-datepicker-toggle>
@@ -15,7 +15,7 @@
             </mat-form-field>
 
             <mat-form-field>
-                <input matInput name="toDate" [matDatepicker]="pickerToDate" [min]="currentDate"
+                <input matInput name="toDate" [matDatepicker]="pickerToDate" [min]="tommorow"
                        formControlName="toDate"
                        placeholder="Bis">
                 <mat-datepicker-toggle matSuffix [for]="pickerToDate"></mat-datepicker-toggle>
@@ -26,7 +26,7 @@
                 </mat-error>
             </mat-form-field>
 
-            <div class="vacation-days">{{ vacationDaysLeft }} Tage / 30 verbleibend</div>
+            <div class="vacation-days">{{ vacationDaysLeft }} Tage / 36 verbleibend</div>
             <div></div>
             <button type="submit" (click)="onSubmit()" [disabled]="requestVacationForm.invalid" mat-button mat-raised-button color="primary">
                 Anfragen
