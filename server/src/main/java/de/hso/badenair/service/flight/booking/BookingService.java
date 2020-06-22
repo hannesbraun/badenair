@@ -1,6 +1,7 @@
 package de.hso.badenair.service.flight.booking;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,6 +25,7 @@ import de.hso.badenair.domain.flight.Flight;
 import de.hso.badenair.service.booking.repository.BookingRepository;
 import de.hso.badenair.service.flight.FlightService;
 import de.hso.badenair.service.seat.SeatService;
+import de.hso.badenair.util.time.DateFusioner;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -39,6 +41,7 @@ public class BookingService {
 	private static final Map<Integer, Booking> bookingDrafts = new HashMap<>();
 	private static OffsetDateTime lastBookingDraft;
 	private static final long TIMEOUT = 5l;
+	private static final long BOOKING_LIMIT_MINUTES = 45l;
 
 	private static final Random random = new Random();
 
@@ -58,6 +61,14 @@ public class BookingService {
 
 			Flight flight = flightService.getFlightById(dto.getFlightId());
 			if (flight == null) {
+				unlock();
+				return 0;
+			}
+
+			if (DateFusioner.fusionStartDate(flight.getStartDate(), flight.getScheduledFlight().getStartTime(), null)
+					.isBefore(OffsetDateTime.now().plusMinutes(BOOKING_LIMIT_MINUTES)
+							.withOffsetSameLocal(ZoneOffset.of("+1")))) {
+				// Too late: booking not possible anymore
 				unlock();
 				return 0;
 			}
