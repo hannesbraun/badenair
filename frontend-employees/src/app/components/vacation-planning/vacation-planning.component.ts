@@ -38,9 +38,7 @@ export class VacationPlanningComponent {
 
     requestVacationForm: FormGroup = this.formBuilder.group({
         fromDate: ['', Validators.required],
-        toDate: ['', Validators.required],
-        fromTimeOfDay: ['', Validators.required],
-        toTimeOfDay: ['', Validators.required]
+        toDate: ['', Validators.required]
     });
 
     constructor(private formBuilder: FormBuilder) {
@@ -75,8 +73,8 @@ export class VacationPlanningComponent {
     onSubmit() {
         if (this.requestVacationForm.valid) {
             const dto: RequestVacationDto = {
-                startDate: this.setFromDateToTimeOfDay(this.requestVacationForm.get('fromDate')?.value),
-                endDate: this.setToDateToTimeOfDay(this.requestVacationForm.get('toDate')?.value)
+                startDate: this.setHourOffset(this.requestVacationForm.get('fromDate')?.value),
+                endDate: this.setHourOffset(this.requestVacationForm.get('toDate')?.value)
             };
 
             this.requestSubmit.emit(dto);
@@ -88,29 +86,8 @@ export class VacationPlanningComponent {
         return today.getDate() < VacationPlanningComponent.lastPossibleRequestDayOfMonth;
     }
 
-    private setFromDateToTimeOfDay(date: Date): Date {
-        if (this.requestVacationForm.get('fromTimeOfDay')?.value === 'morning') {
-            return this.setToStartOfDay(date);
-        }
-
-        return this.setToEndOfDay(date);
-    }
-
-    private setToDateToTimeOfDay(date: Date): Date {
-        if (this.requestVacationForm.get('toTimeOfDay')?.value === 'morning') {
-            return this.setToStartOfDay(date);
-        }
-
-        return this.setToEndOfDay(date);
-    }
-
-    private setToStartOfDay(date: Date): Date {
-        date.setHours(0, 0, 0);
-        return date;
-    }
-
-    private setToEndOfDay(date: Date): Date {
-        date.setHours(23, 59, 59);
+    private setHourOffset(date: Date): Date {
+        date.setHours(12, 0, 0);
         return date;
     }
 }
