@@ -21,6 +21,8 @@ export interface VacationPlanTableData {
 })
 export class VacationPlanningComponent {
 
+    static readonly lastPossibleRequestDayOfMonth = 10;
+
     calendar1: Date;
     calendar2: Date;
     calendar3: Date;
@@ -79,6 +81,11 @@ export class VacationPlanningComponent {
 
             this.requestSubmit.emit(dto);
         }
+    }
+
+    get canRequestVacation(): boolean {
+        const today = new Date();
+        return today.getDate() < VacationPlanningComponent.lastPossibleRequestDayOfMonth;
     }
 
     private setFromDateToTimeOfDay(date: Date): Date {
