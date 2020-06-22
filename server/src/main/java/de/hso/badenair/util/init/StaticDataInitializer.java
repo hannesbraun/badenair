@@ -585,20 +585,31 @@ public class StaticDataInitializer {
 			List<Flight> currentReturnFlights = flightRepository.findByScheduledFlightId(scheduledReturnFlight.getId());
 
 			OffsetTime flightStartTime = scheduledFlight.getStartTime().toOffsetTime();
+			OffsetDateTime nextMonth = OffsetDateTime.now().plusMonths(1);
 
 			for (int i = 0; i < currentFlights.size(); i++) {
 				Flight flight = currentFlights.get(i);
 				Flight returnFlight = currentReturnFlights.get(i);
 
-				flight.setStartDate(flight.getStartDate().toLocalDate().atTime(flightStartTime));
-				returnFlight
-						.setStartDate(scheduledReturnFlight.getLandingTime(returnFlight.getStartDate().toLocalDate()));
+				if (flight.getStartDate().isAfter(nextMonth)) {
+				    continue;
+                }
+
+                flight.setStartDate(flight.getStartDate().toLocalDate().atTime(flightStartTime));
+                returnFlight.setStartDate(scheduledReturnFlight.getLandingTime(returnFlight.getStartDate().toLocalDate()));
 
 				flightGroups.add(new FlightGroup(flight, returnFlight));
 			}
 		}
 
 		flightGroups.sort(Comparator.comparing(g -> g.getFlight().getStartDate()));
+
+		final Map<String, Integer> maxCrewAssignments = new HashMap<>() {
+            {
+                put("dash", 0);
+                put("jet", 0);
+            }
+        };
 
 		for (FlightGroup flightGroup : flightGroups) {
 			Flight flight = flightGroup.getFlight();
@@ -607,28 +618,40 @@ public class StaticDataInitializer {
 			OffsetDateTime flightStartDateTime = flight.getStartDate();
 			OffsetDateTime returnFlightLandingDateTime = returnFlight.getStartDate();
 
-			Stream<CrewData> crewsStream = crews
-					.get(flight.getPlane().getTypeData().getType().getName().contains("Dash") ? "dash" : "jet")
-					.stream();
+            String planeName = flight.getPlane().getTypeData().getType().getName().contains("Dash") ? "dash" : "jet";
 
-			// 8 hours per day and 20% overtime
+			Stream<CrewData> crewsStream = crews.get(planeName).stream();
+
+            // 8 hours per day and 20% overtime
 			final double allowedHoursPerDay = 8.0 * 1.2;
 
-			Optional<CrewData> foundCrewOpt = crewsStream
+			List<CrewData> possibleCrews = crewsStream
 					.filter(c -> (c.busyUntil == null || c.busyUntil.isBefore(flightStartDateTime))
-							&& c.getHoursAtDay(
+                            && c.getHoursAtDay(
 									flightStartDateTime) < allowedHoursPerDay
 											- (Duration
 													.between(flightStartDateTime.minusMinutes(30l),
 															returnFlightLandingDateTime.plusMinutes(30l))
 													.getSeconds() / 3600.0)
-							&& c.getEmployees().stream().allMatch(e -> vacationRepository
-									.findByEmployeeUserIdOrderByStartTimeAsc(e).stream()
-									.noneMatch(v -> v.isOverlapping(flightStartDateTime, returnFlightLandingDateTime))))
-					.findFirst();
+                            && c.getEmployees().stream().allMatch(e -> vacationRepository
+                            .findByEmployeeUserIdOrderByStartTimeAsc(e).stream()
+                            .noneMatch(v -> v.isOverlapping(flightStartDateTime, returnFlightLandingDateTime)))).collect(Collectors.toList());
+
+			int finalMaxCrewAssignments = maxCrewAssignments.get(planeName);
+
+			Optional<CrewData> foundCrewOpt = possibleCrews.stream().filter(c -> c.assignments < finalMaxCrewAssignments).findFirst();
+
+			if(foundCrewOpt.isEmpty()) {
+			    foundCrewOpt = possibleCrews.stream().filter(c -> c.assignments <= finalMaxCrewAssignments).findFirst();
+            }
 
 			if (foundCrewOpt.isPresent()) {
 				CrewData foundCrew = foundCrewOpt.get();
+				foundCrew.assignments++;
+
+				if(foundCrew.assignments > finalMaxCrewAssignments) {
+				    maxCrewAssignments.put(planeName, foundCrew.assignments);
+                }
 
 				for (String employeeId : foundCrew.getEmployees()) {
 					shiftPlanRepository.save(ShiftSchedule.builder().startTime(flightStartDateTime.minusMinutes(30l))

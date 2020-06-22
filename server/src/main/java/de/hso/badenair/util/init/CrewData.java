@@ -17,6 +17,8 @@ public class CrewData {
 	@Setter
 	OffsetDateTime busyUntil = null;
 
+    int assignments = 0;
+
 	private Map<String, Double> hoursPerDay = new HashMap<>();
 
 	public void addHourAtDay(OffsetDateTime day, double hours) {

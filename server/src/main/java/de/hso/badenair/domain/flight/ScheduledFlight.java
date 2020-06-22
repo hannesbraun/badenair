@@ -64,9 +64,10 @@ public class ScheduledFlight extends BaseEntity {
         int minutes = (int)((durationInHours * 60) % 60);
 
         if(startDate == null) {
-            return startTime.plusHours(hours).plusMinutes(minutes);
+            return getStartTime().plusHours(hours).plusMinutes(minutes);
         } else {
-            return startDate.atTime(startTime.toOffsetTime()).plusHours(hours).plusMinutes(minutes);
+            OffsetDateTime startDateTime = startDate.atTime(getStartTime().toOffsetTime());
+            return startDateTime.plusHours(hours).plusMinutes(minutes);
         }
     }
 }
