@@ -28,7 +28,7 @@ export class VacationPlanningPageComponent implements OnInit {
             this.tableData = vacationPlan.vacations.map(vacation => {
                 return {
                     duration: [vacation.startDate, vacation.endDate],
-                    days: Math.ceil((vacation.endDate.getTime() - vacation.startDate.getTime()) / this.DAY_IN_MS),
+                    days: Math.floor((vacation.endDate.getTime() - vacation.startDate.getTime()) / this.DAY_IN_MS),
                     state: VacationState.APPROVED
                 } as VacationPlanTableData;
             });
@@ -44,7 +44,7 @@ export class VacationPlanningPageComponent implements OnInit {
                             temp = new Date(temp.getTime() + this.DAY_IN_MS);
                         }
 
-                        dateRange.push(vacation.endDate);
+                        // dateRange.push(vacation.endDate);
 
                         return dateRange;
                     })
@@ -58,11 +58,16 @@ export class VacationPlanningPageComponent implements OnInit {
             }
 
             this.loading = true;
-        },error => this.infoService.showErrorMessage('Die Urlaubsplanung konnte nicht abgerufen werden'));
+        }, error => this.infoService.showErrorMessage('Die Urlaubsplanung konnte nicht abgerufen werden'));
     }
 
     onVacationRequest(dto: RequestVacationDto) {
-        this.vacationService.requestVacation(dto).subscribe(() => {
+        this.vacationService.requestVacation(dto).subscribe((value) => {
+
+            if (value) {
+                this.infoService.showMessage(value.msg);
+            }
+
             this.loading = false;
             this.ngOnInit();
         }, error => this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten'));

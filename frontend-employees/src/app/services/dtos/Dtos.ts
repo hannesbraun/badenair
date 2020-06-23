@@ -97,3 +97,7 @@ export interface TrackingDto{
     delay: number;
     date ?: Date;
 }
+
+export interface VacationRequestDeniedDto {
+    msg: string;
+}
