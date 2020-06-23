@@ -15,6 +15,7 @@ import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -43,17 +44,17 @@ public class VacationService {
     }
 
     @Transactional
-    public void requestVacation(String employeeUserId, RequestVacationDto requestVacationDto) {
+    public Optional<String> requestVacation(String employeeUserId, RequestVacationDto requestVacationDto) {
         final OffsetDateTime startDate = requestVacationDto.getStartDate().withHour(0).withOffsetSameLocal(ZoneOffset.of("+1"));
         final OffsetDateTime endDate = requestVacationDto.getEndDate().withHour(0).withOffsetSameLocal(ZoneOffset.of("+1"));
         final int differenceInDays = getDifferenceInDays(startDate, endDate);
 
-        if (isRequestValid(startDate, endDate, differenceInDays)) {
-            return;
+        if (isRequestInvalid(startDate, endDate, differenceInDays)) {
+            return Optional.of("The request is invalid");
         }
 
         if (!canPilotRequestVacation(employeeUserId, startDate, endDate)) {
-            return;
+            return Optional.of("Another pilot already has requested a vacation in this time");
         }
 
         final List<Vacation> vacations = getVacation(employeeUserId);
@@ -69,13 +70,13 @@ public class VacationService {
                         vacation.setEndTime(endDate);
                     }
                 });
-            return;
+            return Optional.empty();
         }
 
         final int usedVacationDays = differenceInDays + getUsedVacationDays(employeeUserId);
 
         if (usedVacationDays > MAX_VACATION_DAYS) {
-            return;
+            return Optional.of("The request exceeds the maximum vacation days");
         }
 
         final Vacation vacation = Vacation.builder()
@@ -85,6 +86,8 @@ public class VacationService {
             .build();
 
         vacationRepository.save(vacation);
+
+        return Optional.empty();
     }
 
     private boolean canPilotRequestVacation(String employeeUserId, OffsetDateTime startDate, OffsetDateTime endDate) {
@@ -92,6 +95,7 @@ public class VacationService {
             final List<String> userIds = Stream.concat(keycloakApiService.getEmployeeUsersWithRole(EmployeeRole.DASH_PILOT).stream(),
                 keycloakApiService.getEmployeeUsersWithRole(EmployeeRole.JET_PILOT).stream())
                 .map(UserRepresentation::getId)
+                .filter(id -> !id.equals(employeeUserId))
                 .collect(Collectors.toList());
 
             return userIds.stream()
@@ -103,8 +107,8 @@ public class VacationService {
         return true;
     }
 
-    private boolean isRequestValid(OffsetDateTime startDate, OffsetDateTime endDate, int differenceInDays) {
-        return endDate.isBefore(startDate) || differenceInDays <= 0 || OffsetDateTime.now().getDayOfMonth() < LAST_POSSIBLE_REQUEST_DAY_OF_MONTH;
+    private boolean isRequestInvalid(OffsetDateTime startDate, OffsetDateTime endDate, int differenceInDays) {
+        return endDate.isBefore(startDate) || differenceInDays <= 0 || OffsetDateTime.now().getDayOfMonth() > LAST_POSSIBLE_REQUEST_DAY_OF_MONTH;
     }
 
     private int getDifferenceInDays(Vacation vacation) {
@@ -128,6 +132,6 @@ public class VacationService {
     }
 
     private int getDifferenceInDays(OffsetDateTime startDate, OffsetDateTime endDate) {
-        return (int) Math.ceil(ChronoUnit.HOURS.between(startDate, endDate) / 24.0);
+        return (int) Math.floor(ChronoUnit.HOURS.between(startDate, endDate) / 24.0);
     }
 }

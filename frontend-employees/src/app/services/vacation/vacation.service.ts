@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {RequestVacationDto, VacationPlanDto} from '../dtos/Dtos';
+import {RequestVacationDto, VacationPlanDto, VacationRequestDeniedDto} from '../dtos/Dtos';
 import {environment} from '../../../environments/environment';
 
 @Injectable({
@@ -16,7 +16,7 @@ export class VacationService {
         return this.http.get<VacationPlanDto>(`${environment.backendApiRoot}/plan/vacation`);
     }
 
-    requestVacation(dto: RequestVacationDto): Observable<void> {
-        return this.http.post<void>(`${environment.backendApiRoot}/plan/vacation`, dto);
+    requestVacation(dto: RequestVacationDto): Observable<VacationRequestDeniedDto | void> {
+        return this.http.post<VacationRequestDeniedDto | void>(`${environment.backendApiRoot}/plan/vacation`, dto);
     }
 }

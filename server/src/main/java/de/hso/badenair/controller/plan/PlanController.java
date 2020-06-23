@@ -67,9 +67,10 @@ public class PlanController {
 
 	@PostMapping("/vacation")
 	public ResponseEntity<?> requestVacation(Principal user, @RequestBody @Valid RequestVacationDto dto) {
-		vacationService.requestVacation(user.getName(), dto);
-
-		return ResponseEntity.status(HttpStatus.CREATED).build();
+		return vacationService.requestVacation(user.getName(), dto)
+            .map(VacationRequestDeniedDto::new)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.status(HttpStatus.CREATED).build());
 	}
 
 	@GetMapping("/standby")
