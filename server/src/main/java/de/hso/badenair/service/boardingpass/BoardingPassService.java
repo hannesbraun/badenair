@@ -11,7 +11,6 @@ import de.hso.badenair.service.luggage.LuggageRepository;
 import de.hso.badenair.service.traveler.TravelerRepository;
 import de.hso.badenair.util.time.DateFusioner;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.io.IOUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -38,7 +37,6 @@ import java.util.Optional;
  */
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class BoardingPassService {
 
     private final TravelerRepository travelerRepository;

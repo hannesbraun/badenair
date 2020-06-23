@@ -28,13 +28,12 @@ export class VacationPlanningPageComponent implements OnInit {
             this.tableData = vacationPlan.vacations.map(vacation => {
                 return {
                     duration: [vacation.startDate, vacation.endDate],
-                    days: Math.ceil((vacation.endDate.getTime() - vacation.startDate.getTime()) / this.DAY_IN_MS),
+                    days: Math.floor((vacation.endDate.getTime() - vacation.startDate.getTime()) / this.DAY_IN_MS),
                     state: VacationState.APPROVED
                 } as VacationPlanTableData;
             });
 
             if (vacationPlan.vacations.length > 0) {
-                const startMonth = vacationPlan.vacations[0].startDate.getMonth();
                 const dates = vacationPlan.vacations
                     .map(vacation => {
                         let temp = vacation.startDate;
@@ -44,25 +43,28 @@ export class VacationPlanningPageComponent implements OnInit {
                             temp = new Date(temp.getTime() + this.DAY_IN_MS);
                         }
 
-                        dateRange.push(vacation.endDate);
-
                         return dateRange;
                     })
                     .reduce(this.concat, []);
 
                 for (let i = 0; i < 4; i++) {
                     this.approvedDates[i] = dates
-                        .filter(date => date.getMonth() === ((startMonth + i) % 12))
+                        .filter(date => date.getMonth() === ((new Date().getMonth() + i) % 12))
                         .map(date => date.getDate());
                 }
             }
 
             this.loading = true;
-        },error => this.infoService.showErrorMessage('Die Urlaubsplanung konnte nicht abgerufen werden'));
+        }, error => this.infoService.showErrorMessage('Die Urlaubsplanung konnte nicht abgerufen werden'));
     }
 
     onVacationRequest(dto: RequestVacationDto) {
-        this.vacationService.requestVacation(dto).subscribe(() => {
+        this.vacationService.requestVacation(dto).subscribe((value) => {
+
+            if (value) {
+                this.infoService.showMessage(value.msg);
+            }
+
             this.loading = false;
             this.ngOnInit();
         }, error => this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten'));

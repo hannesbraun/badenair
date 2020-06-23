@@ -22,7 +22,7 @@ export class ServiceScheduleService {
                     end: entry.endTime,
 
                 },
-                employee: entry.employeeUserId
+                employee: entry.employee
             };
         })
 

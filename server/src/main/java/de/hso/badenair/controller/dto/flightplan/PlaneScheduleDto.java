@@ -2,7 +2,6 @@ package de.hso.badenair.controller.dto.flightplan;
 
 import lombok.Value;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Value

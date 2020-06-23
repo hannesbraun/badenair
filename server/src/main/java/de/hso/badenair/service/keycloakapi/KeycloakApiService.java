@@ -5,11 +5,13 @@ import de.hso.badenair.exception.GetRolesException;
 import de.hso.badenair.exception.KeycloakApiAuthenticationException;
 import de.hso.badenair.exception.UserNotFoundException;
 import de.hso.badenair.service.keycloakapi.dto.CredentialRepresentation;
+import de.hso.badenair.service.keycloakapi.dto.KeycloakRole;
 import de.hso.badenair.service.keycloakapi.dto.RoleRepresentation;
 import de.hso.badenair.service.keycloakapi.dto.UserRepresentation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -30,10 +32,13 @@ import java.util.stream.Collectors;
 public class KeycloakApiService {
 
     private static final UserRepresentation[] EMPTY_USER_LIST = {};
+    private static final KeycloakRole[] EMPTY_ROLE_LIST = {};
     private static final String CUSTOMER_ROLE_NAME = "badenair_customer";
     private final KeycloakApiConfig config;
+    private final TaskScheduler taskScheduler;
     private final RestTemplate restTemplate = new RestTemplate();
     private String accessToken;
+    private String refreshToken;
     private Map<EmployeeRole, RoleRepresentation> employeeRoles;
     private RoleRepresentation customerRole;
 
@@ -42,17 +47,45 @@ public class KeycloakApiService {
      */
     @PostConstruct
     private void getToken() {
-        RestTemplate restTemplate = new RestTemplate();
+        final KeycloakAccessToken tokenBody = getKeycloakAccessToken();
+
+        final int refreshDelayInMs = (int) ((tokenBody.getExpires_in() * 0.75) * 1000);
+
+        // Try to get a new access token after 75% of the tokens lifespan has passed
+        taskScheduler.scheduleWithFixedDelay(this::refreshAccessToken, refreshDelayInMs);
+        getRolesForInit();
+    }
+
+    /**
+     * @return Returns the needed attributes of the access token request as an object
+     */
+    private KeycloakAccessToken getKeycloakAccessToken() {
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("client_id", "admin-cli");
+        body.add("username", config.getUsername());
+        body.add("password", config.getPassword());
+        body.add("grant_type", "password");
+
+        return getAccessToken(body);
+    }
+
+    private void refreshAccessToken() {
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("client_id", "admin-cli");
+        body.add("refresh_token", refreshToken);
+        body.add("grant_type", "refresh_token");
+
+        getAccessToken(body);
+    }
+
+    /**
+     * @param body Body of the access token request
+     * @return Returns the needed attributes of the access token request as an object
+     */
+    private KeycloakAccessToken getAccessToken(MultiValueMap<String, String> body) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add("client_id", "admin-cli");
-        map.add("username", config.getUsername());
-        map.add("password", config.getPassword());
-        map.add("grant_type", "password");
-
-        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
+        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(body, headers);
         final String url = "http://" + config.getHost() + "/auth/realms/master/protocol/openid-connect/token";
 
         final ResponseEntity<KeycloakAccessToken> exchange = restTemplate.exchange(url, HttpMethod.POST, entity, KeycloakAccessToken.class);
@@ -60,13 +93,16 @@ public class KeycloakApiService {
             .orElseThrow(KeycloakApiAuthenticationException::new);
 
         accessToken = tokenBody.getAccess_token();
-        getRolesForInit();
+        refreshToken = tokenBody.getRefresh_token();
+
+        return tokenBody;
     }
 
     /**
      * Creates a new employee user account
+     *
      * @param username Name of the user to create (must be unique)
-     * @param role Role the user should have
+     * @param role     Role the user should have
      */
     public void createEmployeeUser(String username, EmployeeRole role) {
         final UserRepresentation user = createUser(username);
@@ -92,6 +128,7 @@ public class KeycloakApiService {
 
     /**
      * Creates a new customer user account
+     *
      * @param username Name of the user to create (must be unique)
      */
     public void createCustomerUser(String username) {
@@ -137,6 +174,22 @@ public class KeycloakApiService {
         return Arrays.asList(body);
     }
 
+
+    /**
+     * @param role Role of the employees
+     * @return Returns all employee user accounts with the specified role
+     */
+    public List<UserRepresentation> getEmployeeUsersWithRole(EmployeeRole role) {
+        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(getAuthHeader());
+
+        final String url = getBaseUrl() + "roles/" + role.getName() + "/users?max=1000";
+        final ResponseEntity<UserRepresentation[]> exchange = restTemplate.exchange(url, HttpMethod.GET, entity, UserRepresentation[].class);
+
+        final UserRepresentation[] body = Optional.ofNullable(exchange.getBody()).orElse(EMPTY_USER_LIST);
+
+        return Arrays.asList(body);
+    }
+
     /**
      * @param username Name of the user to seach for
      * @return Returns an {@link Optional} with a user
@@ -154,6 +207,24 @@ public class KeycloakApiService {
         }
 
         return Optional.empty();
+    }
+
+
+    /**
+     * @param id Id of the user
+     * @return Returns whether the user is a pilot or not
+     */
+    public boolean isPilot(String id) {
+        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(getAuthHeader());
+
+        final String url = getBaseUrl() + "users/" + id + "/role-mappings/realm";
+        final ResponseEntity<KeycloakRole[]> exchange = restTemplate.exchange(url, HttpMethod.GET, entity, KeycloakRole[].class);
+
+        final KeycloakRole[] body = Optional.ofNullable(exchange.getBody()).orElse(EMPTY_ROLE_LIST);
+
+        return Arrays.stream(body)
+            .map(KeycloakRole::getName)
+            .anyMatch(name -> name.equals(EmployeeRole.DASH_PILOT.getName()) || name.equals(EmployeeRole.JET_PILOT.getName()));
     }
 
     /**
@@ -199,8 +270,9 @@ public class KeycloakApiService {
 
     /**
      * Adds the specified rules to the user
+     *
      * @param roleRepresentations Roles the user will be given
-     * @param userId ID of the user
+     * @param userId              ID of the user
      */
     private void addRoleToUser(RoleRepresentation[] roleRepresentations, String userId) {
         HttpEntity<RoleRepresentation[]> entity = new HttpEntity<>(roleRepresentations, getAuthHeader());
@@ -211,8 +283,9 @@ public class KeycloakApiService {
 
     /**
      * Removes the specified roles to the user
+     *
      * @param roleRepresentations Roles the user will be given
-     * @param userId ID of the user
+     * @param userId              ID of the user
      */
     private void removeRoleFromUser(RoleRepresentation[] roleRepresentations, String userId) {
         HttpEntity<RoleRepresentation[]> entity = new HttpEntity<>(roleRepresentations, getAuthHeader());

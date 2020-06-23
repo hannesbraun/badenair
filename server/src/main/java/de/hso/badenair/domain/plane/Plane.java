@@ -46,9 +46,13 @@ public class Plane extends BaseEntity {
 	@Column(name = "STATE")
 	private PlaneState state;
 
-	@Column(name = "TRAVELED_DISTANCE")
-	private Integer traveledDistance;
+	@Column(name = "FLIGHT_HOURS")
+	private Double flightHours;
 
 	@OneToMany(mappedBy = "plane", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Flight> flight;
+
+	public void addFlightHours(double flightHours) {
+		setFlightHours(getFlightHours() + flightHours);
+	}
 }

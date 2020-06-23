@@ -7,7 +7,7 @@ import {InfoService} from '../../services/info/info.service';
 export interface BookedFlight {
     flight: FlightDto;
     travelers: Person[];
-    baggages: Baggage[];
+    luggage: Baggage[];
 }
 
 @Component({

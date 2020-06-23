@@ -22,7 +22,7 @@ body {
   box-shadow: 2px 2px 10px rgba(black, 0.25);
 }
 
-.error-message {
+.error-message, .success-message {
   background-color: red;
   color: white;
   font-weight: bold;
@@ -30,5 +30,9 @@ body {
   .mat-simple-snackbar-action {
     color: white;
   }
+}
+
+.success-message {
+  background-color: limegreen;
 }
 
