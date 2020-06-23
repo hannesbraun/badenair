@@ -171,18 +171,18 @@ public class StaticDataInitializer {
 
 		// Create planes
 		for (int i = 0; i < dash_8_200_count; i++) {
-			planes.add(Plane.builder().typeData(planeTypeDataDash_8_200).state(PlaneState.WAITING).traveledDistance(0)
+			planes.add(Plane.builder().typeData(planeTypeDataDash_8_200).state(PlaneState.WAITING).flightHours(0.0)
 					.build());
 		}
 
 		for (int i = 0; i < dash_8_400_count; i++) {
-			planes.add(Plane.builder().typeData(planeTypeDataDash_8_400).state(PlaneState.WAITING).traveledDistance(0)
+			planes.add(Plane.builder().typeData(planeTypeDataDash_8_400).state(PlaneState.WAITING).flightHours(0.0)
 					.build());
 		}
 
 		for (int i = 0; i < b737_400_count; i++) {
-			planes.add(Plane.builder().typeData(planeTypeDataB737_400).state(PlaneState.WAITING).traveledDistance(0)
-					.build());
+			planes.add(
+					Plane.builder().typeData(planeTypeDataB737_400).state(PlaneState.WAITING).flightHours(0.0).build());
 		}
 
 		planeRepository.saveAll(planes);
