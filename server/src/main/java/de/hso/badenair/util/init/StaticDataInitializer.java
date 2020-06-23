@@ -493,7 +493,6 @@ public class StaticDataInitializer {
 		int groundsPlanned = 0;
 
 		OffsetDateTime date = OffsetDateTime.now().withDayOfMonth(1);
-		OffsetDateTime previousDate = null;
 		OffsetDateTime nextMonth = OffsetDateTime.now();
 		if (nextMonth.getDayOfMonth() < 10) {
 			nextMonth = nextMonth.plusMonths(1);
@@ -509,15 +508,29 @@ public class StaticDataInitializer {
 
 			OffsetDateTime finalDate = date;
 
-			if (previousDate == null || ChronoUnit.DAYS.between(previousDate, date) > 3) {
-				standbyScheduleCache.add(standbySchedule.employeeUserId(pilots.get(pilotsPlanned).getId()).build());
-				pilotsPlanned = (pilotsPlanned + 1) % pilots.size();
+            for (int i = 0; i < 1; i++) {
+                String employeeId = pilots.get(pilotsPlanned).getId();
 
-				standbyScheduleCache.add(standbySchedule.employeeUserId(cabins.get(cabinsPlanned).getId()).build());
-				cabinsPlanned = (cabinsPlanned + 1) % cabins.size();
+                if (vacationRepository.findByEmployeeUserIdOrderByStartTimeAsc(employeeId).stream()
+                    .anyMatch(v -> v.isOverlapping(finalDate, finalDate))) {
+                    continue;
+                }
 
-				previousDate = date;
-			}
+                standbyScheduleCache.add(standbySchedule.employeeUserId(employeeId).build());
+                pilotsPlanned = (pilotsPlanned + 1) % pilots.size();
+            }
+
+            for (int i = 0; i < 1; i++) {
+                String employeeId = cabins.get(cabinsPlanned).getId();
+
+                if (vacationRepository.findByEmployeeUserIdOrderByStartTimeAsc(employeeId).stream()
+                    .anyMatch(v -> v.isOverlapping(finalDate, finalDate))) {
+                    continue;
+                }
+
+                standbyScheduleCache.add(standbySchedule.employeeUserId(employeeId).build());
+                cabinsPlanned = (cabinsPlanned + 1) % cabins.size();
+            }
 
 			for (int i = 0; i < 1; i++) {
 				String employeeId = technicians.get(techniciansPlanned).getId();
