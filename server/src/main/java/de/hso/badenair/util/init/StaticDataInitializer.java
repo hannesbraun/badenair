@@ -400,6 +400,8 @@ public class StaticDataInitializer {
 
 		List<UserRepresentation> employees = keycloakApiService.getEmployeeUsers();
 
+		List<ShiftSchedule> shiftScheduleCache = new ArrayList<>();
+
 		OffsetDateTime date = OffsetDateTime.now().withDayOfMonth(1);
 		OffsetDateTime nextMonth = OffsetDateTime.now();
 		if (nextMonth.getDayOfMonth() < 10) {
@@ -435,11 +437,11 @@ public class StaticDataInitializer {
 				if (date.getDayOfWeek().getValue() <= 5) {
 					if (username.contains("ground")) {
 						if (groundsPlanned < groundCount / 3) {
-							shiftPlanRepository.save(fruehschicht.employeeUserId(employee.getId()).build());
+							shiftScheduleCache.add(fruehschicht.employeeUserId(employee.getId()).build());
 						} else if (groundsPlanned < (2 * groundCount) / 3) {
-							shiftPlanRepository.save(spaetschicht.employeeUserId(employee.getId()).build());
+							shiftScheduleCache.add(spaetschicht.employeeUserId(employee.getId()).build());
 						} else {
-							shiftPlanRepository.save(nachtschicht.employeeUserId(employee.getId()).build());
+							shiftScheduleCache.add(nachtschicht.employeeUserId(employee.getId()).build());
 						}
 
 						groundsPlanned++;
@@ -448,23 +450,25 @@ public class StaticDataInitializer {
 
 				if (username.contains("technician")) {
 					if (techniciansPlanned < technicianCount / 3) {
-						shiftPlanRepository.save(fruehschicht.employeeUserId(employee.getId()).build());
+						shiftScheduleCache.add(fruehschicht.employeeUserId(employee.getId()).build());
 					} else if (techniciansPlanned < (2 * technicianCount) / 3) {
-						shiftPlanRepository.save(spaetschicht.employeeUserId(employee.getId()).build());
+						shiftScheduleCache.add(spaetschicht.employeeUserId(employee.getId()).build());
 					} else {
-						shiftPlanRepository.save(nachtschicht.employeeUserId(employee.getId()).build());
+						shiftScheduleCache.add(nachtschicht.employeeUserId(employee.getId()).build());
 					}
 
 					techniciansPlanned++;
 				} else if (username.contains("flightdirector")) {
-					shiftPlanRepository.save(fruehschicht.employeeUserId(employee.getId()).build());
-					shiftPlanRepository.save(spaetschicht.employeeUserId(employee.getId()).build());
-					shiftPlanRepository.save(nachtschicht.employeeUserId(employee.getId()).build());
+					shiftScheduleCache.add(fruehschicht.employeeUserId(employee.getId()).build());
+					shiftScheduleCache.add(spaetschicht.employeeUserId(employee.getId()).build());
+					shiftScheduleCache.add(nachtschicht.employeeUserId(employee.getId()).build());
 				}
 			}
 
 			date = date.plusDays(1);
 		}
+
+		shiftPlanRepository.saveAll(shiftScheduleCache);
 	}
 
 	/**
@@ -472,14 +476,16 @@ public class StaticDataInitializer {
 	 */
 	private void initStandbyPlan() {
 		List<UserRepresentation> employees = keycloakApiService.getEmployeeUsers();
-        List<UserRepresentation> pilots = employees.stream().filter(e -> e.getUsername().contains("pilot"))
-            .collect(Collectors.toList());
-        List<UserRepresentation> cabins = employees.stream().filter(e -> e.getUsername().contains("cabin"))
-            .collect(Collectors.toList());
+		List<UserRepresentation> pilots = employees.stream().filter(e -> e.getUsername().contains("pilot"))
+				.collect(Collectors.toList());
+		List<UserRepresentation> cabins = employees.stream().filter(e -> e.getUsername().contains("cabin"))
+				.collect(Collectors.toList());
 		List<UserRepresentation> technicians = employees.stream().filter(e -> e.getUsername().contains("technician"))
 				.collect(Collectors.toList());
 		List<UserRepresentation> grounds = employees.stream().filter(e -> e.getUsername().contains("ground"))
 				.collect(Collectors.toList());
+
+		List<StandbySchedule> standbyScheduleCache = new ArrayList<>();
 
 		int pilotsPlanned = 0;
 		int cabinsPlanned = 0;
@@ -504,14 +510,14 @@ public class StaticDataInitializer {
 			OffsetDateTime finalDate = date;
 
 			if (previousDate == null || ChronoUnit.DAYS.between(previousDate, date) > 3) {
-                standbyScheduleRepository.save(standbySchedule.employeeUserId(pilots.get(pilotsPlanned).getId()).build());
-                pilotsPlanned = (pilotsPlanned + 1) % pilots.size();
+				standbyScheduleCache.add(standbySchedule.employeeUserId(pilots.get(pilotsPlanned).getId()).build());
+				pilotsPlanned = (pilotsPlanned + 1) % pilots.size();
 
-                standbyScheduleRepository.save(standbySchedule.employeeUserId(cabins.get(cabinsPlanned).getId()).build());
-                cabinsPlanned = (cabinsPlanned + 1) % cabins.size();
+				standbyScheduleCache.add(standbySchedule.employeeUserId(cabins.get(cabinsPlanned).getId()).build());
+				cabinsPlanned = (cabinsPlanned + 1) % cabins.size();
 
-                previousDate = date;
-            }
+				previousDate = date;
+			}
 
 			for (int i = 0; i < 1; i++) {
 				String employeeId = technicians.get(techniciansPlanned).getId();
@@ -521,7 +527,7 @@ public class StaticDataInitializer {
 					continue;
 				}
 
-				standbyScheduleRepository.save(standbySchedule.employeeUserId(employeeId).build());
+				standbyScheduleCache.add(standbySchedule.employeeUserId(employeeId).build());
 				techniciansPlanned = (techniciansPlanned + 1) % technicians.size();
 			}
 
@@ -533,12 +539,14 @@ public class StaticDataInitializer {
 					continue;
 				}
 
-				standbyScheduleRepository.save(standbySchedule.employeeUserId(employeeId).build());
+				standbyScheduleCache.add(standbySchedule.employeeUserId(employeeId).build());
 				groundsPlanned = (groundsPlanned + 1) % grounds.size();
 			}
 
 			date = date.plusDays(1);
 		}
+
+		standbyScheduleRepository.saveAll(standbyScheduleCache);
 	}
 
 	/**
@@ -627,7 +635,7 @@ public class StaticDataInitializer {
 				Flight returnFlight = currentReturnFlights.get(i);
 
 				if (flight.getStartDate().isAfter(nextMonth)) {
-				    continue;
+					continue;
                 }
 
                 flight.setStartDate(flight.getStartDate().toLocalDate().atTime(flightStartTime));
@@ -640,11 +648,14 @@ public class StaticDataInitializer {
 		flightGroups.sort(Comparator.comparing(g -> g.getFlight().getStartDate()));
 
 		final Map<String, Integer> maxCrewAssignments = new HashMap<>() {
-            {
-                put("dash", 0);
-                put("jet", 0);
-            }
-        };
+			{
+				put("dash", 0);
+				put("jet", 0);
+			}
+		};
+
+		List<ShiftSchedule> shiftScheduleCache = new ArrayList<>();
+		List<FlightCrewMember> flightCrewMemberCache = new ArrayList<>();
 
 		for (FlightGroup flightGroup : flightGroups) {
 			Flight flight = flightGroup.getFlight();
@@ -653,16 +664,16 @@ public class StaticDataInitializer {
 			OffsetDateTime flightStartDateTime = flight.getStartDate();
 			OffsetDateTime returnFlightLandingDateTime = returnFlight.getStartDate();
 
-            String planeName = flight.getPlane().getTypeData().getType().getName().contains("Dash") ? "dash" : "jet";
+			String planeName = flight.getPlane().getTypeData().getType().getName().contains("Dash") ? "dash" : "jet";
 
 			Stream<CrewData> crewsStream = crews.get(planeName).stream();
 
-            // 8 hours per day and 20% overtime
+			// 8 hours per day and 20% overtime
 			final double allowedHoursPerDay = 8.0 * 1.2;
 
 			List<CrewData> possibleCrews = crewsStream
 					.filter(c -> (c.busyUntil == null || c.busyUntil.isBefore(flightStartDateTime))
-                            && c.getHoursAtDay(
+							&& c.getHoursAtDay(
 									flightStartDateTime) < allowedHoursPerDay
 											- (Duration
 													.between(flightStartDateTime.minusMinutes(30l),
@@ -678,7 +689,7 @@ public class StaticDataInitializer {
 
 			if (foundCrewOpt.isEmpty()) {
 			    foundCrewOpt = possibleCrews.stream().filter(c -> c.assignments <= finalMaxCrewAssignments).findFirst();
-            }
+			}
 
 			if (foundCrewOpt.isPresent()) {
 				CrewData foundCrew = foundCrewOpt.get();
@@ -689,13 +700,13 @@ public class StaticDataInitializer {
 				}
 
 				for (String employeeId : foundCrew.getEmployees()) {
-					shiftPlanRepository.save(ShiftSchedule.builder().startTime(flightStartDateTime.minusMinutes(30l))
+					shiftScheduleCache.add(ShiftSchedule.builder().startTime(flightStartDateTime.minusMinutes(30l))
 							.endTime(returnFlightLandingDateTime.plusMinutes(30l)).employeeUserId(employeeId).build());
 
-					flightCrewMemberRepository
-							.save(FlightCrewMember.builder().flight(flight).employeeUserId(employeeId).build());
-					flightCrewMemberRepository
-							.save(FlightCrewMember.builder().flight(returnFlight).employeeUserId(employeeId).build());
+					flightCrewMemberCache
+							.add(FlightCrewMember.builder().flight(flight).employeeUserId(employeeId).build());
+					flightCrewMemberCache
+							.add(FlightCrewMember.builder().flight(returnFlight).employeeUserId(employeeId).build());
 				}
 
 				foundCrew.setBusyUntil(returnFlightLandingDateTime.plusHours(1l));
@@ -716,6 +727,9 @@ public class StaticDataInitializer {
 				System.err.println("Warning: no flight crew available for flight " + flight.getId());
 			}
 		}
+
+		flightCrewMemberRepository.saveAll(flightCrewMemberCache);
+		shiftPlanRepository.saveAll(shiftScheduleCache);
 	}
 
 	/**
