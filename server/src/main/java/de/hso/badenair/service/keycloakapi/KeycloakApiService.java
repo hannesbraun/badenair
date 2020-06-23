@@ -209,6 +209,19 @@ public class KeycloakApiService {
         return Optional.empty();
     }
 
+    /**
+     * @param id Id of the user
+     * @return Returns an {@link Optional} with a user
+     */
+    public Optional<UserRepresentation> getUserById(String id) {
+        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(getAuthHeader());
+
+        final String url = getBaseUrl() + "users/" + id;
+        final ResponseEntity<UserRepresentation> exchange = restTemplate.exchange(url, HttpMethod.GET, entity, UserRepresentation.class);
+
+        return Optional.ofNullable(exchange.getBody());
+    }
+
 
     /**
      * @param id Id of the user
