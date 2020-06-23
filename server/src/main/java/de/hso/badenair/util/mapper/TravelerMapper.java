@@ -1,7 +1,6 @@
 package de.hso.badenair.util.mapper;
 
 import de.hso.badenair.controller.dto.traveler.CheckInTravelerDto;
-import de.hso.badenair.controller.dto.traveler.IncomingTravelerDto;
 import de.hso.badenair.domain.booking.Luggage;
 import de.hso.badenair.domain.booking.Traveler;
 

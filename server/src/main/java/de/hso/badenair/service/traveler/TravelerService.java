@@ -3,9 +3,7 @@ package de.hso.badenair.service.traveler;
 
 import de.hso.badenair.controller.dto.checkin.CheckInInfoDto;
 import de.hso.badenair.controller.dto.traveler.CheckInTravelerDto;
-import de.hso.badenair.controller.dto.traveler.IncomingTravelerDto;
 import de.hso.badenair.domain.booking.Booking;
-import de.hso.badenair.domain.booking.Luggage;
 import de.hso.badenair.domain.booking.Traveler;
 import de.hso.badenair.service.booking.repository.BookingRepository;
 import de.hso.badenair.util.mapper.FlightMapper;

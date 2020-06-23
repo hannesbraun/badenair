@@ -7,14 +7,12 @@ import org.springframework.stereotype.Service;
 import de.hso.badenair.domain.booking.Luggage;
 import de.hso.badenair.domain.booking.LuggageState;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Updates the luggage state.
  */
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class LuggageService {
 
 	private final LuggageRepository luggageRepository;
