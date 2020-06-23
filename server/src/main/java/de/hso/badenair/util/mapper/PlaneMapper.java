@@ -5,7 +5,7 @@ import de.hso.badenair.domain.plane.Plane;
 
 public abstract class PlaneMapper {
 
-    public static PlaneMaintenanceDto mapToDto(Plane plane) {
-        return new PlaneMaintenanceDto(plane.getId(), plane.getState(), plane.getTraveledDistance());
-    }
+	public static PlaneMaintenanceDto mapToDto(Plane plane) {
+		return new PlaneMaintenanceDto(plane.getId(), plane.getState(), plane.getFlightHours().intValue());
+	}
 }
