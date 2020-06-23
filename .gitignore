@@ -148,3 +148,6 @@ modules.xml
 .vagrant/
 
 *.log
+
+# BadenAir statistics
+statistics*.txt

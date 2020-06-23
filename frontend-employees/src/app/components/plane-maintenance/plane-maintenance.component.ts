@@ -28,7 +28,7 @@ export class PlaneMaintenanceComponent implements OnInit {
     }
 
     getIndicatorLength(distance: number) {
-        return {transform: `scaleX(${distance / 1000 % 1})`};
+        return {transform: `scaleX(${distance / 2000 % 1})`};
     }
 
     onRepairButtonPressed(currentPlane: PlaneMaintenance) {

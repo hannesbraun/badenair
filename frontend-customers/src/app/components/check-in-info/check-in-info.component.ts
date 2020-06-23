@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {TravelerDto} from '../../services/dtos/Dtos';
+import {CheckInTraverDto} from '../../services/dtos/Dtos';
 
 @Component({
     selector: 'app-check-in-info',
@@ -8,18 +8,28 @@ import {TravelerDto} from '../../services/dtos/Dtos';
 })
 export class CheckInInfoComponent {
 
-    @Input() passenger !: TravelerDto;
+    @Input() passenger !: CheckInTraverDto;
     @Output() download = new EventEmitter<void>();
-    @Input() isCheckInComplete !: boolean;
+    @Output() onCheckIn = new EventEmitter<CheckInTraverDto>();
 
-    constructor() {
-    }
-
-    get isPassengerSelected(): boolean {
-        return this.passenger.checkedIn;
+    checkIn() {
+        this.passenger.checkedIn = true;
+        this.onCheckIn.emit(this.passenger);
     }
 
     onDownload() {
         this.download.emit();
+    }
+
+    getBaggageState(state: string): string {
+        switch (state) {
+            case 'AT_TRAVELLER': return 'Beim Reisenden';
+            case 'ON_BAGGAGE_CAROUSEL': return 'Auf dem Gepäckband';
+            case 'IN_LUGGAGE_HALL': return 'In der Gepäckhalle';
+            case 'ON_LUGGAGE_CART': return 'Auf dem Gepäckwagen';
+            case 'ON_PLANE': return 'Im Flugzeug';
+            case 'READY_FOR_PICK_UP': return 'Bereit zum Abholen';
+        }
+        return '';
     }
 }

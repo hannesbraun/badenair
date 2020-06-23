@@ -7,9 +7,9 @@
         </div>
         <div class="progress">
             <div class="progress-indicator"
-                 [ngStyle]="getIndicatorLength(plane.traveledDistance)"></div>
+                 [ngStyle]="getIndicatorLength(plane.flightHours)"></div>
         </div>
-        <button [disabled]="plane.state !== 'IN_MAINTENANCE'" (click)="onRepairButtonPressed(plane)" mat-raised-button>Reparieren</button>
-        <div>Zurückgelegte Strecke: {{ plane.traveledDistance }} km</div>
+        <button [disabled]="plane.state !== 'IN_MAINTENANCE'" (click)="onRepairButtonPressed(plane)" mat-raised-button>Wartung beenden</button>
+        <div>Flugstunden: {{ plane.flightHours }} Stunden</div>
     </mat-card>
 </div>

@@ -17,4 +17,9 @@ export class InfoService {
         this.snackBar.open(message, 'Schließen', {
             panelClass: ['error-message'], verticalPosition: 'top'});
     }
+
+    showSuccessMessage(message: string) {
+        this.snackBar.open(message, 'Schließen', {
+            panelClass: ['success-message'], verticalPosition: 'top'});
+    }
 }

@@ -50,4 +50,16 @@ export class FlightComponent {
     getDuration() {
         return formatDuration(this.flight.arrivalTime.getTime() - this.flight.startTime.getTime());
     }
+
+    getBaggageState(state: string): string {
+        switch (state) {
+            case 'AT_TRAVELLER': return 'Beim Reisenden';
+            case 'ON_BAGGAGE_CAROUSEL': return 'Auf dem Gepäckband';
+            case 'IN_LUGGAGE_HALL': return 'In der Gepäckhalle';
+            case 'ON_LUGGAGE_CART': return 'Auf dem Gepäckwagen';
+            case 'ON_PLANE': return 'Im Flugzeug';
+            case 'READY_FOR_PICK_UP': return 'Bereit zum Abholen';
+        }
+        return '';
+    }
 }

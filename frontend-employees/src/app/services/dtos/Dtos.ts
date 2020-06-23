@@ -4,6 +4,8 @@ export interface FlightDto {
     destination: string;
     delay: number;
     startTime: Date;
+    startTimezone: string;
+    detinationTimezone: string;
     arrivalTime: Date;
     realStartTime: Date;
     realLandingTime: Date;
@@ -97,7 +99,7 @@ export interface RequestVacationDto {
 export interface PlaneMaintenance {
     id: number;
     state: string;
-    traveledDistance: number;
+    flightHours: number;
 }
 
 export interface WorkingHoursDto {
@@ -107,6 +109,10 @@ export interface WorkingHoursDto {
 
 export interface TrackingDto{
     action: "Start"| "Landung" | "Verspätung" | "Bereit";
-    delay?: number;
+    delay: number;
     date ?: Date;
+}
+
+export interface VacationRequestDeniedDto {
+    msg: string;
 }

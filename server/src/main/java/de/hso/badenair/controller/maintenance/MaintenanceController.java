@@ -1,7 +1,6 @@
 package de.hso.badenair.controller.maintenance;
 
 import de.hso.badenair.controller.dto.maintenance.PlaneMaintenanceDto;
-import de.hso.badenair.domain.plane.Plane;
 import de.hso.badenair.util.mapper.PlaneMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,8 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import de.hso.badenair.service.maintenance.MaintenanceService;
 
-import javax.validation.Valid;
-import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 

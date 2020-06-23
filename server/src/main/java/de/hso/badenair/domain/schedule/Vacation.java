@@ -2,6 +2,7 @@ package de.hso.badenair.domain.schedule;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -54,4 +55,20 @@ public class Vacation extends BaseEntity {
 		}
 		return endTime.withOffsetSameInstant(ZoneOffset.of("+1"));
 	}
+
+    public boolean isOverlapping(OffsetDateTime startDate, OffsetDateTime endDate) {
+        if (isOnSameDay(startTime, startDate, endDate) || isOnSameDay(endTime, startDate, endDate)) {
+            return true;
+        }
+
+        return isWithinDateRange(startTime, startDate, endDate) || isWithinDateRange(endTime, startDate, endDate);
+    }
+
+    private boolean isWithinDateRange(OffsetDateTime date, OffsetDateTime startDate, OffsetDateTime endDate) {
+        return date.isAfter(startDate) && date.isBefore(endDate);
+    }
+
+    private boolean isOnSameDay(OffsetDateTime date, OffsetDateTime startDate, OffsetDateTime endDate) {
+        return ChronoUnit.DAYS.between(date, startDate) == 0 || ChronoUnit.DAYS.between(date, endDate) == 0;
+    }
 }

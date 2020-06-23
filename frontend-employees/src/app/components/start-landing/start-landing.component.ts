@@ -22,7 +22,7 @@ export class StartLandingComponent implements OnInit {
 
     ngOnInit() {
         this.flightService.getCurrentFlightforPilot().subscribe(res => { this.flight = res },
-            err => { this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten.') },
+            err => { this.infoService.showErrorMessage('Ihnen ist kein weiterer Flug zugeordnet.') },
             () => {
                 this.flightService.getCurrentTrackingAction(this.flight.id).subscribe(res => {
                     if (res.action === "Start") {
@@ -33,6 +33,7 @@ export class StartLandingComponent implements OnInit {
                         this.isStarted = false
                         this.flight.arrivalTime = res.date as Date;
                     }
+                    this.delayTime = res.delay;
                 },
                     err => { this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten.') },
                     () => {
@@ -46,7 +47,7 @@ export class StartLandingComponent implements OnInit {
         this.flightService.updateFlightTracking(flight.id, { action: "Start", delay: 0 } as TrackingDto)
             .subscribe(
                 (res) => flight.startTime = res as Date,
-                error => this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten')
+                error => this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten.')
             );
     }
 
@@ -55,13 +56,17 @@ export class StartLandingComponent implements OnInit {
         this.flightService.updateFlightTracking(flight.id, { action: "Landung", delay: 0 } as TrackingDto)
             .subscribe(
                 res => flight.arrivalTime = res as Date,
-                error => this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten')
+                error => this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten.')
             );
     }
 
     delay(flight: FlightDto) {
         this.flightService.updateFlightTracking(flight.id, { action: "Verspätung", delay: this.delayTime } as TrackingDto).subscribe();
         this.delayTransmitted = true;
+    }
+
+    setMaintenance(flightId: number) {
+    this.flightService.setMaintenance(flightId).subscribe(() => {/* This is fine*/}, error => this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten.'));
     }
 
     /* get name() {

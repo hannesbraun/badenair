@@ -3,7 +3,9 @@ package de.hso.badenair.controller.flight;
 import java.security.Principal;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import org.springframework.http.HttpStatus;
@@ -32,6 +34,8 @@ public class FlightController {
 		OffsetDateTime updateSuccess = flightService.updateFlightTracking(id, dto);
 
 		if (updateSuccess != null) {
+			updateSuccess = updateSuccess
+					.withOffsetSameLocal(ZoneOffset.of(TimeZone.getDefault().inDaylightTime(new Date()) ? "+2" : "+1"));
 			return ResponseEntity.ok(updateSuccess);
 		} else {
 			return new ResponseEntity<OffsetDateTime>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -43,11 +47,25 @@ public class FlightController {
 		TrackingDto resultDto = flightService.getFlightAction(id);
 
 		if (resultDto != null) {
+			resultDto = new TrackingDto(resultDto.getAction(), resultDto.getDelay(),
+					resultDto.getDate().withOffsetSameLocal(
+							ZoneOffset.of(TimeZone.getDefault().inDaylightTime(new Date()) ? "+2" : "+1")));
 			return ResponseEntity.ok(resultDto);
 		} else {
 			return new ResponseEntity<TrackingDto>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
+	}
+
+	@PatchMapping("/maintenance/{flightId}")
+	public ResponseEntity<Object> setMaintenance(@PathVariable Long flightId) {
+		boolean success = flightService.setMaintenance(flightId);
+
+		if (success) {
+			return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
+		} else {
+			return new ResponseEntity<Object>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@GetMapping("/pilot")
@@ -71,5 +89,23 @@ public class FlightController {
 			return new ResponseEntity<FlightDto>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
+	}
+
+	@GetMapping("/crewplan")
+	public ResponseEntity<List<FlightDto>> getNextFlights(Principal user) {
+		List<FlightDto> nextFlights = flightService.getNextFlights(user.getName());
+
+		// Fix timezone for corrct displaying in the frontend
+		List<FlightDto> nextFlightsFixed = new ArrayList<>();
+		for (FlightDto flight : nextFlights) {
+			nextFlightsFixed.add(new FlightDto(flight.getId(), flight.getStart(), flight.getDestination(),
+					flight.getStartTime().withOffsetSameLocal(
+							ZoneOffset.of(TimeZone.getDefault().inDaylightTime(new Date()) ? "+2" : "+1")),
+					flight.getArrivalTime().withOffsetSameLocal(
+							ZoneOffset.of(TimeZone.getDefault().inDaylightTime(new Date()) ? "+2" : "+1")),
+					flight.getStartTimezone(), flight.getDestinationTimezone(), flight.getPrice()));
+		}
+
+		return ResponseEntity.ok(nextFlightsFixed);
 	}
 }

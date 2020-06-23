@@ -1,5 +1,6 @@
 package de.hso.badenair.controller.dto.traveler;
 
+import de.hso.badenair.controller.dto.luggage.LuggageDto;
 import lombok.Value;
 
 @Value
@@ -8,10 +9,7 @@ public class CheckInTravelerDto {
     String name;
     String surname;
     boolean checkedIn;
-    int baggage1;
-    int baggage2;
-    int baggage3;
-    int baggage4;
+    LuggageDto[] baggage;
     int seatRow;
     int seatColumn;
 }

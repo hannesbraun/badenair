@@ -1,24 +1,20 @@
 <mat-card appHoverClass hoverClass="mat-elevation-z8">
     <mat-card-header>
         <mat-card-title>
-            <mat-checkbox
-                *ngIf="!isCheckInComplete; else normal"
-                [(ngModel)]="passenger.checkedIn">{{passenger.name}} {{passenger.surname}}</mat-checkbox>
-            <ng-template #normal>{{passenger.name}} {{passenger.surname}}</ng-template>
+            {{passenger.name}} {{passenger.surname}}
         </mat-card-title>
     </mat-card-header>
     <mat-card-content>
         <div>
-            <p *ngIf="passenger.baggage1 !== 0">1x Gepäckstück ({{passenger.baggage1}}kg)</p>
-            <p *ngIf="passenger.baggage2 !== 0">1x Gepäckstück ({{passenger.baggage2}}kg)</p>
-            <p *ngIf="passenger.baggage3 !== 0">1x Gepäckstück ({{passenger.baggage3}}kg)</p>
-            <p *ngIf="passenger.baggage4 !== 0">1x Gepäckstück ({{passenger.baggage4}}kg)</p>
+            <p *ngFor="let baggage of passenger.baggage; index as i">
+                {{i + 1}}. Gepäckstück ({{baggage.weight}}kg), Status: {{getBaggageState(baggage.state)}}
+            </p>
         </div>
-        <div *ngIf="isCheckInComplete && passenger.checkedIn">
+        <div *ngIf="passenger.checkedIn">
             <button mat-raised-button color="primary" (click)="onDownload()">Download PDF</button>
         </div>
-        <div *ngIf="isCheckInComplete && !passenger.checkedIn">
-            <p>Passagier nicht eingecheckt</p>
+        <div *ngIf="!passenger.checkedIn">
+            <button mat-raised-button color="primary" (click)="checkIn()">Check-In</button>
         </div>
     </mat-card-content>
 </mat-card>
