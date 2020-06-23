@@ -22,10 +22,10 @@
             </div>
         </ng-container>
     </mat-card-content>
-    <mat-card-footer *ngIf="persons">
+    <mat-card-footer >
         <div class="baggage-list">
             <div class="baggage" *ngFor="let baggage of baggages">
-                <b>Gepäckstück {{ baggage.id }}: </b>{{ baggage.state }}
+                <b>Gepäckstück {{ baggage.id }}: </b>{{ getBaggageState(baggage.state) }}
             </div>
         </div>
     </mat-card-footer>
