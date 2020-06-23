@@ -99,7 +99,9 @@ public class VacationService {
             return userIds.stream()
                 .map(vacationRepository::findByEmployeeUserIdOrderByStartTimeAsc)
                 .flatMap(Collection::stream)
-                .noneMatch(vacation -> isOverlapping(vacation, startDate.minusHours(1), endDate.plusHours(1)));
+                .noneMatch(vacation -> startDate.isAfter(vacation.getStartTime()) && startDate.isBefore(vacation.getEndTime()) ||
+                        endDate.isAfter(vacation.getStartTime()) && endDate.isBefore(vacation.getEndTime()) ||
+                    isOnSameDay(vacation.getStartTime(), startDate, endDate) || isOnSameDay(vacation.getEndTime(), startDate, endDate));
         }
 
         return true;
@@ -125,7 +127,8 @@ public class VacationService {
             return true;
         }
 
-        return isWithinDateRange(vacation.getStartTime(), startDate, endDate) || isWithinDateRange(vacation.getEndTime(), startDate, endDate);
+        return isWithinDateRange(vacation.getStartTime().truncatedTo(ChronoUnit.DAYS), startDate, endDate) ||
+            isWithinDateRange(vacation.getEndTime().truncatedTo(ChronoUnit.DAYS), startDate, endDate);
     }
 
     private boolean isWithinDateRange(OffsetDateTime date, OffsetDateTime startDate, OffsetDateTime endDate) {
@@ -133,7 +136,8 @@ public class VacationService {
     }
 
     private boolean isOnSameDay(OffsetDateTime date, OffsetDateTime startDate, OffsetDateTime endDate) {
-        return ChronoUnit.DAYS.between(date, startDate) == 0 || ChronoUnit.DAYS.between(date, endDate) == 0;
+        return date.truncatedTo(ChronoUnit.DAYS).equals(startDate.truncatedTo(ChronoUnit.DAYS)) ||
+            date.truncatedTo(ChronoUnit.DAYS).equals(endDate.truncatedTo(ChronoUnit.DAYS));
     }
 
     private int getDifferenceInDays(OffsetDateTime startDate, OffsetDateTime endDate) {
