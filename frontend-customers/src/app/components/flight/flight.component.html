@@ -15,8 +15,11 @@
                 <h3>Personen:</h3>
                 <div *ngFor="let person of persons">{{ person.name }}</div>
             </div>
-            <button mat-button mat-raised-button class="mat-primary" [routerLink]="['/checkin', flight.id]">Check-In
-            </button>
+            <div>
+                <p class="large">Preis: {{price | currency:'EUR'}}</p>
+                <button mat-button mat-raised-button class="mat-primary" [routerLink]="['/checkin', flight.id]">Check-In
+                </button>
+            </div>
         </ng-container>
     </mat-card-content>
     <mat-card-footer *ngIf="persons">
