@@ -22,7 +22,7 @@ export class UpdateBaggageComponent {
     onSubmit() {
         if (this.updateBaggageForm.valid) {
             const dto: ChangeBaggageStateDto = {
-                baggageId: this.updateBaggageForm.get('baggageId')?.value,
+                id: this.updateBaggageForm.get('baggageId')?.value,
                 state: this.updateBaggageForm.get('stateSelect')?.value
             };
             this.updateBaggageState.emit(dto);
