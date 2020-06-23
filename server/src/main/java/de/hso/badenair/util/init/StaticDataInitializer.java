@@ -7,7 +7,6 @@ import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoField;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -508,29 +507,29 @@ public class StaticDataInitializer {
 
 			OffsetDateTime finalDate = date;
 
-            for (int i = 0; i < 1; i++) {
-                String employeeId = pilots.get(pilotsPlanned).getId();
+			for (int i = 0; i < 1; i++) {
+				String employeeId = pilots.get(pilotsPlanned).getId();
 
-                if (vacationRepository.findByEmployeeUserIdOrderByStartTimeAsc(employeeId).stream()
-                    .anyMatch(v -> v.isOverlapping(finalDate, finalDate))) {
-                    continue;
-                }
+				if (vacationRepository.findByEmployeeUserIdOrderByStartTimeAsc(employeeId).stream()
+						.anyMatch(v -> v.isOverlapping(finalDate, finalDate))) {
+					continue;
+				}
 
-                standbyScheduleCache.add(standbySchedule.employeeUserId(employeeId).build());
-                pilotsPlanned = (pilotsPlanned + 1) % pilots.size();
-            }
+				standbyScheduleCache.add(standbySchedule.employeeUserId(employeeId).build());
+				pilotsPlanned = (pilotsPlanned + 1) % pilots.size();
+			}
 
-            for (int i = 0; i < 1; i++) {
-                String employeeId = cabins.get(cabinsPlanned).getId();
+			for (int i = 0; i < 1; i++) {
+				String employeeId = cabins.get(cabinsPlanned).getId();
 
-                if (vacationRepository.findByEmployeeUserIdOrderByStartTimeAsc(employeeId).stream()
-                    .anyMatch(v -> v.isOverlapping(finalDate, finalDate))) {
-                    continue;
-                }
+				if (vacationRepository.findByEmployeeUserIdOrderByStartTimeAsc(employeeId).stream()
+						.anyMatch(v -> v.isOverlapping(finalDate, finalDate))) {
+					continue;
+				}
 
-                standbyScheduleCache.add(standbySchedule.employeeUserId(employeeId).build());
-                cabinsPlanned = (cabinsPlanned + 1) % cabins.size();
-            }
+				standbyScheduleCache.add(standbySchedule.employeeUserId(employeeId).build());
+				cabinsPlanned = (cabinsPlanned + 1) % cabins.size();
+			}
 
 			for (int i = 0; i < 1; i++) {
 				String employeeId = technicians.get(techniciansPlanned).getId();
