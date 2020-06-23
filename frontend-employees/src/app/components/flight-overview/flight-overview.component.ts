@@ -143,6 +143,7 @@ export class FlightOverviewComponent implements OnInit {
                 else if (value.selectedOption == ScheduleConfigSolution.DO_NOTHING){
                     this.conflictService.ignoreDelay(flight.id).subscribe();
                 }
+                this.updateFlightPlan();
             }
         });
     }

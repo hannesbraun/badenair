@@ -39,15 +39,14 @@ public class FlightPlanService {
 		now = now.truncatedTo(ChronoUnit.DAYS);
 		now = now.plusHours(6);
 		OffsetDateTime oneDayLater = now.plusHours(21);
-		AtomicBoolean hasConflict = new AtomicBoolean(false);
 
 		List<Plane> planes = (List<Plane>) planeRepository.findAll();
 		ArrayList<PlaneScheduleDto> planeSchedules = new ArrayList<>(0);
 
 		OffsetDateTime finalNow = now;
-		planes.forEach(plane -> {
-			hasConflict.set(false);
 
+		//create Dtos for each plane
+		planes.forEach(plane -> {
 			final List<FlightWithoutPriceDto> flights = flightplanRepository
 					.findByStartDateBetweenAndPlane_IdEquals(finalNow.withHour(0).withMinute(0).withSecond(0),
 							oneDayLater.withHour(23).withMinute(59).withSecond(59), plane.getId())
@@ -59,11 +58,6 @@ public class FlightPlanService {
 
 					.map(flight -> {
 						final ScheduledFlight scheduledFlight = flight.getScheduledFlight();
-
-						for (int i = 0; i < conflicts.size(); i++) {
-							if (flight.getId() == conflicts.get(i).getFlightID())
-								hasConflict.set(true);
-						}
 
 						// Adjusting timezones in these dtos again because the frontend wants another
 						// timezone :(
@@ -82,32 +76,35 @@ public class FlightPlanService {
 								flight.getActualStartTime(), flight.getActualLandingTime());
 					}).collect(Collectors.toList());
 
+			//create the Dto for the next plane
 			planeSchedules.add(new PlaneScheduleDto(plane.getId(), plane.getTypeData().getType().getName(),
-					plane.getState().getName(), hasConflict.get(), flights));
+					plane.getState().getName(), false, flights));
 		});
 
+		//update conflict list
 		conflicts.clear();
 		ConflictFinder.findConflicts(planeSchedules, conflicts);
 
+        //remove blacklisted conflicts from conflict list
+        for (int i = 0; i < conflicts.size(); i++){
+            for (int j = 0; j < conflictBlackList.size(); j++){
+                if (conflicts.get(i).getFlightID() == conflictBlackList.get(j)){
+                    conflicts.remove(i);
+                    break;
+                }
+            }
+        }
+
+		//update has conflict boolean in transmitted flightplan. needs to be done again, cause ConflictFinder needs the Dto representation
 		planeSchedules.forEach(planeScheduleDto -> {
 		    planeScheduleDto.getFlights().forEach( flightWithoutPriceDto -> {
 		        conflicts.forEach( conflictDto -> {
 		            if (conflictDto.getFlightID() == flightWithoutPriceDto.getId())
                         planeScheduleDto.setHasConflict(true);
                     }
-
                 );
             });
         });
-
-		for (int i = 0; i < conflicts.size(); i++){
-		    for (int j = 0; j < conflictBlackList.size(); j++){
-		        if (conflicts.get(i).getFlightID() == conflictBlackList.get(j)){
-                    conflicts.remove(i);
-                    break;
-                }
-            }
-        }
 
 		return planeSchedules;
 	}
@@ -119,15 +116,16 @@ public class FlightPlanService {
 	public void resolvePlaneConflict(long flightID, long reservePlaneID){
         Flight flight = flightRepository.findById(flightID).get();
 
-        OffsetDateTime now = OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.of("+1"));
-        now = now.truncatedTo(ChronoUnit.DAYS);
-        now = now.plusHours(6);
-        OffsetDateTime oneDayLater = now.plusHours(21);
+        //need the whole list of flights for that plane and day to create the FlightGroup
+        OffsetDateTime startOfDay = OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.of("+1"));
+        startOfDay = startOfDay.truncatedTo(ChronoUnit.DAYS);
+        startOfDay = startOfDay.plusHours(6);
+        OffsetDateTime oneDayLater = startOfDay.plusHours(21);
 
-        OffsetDateTime finalNow = now;
+        OffsetDateTime finalNow = startOfDay;
         final ArrayList<Flight> flights = new ArrayList<>();
         flights.addAll(flightplanRepository
-            .findByStartDateBetweenAndPlane_IdEquals(now.withHour(0).withMinute(0).withSecond(0),
+            .findByStartDateBetweenAndPlane_IdEquals(startOfDay.withHour(0).withMinute(0).withSecond(0),
                 oneDayLater.withHour(23).withMinute(59).withSecond(59), flight.getPlane().getId())
             .stream().filter(f -> {
                 OffsetDateTime fusionedStartDate = DateFusioner.fusionStartDate(f.getStartDate(),
@@ -145,22 +143,27 @@ public class FlightPlanService {
         outgoingFlight.setDelay(0);
         incomingFlight.setDelay(0);
 
-        flightRepository.save(outgoingFlight);
-        flightRepository.save(incomingFlight);
+        OffsetDateTime now = OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.of("+1"));
+
+        if (outgoingFlight.getActualStartTime() == null || now.isBefore(outgoingFlight.getActualStartTime()))
+            flightRepository.save(outgoingFlight);
+        if (incomingFlight.getActualStartTime() == null || now.isBefore(incomingFlight.getActualStartTime()))
+            flightRepository.save(incomingFlight);
     }
 
     public void cancelFlight(long flightID){
         Flight flight = flightRepository.findById(flightID).get();
 
-        OffsetDateTime now = OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.of("+1"));
-        now = now.truncatedTo(ChronoUnit.DAYS);
-        now = now.plusHours(6);
-        OffsetDateTime oneDayLater = now.plusHours(21);
+        //need the whole list of flights for that plane and day to create the FlightGroup
+        OffsetDateTime startOfDay = OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.of("+1"));
+        startOfDay = startOfDay.truncatedTo(ChronoUnit.DAYS);
+        startOfDay = startOfDay.plusHours(6);
+        OffsetDateTime oneDayLater = startOfDay.plusHours(21);
 
-        OffsetDateTime finalNow = now;
+        OffsetDateTime finalNow = startOfDay;
         final ArrayList<Flight> flights = new ArrayList<>();
         flights.addAll(flightplanRepository
-            .findByStartDateBetweenAndPlane_IdEquals(now.withHour(0).withMinute(0).withSecond(0),
+            .findByStartDateBetweenAndPlane_IdEquals(startOfDay.withHour(0).withMinute(0).withSecond(0),
                 oneDayLater.withHour(23).withMinute(59).withSecond(59), flight.getPlane().getId())
             .stream().filter(f -> {
                 OffsetDateTime fusionedStartDate = DateFusioner.fusionStartDate(f.getStartDate(),
@@ -170,12 +173,16 @@ public class FlightPlanService {
 
         FlightGroup flightGroup = FlightGroup.getFlightGroupForFlight(flight, flights);
 
-        flightRepository.deleteById(flightGroup.getOutgoingFlight().getId());
-        flightRepository.deleteById(flightGroup.getIncomingFlight().getId()); 
+        OffsetDateTime now = OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.of("+1"));
+
+        if (flightGroup.getOutgoingFlight().getRealStartTime() == null || now.isBefore(flightGroup.getOutgoingFlight().getRealStartTime()))
+            flightRepository.deleteById(flightGroup.getOutgoingFlight().getId());
+        if (flightGroup.getIncomingFlight().getRealStartTime() == null || now.isBefore(flightGroup.getIncomingFlight().getRealStartTime()))
+            flightRepository.deleteById(flightGroup.getIncomingFlight().getId());
     }
 
     public void ignoreDelay(long flightID){
-
+        //add the flight id to the blacklist to ignore this conflict
 	    conflictBlackList.add(flightID);
     }
 }

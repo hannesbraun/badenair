@@ -27,6 +27,7 @@
         <!-- Flights -->
         <g class="flight" *ngFor="let j = index; let lengths of calculatedLengths[i]"
            (click)="onClickFlight(schedule.flights[j], schedule.plane)">
+            
             <rect [attr.x]="lengths.start" [attr.y]="23 + lineHeight * i"
                   [attr.width]="lengths.duration"
                   height="14" stroke="#00B0FF" fill="#FFFFFF" [class.conflict] = "checkFlightForConflict(schedule.flights[j])"></rect>

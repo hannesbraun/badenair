@@ -23,4 +23,6 @@ text.medium {
 
 .conflict {
   stroke: red;
+  position: static;
+  z-index: 999999;
 }

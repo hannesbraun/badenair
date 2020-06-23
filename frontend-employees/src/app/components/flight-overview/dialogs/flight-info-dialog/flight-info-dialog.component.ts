@@ -42,6 +42,66 @@ export class FlightInfoDialogComponent {
         }
     }
 
+    getHighlightAcceptDelay(flight: FlightDto, conflict: ScheduleConflictDto) : boolean{
+        if (conflict.planeNotAvailable)
+            return false;
+        
+        if (flight.start === "Karlsruhe/Baden-Baden"){
+            if (flight.delay <= 15)
+                return true;
+            else
+                return false;
+        }
+        else {
+            return !conflict.planeNotAvailable;
+        }
+    }
+
+    getHighlightReservePlane(flight: FlightDto, conflict: ScheduleConflictDto) : boolean{
+        if (!conflict.planeNotAvailableFixable)
+            return false;
+        
+        if (flight.start === "Karlsruhe/Baden-Baden"){
+            if (flight.delay > 15)
+                return true;
+            else
+                return false;
+        }
+        else {
+            return false;
+        }
+    }
+
+    getHighlightCancelFlight(flight: FlightDto, conflict: ScheduleConflictDto) : boolean{
+        if (this.getHighlightAcceptDelay(flight, conflict) == false && this.getHighlightReservePlane(flight, conflict) == false)
+            return true;
+        else
+            return false;
+    }
+
+    isCancelFlightOption() : boolean{
+        if (this.data.flight.realStartTime)
+            return false;
+        if (this.data.flight.start === "Karlsruhe/Baden-Baden")
+            return true;
+        return false;
+    }
+
+    isAcceptDelayOption() : boolean{
+        return true;
+    }
+
+    isUseReservePlaneOption() : boolean{
+        if (this.data.flight.realStartTime)
+            return false;
+        if (this.data.flight.start === "Karlsruhe/Baden-Baden"){
+            if (this.data.conflict.planeNotAvailableFixable){
+                return true;
+            }
+        }
+        return false;
+    }
+
     get scheduleConfigSolutionOptions() {
         return ScheduleConfigSolution;
     }
