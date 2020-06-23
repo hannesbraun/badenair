@@ -62,6 +62,15 @@ export interface BookingDto {
 }
 
 export interface CheckInInfoDto {
-    travelers: TravelerDto[];
+    travelers: CheckInTraverDto[];
     flight: FlightDto;
+}
+
+export interface BaggageDto {
+    weight: number;
+    state: string;
+}
+
+export interface CheckInTraverDto extends TravelerDto {
+    baggage: BaggageDto[];
 }

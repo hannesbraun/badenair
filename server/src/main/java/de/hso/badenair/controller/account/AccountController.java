@@ -73,11 +73,11 @@ public class AccountController {
 
 			// Create final booking dto
 			return new BookingDto(
-					new FlightDto(flight.getId(), flight.getScheduledFlight().getStartingAirport().getName(),
-							flight.getScheduledFlight().getDestinationAirport().getName(), startDate, arrivalDate,
-							"UTC" + flight.getScheduledFlight().getStartingAirport().getTimezone(),
-							"UTC" + flight.getScheduledFlight().getDestinationAirport().getTimezone(), -1337.0),
-					travelerDtos, luggageDtos);
+                new FlightDto(flight.getId(), flight.getScheduledFlight().getStartingAirport().getName(),
+                    flight.getScheduledFlight().getDestinationAirport().getName(), startDate, arrivalDate,
+                    "UTC" + flight.getScheduledFlight().getStartingAirport().getTimezone(),
+                    "UTC" + flight.getScheduledFlight().getDestinationAirport().getTimezone(), booking.getPrice()),
+                travelerDtos, luggageDtos);
 		}).collect(Collectors.toList());
 
 		return ResponseEntity.ok(bookingDtos);
