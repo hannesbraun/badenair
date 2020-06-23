@@ -34,7 +34,6 @@ export class VacationPlanningPageComponent implements OnInit {
             });
 
             if (vacationPlan.vacations.length > 0) {
-                const startMonth = vacationPlan.vacations[0].startDate.getMonth();
                 const dates = vacationPlan.vacations
                     .map(vacation => {
                         let temp = vacation.startDate;
@@ -44,15 +43,13 @@ export class VacationPlanningPageComponent implements OnInit {
                             temp = new Date(temp.getTime() + this.DAY_IN_MS);
                         }
 
-                        // dateRange.push(vacation.endDate);
-
                         return dateRange;
                     })
                     .reduce(this.concat, []);
 
                 for (let i = 0; i < 4; i++) {
                     this.approvedDates[i] = dates
-                        .filter(date => date.getMonth() === ((startMonth + i) % 12))
+                        .filter(date => date.getMonth() === ((new Date().getMonth() + i) % 12))
                         .map(date => date.getDate());
                 }
             }

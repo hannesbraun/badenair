@@ -108,7 +108,13 @@ public class VacationService {
     }
 
     private boolean isRequestInvalid(OffsetDateTime startDate, OffsetDateTime endDate, int differenceInDays) {
-        return endDate.isBefore(startDate) || differenceInDays <= 0 || OffsetDateTime.now().getDayOfMonth() > LAST_POSSIBLE_REQUEST_DAY_OF_MONTH;
+        return endDate.isBefore(startDate) || differenceInDays <= 0 || isAfterTenthOfMonth(startDate);
+    }
+
+    private boolean isAfterTenthOfMonth(OffsetDateTime startDate) {
+        final OffsetDateTime now = OffsetDateTime.now();
+        final boolean isInThisMonth = now.getMonth().equals(startDate.getMonth());
+        return isInThisMonth && (now.getDayOfMonth() > LAST_POSSIBLE_REQUEST_DAY_OF_MONTH);
     }
 
     private int getDifferenceInDays(Vacation vacation) {

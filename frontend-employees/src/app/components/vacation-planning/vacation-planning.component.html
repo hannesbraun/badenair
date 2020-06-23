@@ -3,7 +3,7 @@
         <h3>Neue Anfrage</h3>
         <ng-container [formGroup]="requestVacationForm">
             <mat-form-field>
-                <input matInput [matDatepicker]="pickerFromDate" [min]="tommorow"
+                <input matInput [matDatepicker]="pickerFromDate" [min]="tomorrow"
                        formControlName="fromDate"
                        placeholder="Von">
                 <mat-datepicker-toggle matSuffix [for]="pickerFromDate"></mat-datepicker-toggle>
@@ -15,7 +15,7 @@
             </mat-form-field>
 
             <mat-form-field>
-                <input matInput name="toDate" [matDatepicker]="pickerToDate" [min]="tommorow"
+                <input matInput name="toDate" [matDatepicker]="pickerToDate" [min]="tomorrow"
                        formControlName="toDate"
                        placeholder="Bis">
                 <mat-datepicker-toggle matSuffix [for]="pickerToDate"></mat-datepicker-toggle>
