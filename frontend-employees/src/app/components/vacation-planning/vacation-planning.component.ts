@@ -51,7 +51,7 @@ export class VacationPlanningComponent {
         return new Date();
     }
 
-    get tommorow() {
+    get tomorrow() {
         const date = new Date();
         date.setDate(date.getDate() + 1);
         return date;
