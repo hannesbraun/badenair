@@ -27,7 +27,6 @@ import { ScheduleConflictDialogOutput } from './dialogs/schedule-conflict-dialog
 interface LengthData {
     start: number;
     duration: number;
-    remaining: number;
     realStart: number;
     realDuration: number;
 }
@@ -72,7 +71,6 @@ export class FlightOverviewComponent implements OnInit {
                             return {
                                 start: calculateStart(flight),
                                 duration: calculateDurationLength(flight),
-                                remaining: calculateRemainingLength(flight),
                                 realStart: calculateRealStart(flight),
                                 realDuration: calculateRealDurationLength(flight)
                             };
@@ -94,7 +92,7 @@ export class FlightOverviewComponent implements OnInit {
                 }
             }, error => this.infoService.showErrorMessage('Der Flugplan konnte nicht abgerufen werden'));
 
-        this.flightService.getPlaneSchedules();
+        
     }
 
     getTimeToDisplay(i: number): string {
@@ -152,6 +150,10 @@ export class FlightOverviewComponent implements OnInit {
         if (this.conflicts.find(value => (flight.id === value.flightID)))
             return true;
         return false;
+    }
+
+    getRemainingLength() : number{
+        return calculateRemainingLength();
     }
 
     /*

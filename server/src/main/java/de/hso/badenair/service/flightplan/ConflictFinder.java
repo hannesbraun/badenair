@@ -86,11 +86,7 @@ public class ConflictFinder {
                         otherPlanesFlightGroups = FlightGroup.getFlightGroupsForPlane((ArrayList<FlightWithoutPriceDto>) planes.get(k).getFlights());
 
                         if (lateFlightGroup.checkIfPlaneIsAvailable(otherPlanesFlightGroups)) {
-                            if (plane.getPlane().equals("B737-400")){
-                                if (planes.get(k).getPlane().equals("B737-400"))
-                                    backupPlanes.add(new PlaneDto(planes.get(k).getId(), planes.get(k).getPlane()));
-                            }
-                            else {
+                            if (plane.getPlane().equals(planes.get(k).getPlane())){
                                 backupPlanes.add(new PlaneDto(planes.get(k).getId(), planes.get(k).getPlane()));
                             }
                         }

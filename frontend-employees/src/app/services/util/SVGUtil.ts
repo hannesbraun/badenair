@@ -24,15 +24,13 @@ export function calculateDurationLength(flight: FlightDto): number {
     return duration * hourWidth;
 }
 
-export function calculateRemainingLength(flight: FlightDto): number {
-    if (new Date().getTime() > flight.arrivalTime.getTime())
-        return calculateDurationLength(flight);
-
-    if (new Date().getTime() < flight.startTime.getTime())
-        return 0;
-
-    else
-        return toHours(new Date().getTime() - flight.startTime.getTime())* hourWidth;
+export function calculateRemainingLength(): number {
+    let startTime = new Date();
+    startTime.setHours(6);
+    startTime.setMinutes(0);
+    startTime.setSeconds(0);
+    
+    return toHours(new Date().getTime() - startTime.getTime())* hourWidth;
 }
 
 export function calculateRealStart(flight: FlightDto): number {
