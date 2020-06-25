@@ -67,7 +67,7 @@ export enum BaggageState {
 }
 
 export interface ChangeBaggageStateDto {
-    baggageId: string;
+    id: number;
     state: BaggageState;
 }
 
