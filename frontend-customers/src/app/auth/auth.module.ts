@@ -20,6 +20,7 @@ export class AuthModule {
         clientId: 'badenair-customer',
         responseType: 'code',
         scope: 'openid profile email offline_access customers',
+        postLogoutRedirectUri: environment.home,
         // TODO: Enable HTTPS
         requireHttps: false
     };
