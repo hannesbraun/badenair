@@ -171,6 +171,7 @@ public class BookingService {
 			// Finally: save the bookings
 			bookingRepository.saveAll(bookings);
 
+			//send email to user
             var user = keycloakApiService.getUserById(username).get();
             try {
                 mailNotificationService.sendInvoiceNotification(user.getEmail(), user.getFirstName() + " " + user.getLastName(), bookings);
@@ -180,7 +181,6 @@ public class BookingService {
 
             unlock();
 		}
-
 
 		return true;
 	}
