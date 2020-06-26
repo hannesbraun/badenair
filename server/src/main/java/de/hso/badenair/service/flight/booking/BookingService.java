@@ -1,5 +1,6 @@
 package de.hso.badenair.service.flight.booking;
 
+import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -10,6 +11,9 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import de.hso.badenair.service.email.MailNotificationService;
+import de.hso.badenair.service.keycloakapi.KeycloakApiService;
+import de.hso.badenair.service.keycloakapi.dto.UserRepresentation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +38,8 @@ public class BookingService {
 	private final BookingRepository bookingRepository;
 	private final FlightService flightService;
 	private final SeatService seatService;
+	private final KeycloakApiService keycloakApiService;
+	private final MailNotificationService mailNotificationService;
 
 	private final List<Integer> allowedWeights = List.of(15, 23, 30);
 
@@ -165,8 +171,16 @@ public class BookingService {
 			// Finally: save the bookings
 			bookingRepository.saveAll(bookings);
 
-			unlock();
+            var user = keycloakApiService.getUserById(username).get();
+            try {
+                mailNotificationService.sendInvoiceNotification(user.getEmail(), user.getFirstName() + " " + user.getLastName(), bookings);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            unlock();
 		}
+
 
 		return true;
 	}
