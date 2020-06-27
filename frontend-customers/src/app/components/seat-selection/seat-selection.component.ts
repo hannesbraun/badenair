@@ -17,7 +17,7 @@ export class SeatSelectionComponent implements OnInit, OnChanges {
     columns = ['A', 'B', 'C', 'D', 'E', 'F'];
     planeType = '';
     seats: boolean[][] = [];
-    freeSeatSubscription: Subscription;
+    freeSeatSubscription = new Subscription();
 
     seatForm = this.formBuilder.group({
         row: ['', Validators.required],
