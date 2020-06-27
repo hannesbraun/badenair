@@ -1,6 +1,6 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, Validators} from '@angular/forms';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {SeatDto} from '../../services/dtos/Dtos';
 
 export interface Seat {
@@ -13,10 +13,11 @@ export interface Seat {
     templateUrl: './seat-selection.component.html',
     styleUrls: ['./seat-selection.component.scss']
 })
-export class SeatSelectionComponent implements OnInit {
+export class SeatSelectionComponent implements OnInit, OnChanges {
     columns = ['A', 'B', 'C', 'D', 'E', 'F'];
     planeType = '';
     seats: boolean[][] = [];
+    freeSeatSubscription: Subscription;
 
     seatForm = this.formBuilder.group({
         row: ['', Validators.required],
@@ -49,10 +50,21 @@ export class SeatSelectionComponent implements OnInit {
             }
             this.seatForm.controls.items.patchValue(seats);
         });
-        this.freeSeats.subscribe(seats => {
+        this.freeSeatSubscription = this.freeSeats.subscribe(seats => {
             this.seats = seats.freeSeats;
             this.planeType = seats.type;
+            this.freeSeatSubscription.unsubscribe();
         });
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.freeSeats) {
+            this.freeSeatSubscription = this.freeSeats.subscribe(seats => {
+                this.seats = seats.freeSeats;
+                this.planeType = seats.type;
+                this.freeSeatSubscription.unsubscribe();
+            });
+        }
     }
 
     submit() {
