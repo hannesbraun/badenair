@@ -7,7 +7,7 @@ spring:
     driverClassName: com.mysql.cj.jdbc.Driver
     initialization-mode: always
   jpa:
-    hibernate.ddl-auto: create-drop
+    hibernate.ddl-auto: update
   security:
     oauth2:
       resourceserver:

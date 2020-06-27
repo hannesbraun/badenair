@@ -113,26 +113,28 @@ public class StaticDataInitializer {
 	 */
 	@PostConstruct
 	private void init() {
-		initPlaneTypeData();
-		initPlanes();
+		if (planeRepository.count() == 0) {
+			initPlaneTypeData();
+			initPlanes();
 
-		initAirports();
+			initAirports();
 
-		initFlightplan();
-		// generateFlightplan();
+			initFlightplan();
+			// generateFlightplan();
 
-		initEmployees();
+			initEmployees();
 
-		if (DEMO_MODE) {
-			initCustomers();
-			initBookings();
+			if (DEMO_MODE) {
+				initCustomers();
+				initBookings();
 
-			initVacation();
+				initVacation();
+			}
+
+			initShiftPlan();
+			initStandbyPlan();
+			initFlightCrews();
 		}
-
-		initShiftPlan();
-		initStandbyPlan();
-		initFlightCrews();
 	}
 
 	/**
