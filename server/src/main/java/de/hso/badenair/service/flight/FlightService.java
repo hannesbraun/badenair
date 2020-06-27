@@ -31,7 +31,7 @@ public class FlightService {
     private final KeycloakApiService keycloakApiService;
     private final FlightCrewMemberRepository flightCrewMemberRepository;
 
-    public OffsetDateTime updateFlightTracking(String username, Long flightId, TrackingDto dto) {
+    public OffsetDateTime updateFlightTracking(Long flightId, TrackingDto dto) {
         Optional<Flight> flight = flightRepository.findById(flightId);
 
         final OffsetDateTime currentTime = OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.of("+1"));
@@ -262,7 +262,7 @@ public class FlightService {
             List<Flight> tempFlights = getPlaneFlightsForCurrentAndNextDay(alreadyDelayedFlight.getPlane(), currentFlightDateTime, nextWorkingDay);
             List<Flight> currentDayFlights = filterPendingFlightsForCurrentWorkday(tempFlights, currentFlightDateTime, nextWorkingDay);
 
-            Instant i1 = null;
+            Instant i1;
             //cascade delay on all flights on this plane for the current workday
             for (int i = 0; i < currentDayFlights.size(); i++){
                 if (leftoverDelayForPilot <= currentDayFlights.get(i).getDelay()){
@@ -310,6 +310,7 @@ public class FlightService {
             for (FlightCrewMember member : flightCrew) {
                 if (keycloakApiService.isPilot(member.getEmployeeUserId())) {
                     pilot = member;
+                    break;
                 }
             }
 
@@ -325,7 +326,7 @@ public class FlightService {
                     pilotTempFlights.add(memberEntry.getFlight());
                 }
 
-                Instant i1= null;
+                Instant i1;
                 for (int i = 0; i < currentDayPilotFlights.size(); i++) {
                     if (leftoverDelayForPilot <= currentDayPilotFlights.get(i).getDelay()){
                         break;
