@@ -44,6 +44,8 @@ export class FlightOverviewComponent implements OnInit {
 
     calculatedLengths: LengthData[][] = [];
 
+    drawView: boolean = true;
+
     constructor(private dialog: MatDialog,
                 private conflictService: ConflictService,
                 private flightService: FlightService,
@@ -92,7 +94,7 @@ export class FlightOverviewComponent implements OnInit {
                 }
             }, error => this.infoService.showErrorMessage('Der Flugplan konnte nicht abgerufen werden'));
 
-        
+        this.redrawView();
     }
 
     getTimeToDisplay(i: number): string {
@@ -205,5 +207,10 @@ export class FlightOverviewComponent implements OnInit {
 
     get viewBoxConfig(): string {
         return getViewBoxConfig(this.totalHeight);
+    }
+
+    redrawView() {
+        this.drawView = false;
+        this.drawView = true;
     }
 }

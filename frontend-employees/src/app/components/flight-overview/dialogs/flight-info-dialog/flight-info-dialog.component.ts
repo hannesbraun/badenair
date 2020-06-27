@@ -3,6 +3,7 @@ import {FlightDto, ScheduleConflictDto, ScheduleConfigSolution} from '../../../.
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ScheduleConflictDialogOutput } from '../schedule-conflict-dialog/schedule-conflict-dialog.component';
+import { getLocaleDateTimeFormat } from '@angular/common';
 
 export interface FlightInfoDialogInput {
     plane: string;
@@ -73,6 +74,9 @@ export class FlightInfoDialogComponent {
     }
 
     getHighlightCancelFlight(flight: FlightDto, conflict: ScheduleConflictDto) : boolean{
+        if (this.isDelayOverrun())
+            return true;
+
         if (this.getHighlightAcceptDelay(flight, conflict) == false && this.getHighlightReservePlane(flight, conflict) == false)
             return true;
         else
@@ -80,6 +84,9 @@ export class FlightInfoDialogComponent {
     }
 
     isCancelFlightOption() : boolean{
+        if (this.isDelayOverrun())
+            return true;
+
         if (this.data.flight.realStartTime)
             return false;
         if (this.data.flight.start === "Karlsruhe/Baden-Baden")
@@ -88,10 +95,16 @@ export class FlightInfoDialogComponent {
     }
 
     isAcceptDelayOption() : boolean{
+        if (this.isDelayOverrun())
+            return false;
+        
         return true;
     }
 
     isUseReservePlaneOption() : boolean{
+        if (this.isDelayOverrun())
+            return false;
+
         if (this.data.flight.realStartTime)
             return false;
         if (this.data.flight.start === "Karlsruhe/Baden-Baden"){
@@ -104,5 +117,36 @@ export class FlightInfoDialogComponent {
 
     get scheduleConfigSolutionOptions() {
         return ScheduleConfigSolution;
+    }
+
+    isDelayOverrun(){
+        let now = new Date;
+
+        if (now.getHours() > 6)
+            now.setDate(now.getDate() + 1);
+        now.setHours(6);
+        now.setMinutes(0);
+        now.setSeconds(0);
+        
+        let delayHours = this.data.flight.realLandingTime.getHours() + this.data.flight.delay / 60;
+        let delayMinutes = this.data.flight.arrivalTime.getMinutes() + this.data.flight.delay % 60;
+        let delayedDate = now;
+
+        if (delayMinutes > 59){
+            delayHours++;
+            delayMinutes -= 60;
+        }
+        if (delayHours > 23){
+            delayHours -= 24;
+        }
+        else
+            delayedDate.setDate(delayedDate.getDate() - 1);
+
+        delayedDate.setHours(delayHours);
+        delayedDate.setMinutes(delayMinutes);
+
+        if (delayedDate > now)
+            return true;
+        return false;
     }
 }

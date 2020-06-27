@@ -39,7 +39,7 @@ public class FlightPlanController {
 								? flight.getRealStartTime().withOffsetSameLocal(
 										ZoneOffset.of(TimeZone.getDefault().inDaylightTime(new Date()) ? "+2" : "+1"))
 								: null,
-						flight.getRealStartTime() != null
+						flight.getRealLandingTime() != null
 								? flight.getRealLandingTime().withOffsetSameLocal(
 										ZoneOffset.of(TimeZone.getDefault().inDaylightTime(new Date()) ? "+2" : "+1"))
 								: null);
