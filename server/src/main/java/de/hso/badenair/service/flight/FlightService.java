@@ -3,17 +3,14 @@ package de.hso.badenair.service.flight;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import de.hso.badenair.service.email.FlightChangeNotificationService;
 import org.springframework.stereotype.Service;
 
 import de.hso.badenair.controller.dto.flight.FlightDto;
 import de.hso.badenair.controller.dto.flight.TrackingDto;
-import de.hso.badenair.controller.flight.FlightCascade;
 import de.hso.badenair.domain.flight.Flight;
 import de.hso.badenair.domain.flight.FlightAction;
 import de.hso.badenair.domain.flight.FlightCrewMember;
@@ -33,6 +30,8 @@ public class FlightService {
 	private final FlightCrewMemberRepository flightCrewMemberRepository;
 
 	private final FlightCascade flightCascade;
+
+	private final FlightChangeNotificationService flightChangeNotificationService;
 
 	public OffsetDateTime updateFlightTracking(Long flightId, TrackingDto dto) {
 		Optional<Flight> flight = flightRepository.findById(flightId);
@@ -73,7 +72,14 @@ public class FlightService {
 			OffsetDateTime currentFlightDateTime = DateFusioner.fusionStartDate(flight.get().getStartDate(),
 					flight.get().getScheduledFlight().getStartTime(), null);
 			OffsetDateTime nextWorkingDay = calculateNextWorkingDay(currentFlightDateTime);
-			flightCascade.cascadeDelay(currentFlightDateTime, nextWorkingDay, flight.get(), dto.getDelay());
+
+			Set<Long> flightIdSet = new HashSet<>();
+
+			flightCascade.cascadeDelay(currentFlightDateTime, nextWorkingDay, flight.get(), dto.getDelay(),flightIdSet);
+
+			//send Mail to customers
+            flightChangeNotificationService.sendNotifications(flightIdSet);
+
 		} else {
 			return null;
 		}
@@ -140,10 +146,7 @@ public class FlightService {
 								flight.getScheduledFlight().getStartTime(),
 								flight.getScheduledFlight().getDurationInHours(), null),
 						"UTC+1", "UTC+1", 0.0);
-			} else if (DateFusioner
-					.fusionStartDate(flight.getStartDate(), flight.getScheduledFlight().getStartTime(), null)
-					.isAfter(OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.of("+1")))
-					&& flight.getActualStartTime() == null) {
+			} else if (flight.getActualStartTime() == null && flight.getActualLandingTime() == null) {
 				// Flight is in the future
 				return new FlightDto(flight.getId(), flight.getScheduledFlight().getStartingAirport().getName(),
 						flight.getScheduledFlight().getDestinationAirport().getName(),

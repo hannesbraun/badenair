@@ -1,6 +1,5 @@
 package de.hso.badenair.service.flight.booking;
 
-import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -11,9 +10,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import de.hso.badenair.service.email.MailNotificationService;
-import de.hso.badenair.service.keycloakapi.KeycloakApiService;
-import de.hso.badenair.service.keycloakapi.dto.UserRepresentation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +23,9 @@ import de.hso.badenair.domain.booking.LuggageState;
 import de.hso.badenair.domain.booking.Traveler;
 import de.hso.badenair.domain.flight.Flight;
 import de.hso.badenair.service.booking.repository.BookingRepository;
+import de.hso.badenair.service.email.MailNotificationService;
 import de.hso.badenair.service.flight.FlightService;
+import de.hso.badenair.service.keycloakapi.KeycloakApiService;
 import de.hso.badenair.service.seat.SeatService;
 import de.hso.badenair.util.time.DateFusioner;
 import lombok.RequiredArgsConstructor;
@@ -171,15 +169,16 @@ public class BookingService {
 			// Finally: save the bookings
 			bookingRepository.saveAll(bookings);
 
-			//send email to user
-            try {
-                var user = keycloakApiService.getUserById(username).get();
-                mailNotificationService.sendInvoiceNotification(user.getEmail(), user.getFirstName() + " " + user.getLastName(), bookings);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+			// send email to user
+			try {
+				var user = keycloakApiService.getUserById(username).get();
+				mailNotificationService.sendInvoiceNotification(user.getEmail(),
+						user.getFirstName() + " " + user.getLastName(), bookings);
+			} catch (Exception e) {
+				// e.printStackTrace();
+			}
 
-            unlock();
+			unlock();
 		}
 
 		return true;

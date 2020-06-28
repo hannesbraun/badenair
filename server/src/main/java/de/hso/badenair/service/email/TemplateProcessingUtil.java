@@ -1,71 +1,80 @@
 package de.hso.badenair.service.email;
 
-import de.hso.badenair.domain.booking.Booking;
-import de.hso.badenair.domain.flight.ScheduledFlight;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.FileCopyUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.FileCopyUtils;
+
+import de.hso.badenair.domain.booking.Booking;
+import de.hso.badenair.domain.flight.ScheduledFlight;
+
 public abstract class TemplateProcessingUtil {
 
-    private static final String INVOICE_DETAILS_KEY = "invoiceDetails";
+	private static final String INVOICE_DETAILS_KEY = "invoiceDetails";
 
-    public static String processScheduleChangeTemplate(Map<String, String> values) throws IOException {
-        String messageContent = getFileAsString("mail/scheduleChange.html");
+	public static String processScheduleChangeTemplate(Map<String, String> values) throws IOException {
+		String messageContent = getFileAsString("mail/scheduleChange.html");
 
-        for (Map.Entry<String, String> entry : values.entrySet()) {
-            messageContent = messageContent.replaceAll(getTemplateKey(entry.getKey()), entry.getValue());
-        }
+		for (Map.Entry<String, String> entry : values.entrySet()) {
+			messageContent = messageContent.replaceAll(getTemplateKey(entry.getKey()), entry.getValue());
+		}
 
-        return messageContent;
-    }
+		return messageContent;
+	}
 
-    public static String processInvoiceTemplate(Map<String, String> values, List<Booking> bookings) throws IOException {
-        String messageContent = getFileAsString("mail/invoice.html");
+	public static String processNoFlightTemplate(Map<String, String> values) throws IOException {
+		String messageContent = getFileAsString("mail/noFlight.html");
 
-        for (Map.Entry<String, String> entry : values.entrySet()) {
-            messageContent = messageContent.replaceAll(getTemplateKey(entry.getKey()), entry.getValue());
-        }
+		for (Map.Entry<String, String> entry : values.entrySet()) {
+			messageContent = messageContent.replaceAll(getTemplateKey(entry.getKey()), entry.getValue());
+		}
 
-        final String invoiceDetailTemplate = getFileAsString("mail/invoice_detail_template.html");
-        final List<String> invoiceDetails = new ArrayList<>();
+		return messageContent;
+	}
 
+	public static String processInvoiceTemplate(Map<String, String> values, List<Booking> bookings) throws IOException {
+		String messageContent = getFileAsString("mail/invoice.html");
 
-        bookings.forEach(booking -> {
-            final ScheduledFlight scheduledFlight = booking.getFlight().getScheduledFlight();
-            final Map<String, String> invoiceDetailsValues = Map.of(
-                "startingAirport", scheduledFlight.getStartingAirport().getName(),
-                "destinationAirport", scheduledFlight.getDestinationAirport().getName(),
-                "numberOfPeople", String.valueOf(booking.getTravelers().size()),
-                "amount", String.valueOf(booking.getPrice())
-            );
+		for (Map.Entry<String, String> entry : values.entrySet()) {
+			messageContent = messageContent.replaceAll(getTemplateKey(entry.getKey()), entry.getValue());
+		}
 
-            String content = invoiceDetailTemplate;
+		final String invoiceDetailTemplate = getFileAsString("mail/invoice_detail_template.html");
+		final List<String> invoiceDetails = new ArrayList<>();
 
-            for (Map.Entry<String, String> entry : invoiceDetailsValues.entrySet()) {
-                content = content.replaceAll(getTemplateKey(entry.getKey()), entry.getValue());
-            }
+		bookings.forEach(booking -> {
+			final ScheduledFlight scheduledFlight = booking.getFlight().getScheduledFlight();
+			final Map<String, String> invoiceDetailsValues = Map.of("startingAirport",
+					scheduledFlight.getStartingAirport().getName(), "destinationAirport",
+					scheduledFlight.getDestinationAirport().getName(), "numberOfPeople",
+					String.valueOf(booking.getTravelers().size()), "amount", String.valueOf(booking.getPrice()));
 
-            invoiceDetails.add(content);
-        });
+			String content = invoiceDetailTemplate;
 
-        messageContent = messageContent.replaceAll(getTemplateKey(INVOICE_DETAILS_KEY), String.join("\n", invoiceDetails));
+			for (Map.Entry<String, String> entry : invoiceDetailsValues.entrySet()) {
+				content = content.replaceAll(getTemplateKey(entry.getKey()), entry.getValue());
+			}
 
-        return messageContent;
-    }
+			invoiceDetails.add(content);
+		});
 
-    private static String getFileAsString(String path) throws IOException {
-        final File file = new ClassPathResource(path).getFile();
-        final byte[] bytes = FileCopyUtils.copyToByteArray(file);
-        return new String(bytes);
-    }
+		messageContent = messageContent.replaceAll(getTemplateKey(INVOICE_DETAILS_KEY),
+				String.join("\n", invoiceDetails));
 
-    private static String getTemplateKey(String keyname) {
-        return "\\{\\{" + keyname + "\\}\\}";
-    }
+		return messageContent;
+	}
+
+	private static String getFileAsString(String path) throws IOException {
+		final File file = new ClassPathResource(path).getFile();
+		final byte[] bytes = FileCopyUtils.copyToByteArray(file);
+		return new String(bytes);
+	}
+
+	private static String getTemplateKey(String keyname) {
+		return "\\{\\{" + keyname + "\\}\\}";
+	}
 }

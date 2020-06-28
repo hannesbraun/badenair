@@ -1,4 +1,4 @@
-package de.hso.badenair.controller.flight;
+package de.hso.badenair.service.flight;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -6,6 +6,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +29,7 @@ public class FlightCascade {
 
 	@Transactional
 	public boolean cascadeDelay(OffsetDateTime currentFlightDateTime, OffsetDateTime nextWorkingDay,
-			Flight alreadyDelayedFlight, double delay) {
+			Flight alreadyDelayedFlight, double delay, Set<Long> flightIdSet) {
 
 		double leftoverDelayForPlane = delay;
 		double leftoverDelayForPilot = delay;
@@ -63,11 +64,12 @@ public class FlightCascade {
 
 					currentDayFlights.get(i).setState(FlightState.DELAYED);
 					currentDayFlights.get(i).setDelay(leftoverDelayForPlane);
+					flightIdSet.add(currentDayFlights.get(i).getId());
 					OffsetDateTime delayedFlightDateTime = DateFusioner.fusionStartDate(
 							currentDayFlights.get(i).getStartDate(),
 							currentDayFlights.get(i).getScheduledFlight().getStartTime(), null);
 					if (!cascadeDelay(delayedFlightDateTime, nextWorkingDay, currentDayFlights.get(i),
-							leftoverDelayForPlane)) {
+							leftoverDelayForPlane, flightIdSet)) {
 						return false;
 					}
 				} else {
@@ -123,11 +125,12 @@ public class FlightCascade {
 
 						currentDayPilotFlights.get(i).setState(FlightState.DELAYED);
 						currentDayPilotFlights.get(i).setDelay(leftoverDelayForPilot);
+						flightIdSet.add(currentDayPilotFlights.get(i).getId());
 						OffsetDateTime delayedFlightDateTime = DateFusioner.fusionStartDate(
 								currentDayPilotFlights.get(i).getStartDate(),
 								currentDayPilotFlights.get(i).getScheduledFlight().getStartTime(), null);
 						if (!cascadeDelay(delayedFlightDateTime, nextWorkingDay, currentDayPilotFlights.get(i),
-								leftoverDelayForPilot)) {
+								leftoverDelayForPilot, flightIdSet)) {
 							return false;
 						}
 
