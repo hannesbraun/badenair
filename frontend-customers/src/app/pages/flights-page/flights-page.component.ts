@@ -46,6 +46,10 @@ export class FlightsPageComponent implements OnInit {
                         this.shownFlights = data.returnFlights;
                     }
                 }
+            },
+            err => {console.error("Ein unerwarteter Fehler ist aufgetreten")},
+            ()=> {
+                this.shownFlights.sort((a, b) => a.startTime.getTime()- b.startTime.getTime());
             });
     }
 

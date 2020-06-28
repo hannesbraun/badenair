@@ -614,16 +614,21 @@ public class StaticDataInitializer {
 			Airport startingAirport = scheduledFlight.getStartingAirport();
 			Airport destinationAirport = scheduledFlight.getDestinationAirport();
 
-			LocalDate firstFlightDate = flightRepository.findByScheduledFlightId(scheduledFlight.getId()).get(0)
-					.getStartDate().toLocalDate();
+			Flight firstFlight = flightRepository.findByScheduledFlightId(scheduledFlight.getId()).get(0);
+			LocalDate firstFlightDate = firstFlight.getStartDate().toLocalDate();
+			long firstFlightPlaneId = firstFlight.getPlane().getId();
+
 			OffsetDateTime landingTime = scheduledFlight.getLandingTime(null);
 
 			Optional<ScheduledFlight> scheduledReturnFlightOpt = scheduledFlightRepository
 					.findByStartingAirportIdAndDestinationAirportId(destinationAirport.getId(), startingAirport.getId())
 					.stream().filter(f -> Duration.between(landingTime, f.getStartTime()).getSeconds() > 0)
 					.sorted(Comparator.comparing(f -> Duration.between(landingTime, f.getStartTime())))
-					.filter(f -> firstFlightDate.isEqual(
-							flightRepository.findByScheduledFlightId(f.getId()).get(0).getStartDate().toLocalDate()))
+					.filter(f -> {
+					    Flight returnFlight = flightRepository.findByScheduledFlightId(f.getId()).get(0);
+
+					    return firstFlightPlaneId == returnFlight.getPlane().getId() && firstFlightDate.isEqual(returnFlight.getStartDate().toLocalDate());
+                    })
 					.findFirst();
 
 			if (scheduledReturnFlightOpt.isEmpty()) {

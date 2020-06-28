@@ -29,7 +29,8 @@ export class BookedFlightsComponent implements OnInit {
         this.accountService.getBookings()
             .subscribe(
                 (data: BookedFlight[]) => this.bookedFlights = data,
-                error => this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten')
+                error => this.infoService.showErrorMessage('Ein unerwarteter Fehler ist aufgetreten'),
+                () => this.bookedFlights.sort((a, b) => a.flight.startTime.getTime()- b.flight.startTime.getTime())
             );
     }
 
