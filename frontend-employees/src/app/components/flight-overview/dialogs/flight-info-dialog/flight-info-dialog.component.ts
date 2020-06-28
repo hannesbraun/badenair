@@ -127,22 +127,22 @@ export class FlightInfoDialogComponent {
         now.setMinutes(0);
         now.setSeconds(0);
         
-        let delayHours = this.data.flight.arrivalTime.getHours() + this.data.flight.delay / 60;
-        let delayMinutes = this.data.flight.arrivalTime.getMinutes() + this.data.flight.delay % 60;
-        let delayedDate = now;
+        let delayHours = this.data.flight.delay / 60;
+        let delayMinutes = this.data.flight.delay % 60;
+        let delayedDate = new Date(this.data.flight.arrivalTime);
 
-        if (delayMinutes > 59){
-            delayHours++;
-            delayMinutes -= 60;
-        }
-        if (delayHours > 23){
+        if (delayHours + delayedDate.getHours() > 23){
+            delayedDate.setDate(delayedDate.getDate() + 1);
             delayHours -= 24;
         }
-        else
-            delayedDate.setDate(delayedDate.getDate() - 1);
 
-        delayedDate.setHours(delayHours);
-        delayedDate.setMinutes(delayMinutes);
+        if (delayMinutes + delayedDate.getMinutes() > 59){
+            delayedDate.setHours(delayedDate.getHours() + 1);
+            delayMinutes -= 60;
+        }
+
+        delayedDate.setHours(delayedDate.getHours() + delayHours);
+        delayedDate.setMinutes(delayedDate.getMinutes() + delayMinutes);
 
         if (delayedDate > now)
             return true;
