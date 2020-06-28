@@ -21,13 +21,13 @@ public class WorkingHoursService {
 
 		if (latestWorkingHours.isEmpty() || latestWorkingHours.get().getEndTime() != null) {
 			WorkingHours workingHours = WorkingHours.builder().employeeUserId(employeeUserId)
-					.startTime(OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.of("+1"))).endTime(null).build();
+					.startTime(OffsetDateTime.now()).endTime(null).build();
 
 			workingHoursRepository.save(workingHours);
 
 			return workingHours;
 		} else {
-			latestWorkingHours.get().setEndTime(OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.of("+1")));
+			latestWorkingHours.get().setEndTime(OffsetDateTime.now());
 			workingHoursRepository.save(latestWorkingHours.get());
 
 			return latestWorkingHours.get();
