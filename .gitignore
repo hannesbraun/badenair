@@ -1,6 +1,7 @@
 # Created by https://www.gitignore.io/api/eclipse,intellij+all
 # Edit at https://www.gitignore.io/?templates=eclipse,intellij+all
 
+keycloak-10.0.2/
 keycloak-10.0.1/
 keycloak-9.0.2.tar.gz
 keycloak-9.0.2/

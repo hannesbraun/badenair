@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ChangeDetectorRef} from '@angular/core';
 import {
     calculateDurationLength,
     calculateHeight,
@@ -49,7 +49,8 @@ export class FlightOverviewComponent implements OnInit {
     constructor(private dialog: MatDialog,
                 private conflictService: ConflictService,
                 private flightService: FlightService,
-                private infoService: InfoService) {
+                private infoService: InfoService,
+                private changeDetectorRef: ChangeDetectorRef) {
     }
 
     ngOnInit() {
@@ -86,14 +87,14 @@ export class FlightOverviewComponent implements OnInit {
                 });
 
 
-                if (needToUpdateConflicts) {
-                    this.conflictService.getConflicts()
-                        .subscribe(conflicts => {
-                            this.conflicts = conflicts;
-                        });
-                }
+                this.conflictService.getConflicts()
+                    .subscribe(conflicts => {
+                        this.conflicts = conflicts;
+                    });
+                
             }, error => this.infoService.showErrorMessage('Der Flugplan konnte nicht abgerufen werden'));
 
+        this.changeDetectorRef.detectChanges();
         this.redrawView();
     }
 
@@ -155,7 +156,7 @@ export class FlightOverviewComponent implements OnInit {
     }
 
     getRemainingLength() : number{
-        return calculateRemainingLength();
+        return Math.floor(calculateRemainingLength());
     }
 
     /*

@@ -183,6 +183,7 @@ public class FlightPlanService {
 
     public void ignoreDelay(long flightID){
         //add the flight id to the blacklist to ignore this conflict
+
 	    conflictBlackList.add(flightID);
     }
 }

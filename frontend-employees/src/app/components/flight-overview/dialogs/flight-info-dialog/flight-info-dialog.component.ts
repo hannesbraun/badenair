@@ -3,7 +3,6 @@ import {FlightDto, ScheduleConflictDto, ScheduleConfigSolution} from '../../../.
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ScheduleConflictDialogOutput } from '../schedule-conflict-dialog/schedule-conflict-dialog.component';
-import { getLocaleDateTimeFormat } from '@angular/common';
 
 export interface FlightInfoDialogInput {
     plane: string;
@@ -128,7 +127,7 @@ export class FlightInfoDialogComponent {
         now.setMinutes(0);
         now.setSeconds(0);
         
-        let delayHours = this.data.flight.realLandingTime.getHours() + this.data.flight.delay / 60;
+        let delayHours = this.data.flight.arrivalTime.getHours() + this.data.flight.delay / 60;
         let delayMinutes = this.data.flight.arrivalTime.getMinutes() + this.data.flight.delay % 60;
         let delayedDate = now;
 
