@@ -1,0 +1,18 @@
+<h1>Buchung erfolgreich</h1>
+<p>
+    Ihre Buchung war erfolgreich. Sie können nun bis zu 30 Minuten vor dem Abflug den Check-In online durchführen. Für weitere Details besuchen Sie bitte die Übersichtseite für Ihre gebuchten Flüge.
+</p>
+
+<mat-card *ngFor="let flight of flights">
+    <mat-card-header>
+        <p>Ihr Flug von <b>{{flight.start}}</b> nach <b>{{flight.destination}}</b></p>
+    </mat-card-header>
+    <mat-card-content>
+        <p>Start: {{flight.startTime | date:'dd.MM.yyyy':flight.startTimezone}}, {{flight.startTime | date:'HH:mm:ss':flight.startTimezone}} Uhr</p>
+        <p>Landung: {{flight.arrivalTime | date:'dd.MM.yyyy':flight.destinationTimezone}}, {{flight.arrivalTime | date:'HH:mm:ss':flight.destinationTimezone}} Uhr</p>
+        <p>Flugdauer: {{getDuration(flight)}}</p>
+    </mat-card-content>
+</mat-card>
+
+<h3>Einen weiteren Flug buchen?</h3>
+<button mat-button mat-raised-button color="primary" routerLink="/">Zurück zur Flugsuche</button>

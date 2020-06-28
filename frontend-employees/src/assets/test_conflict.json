@@ -1,0 +1,1019 @@
+[
+    {
+        "id": 1,
+        "plane": "Dash-8-200",
+        "status": "Wartend",
+        "hasConflict": false,
+        "flights": []
+    },
+    {
+        "id": 2,
+        "plane": "Dash-8-200",
+        "status": "Wartend",
+        "hasConflict": false,
+        "flights": [
+            {
+                "id": 5005,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Palermo",
+                "delay": 0.0,
+                "startTime": "2020-06-16T06:04:04.429807+02:00",
+                "arrivalTime": "2020-06-16T07:18:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 21118,
+                "start": "Palermo",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T07:33:04.429807+02:00",
+                "arrivalTime": "2020-06-16T08:47:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 5058,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Lamezia Terme",
+                "delay": 0.0,
+                "startTime": "2020-06-16T09:02:04.429807+02:00",
+                "arrivalTime": "2020-06-16T10:18:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 21171,
+                "start": "Lamezia Terme",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T10:33:04.429807+02:00",
+                "arrivalTime": "2020-06-16T11:49:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 5111,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Wien",
+                "delay": 0.0,
+                "startTime": "2020-06-16T12:05:04.429807+02:00",
+                "arrivalTime": "2020-06-16T12:42:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 21224,
+                "start": "Wien",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T12:57:04.429807+02:00",
+                "arrivalTime": "2020-06-16T13:34:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 5164,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Hamburg",
+                "delay": 0.0,
+                "startTime": "2020-06-16T13:49:04.429807+02:00",
+                "arrivalTime": "2020-06-16T14:21:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 21277,
+                "start": "Hamburg",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T14:36:04.429807+02:00",
+                "arrivalTime": "2020-06-16T15:08:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 5217,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "München",
+                "delay": 0.0,
+                "startTime": "2020-06-16T15:24:04.429807+02:00",
+                "arrivalTime": "2020-06-16T15:44:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 21330,
+                "start": "München",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T15:59:04.429807+02:00",
+                "arrivalTime": "2020-06-16T16:19:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 5270,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Montpellier",
+                "delay": 0.0,
+                "startTime": "2020-06-16T16:35:04.429807+02:00",
+                "arrivalTime": "2020-06-16T17:14:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 21383,
+                "start": "Montpellier",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T17:29:04.429807+02:00",
+                "arrivalTime": "2020-06-16T18:08:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 5323,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Edinburgh",
+                "delay": 0.0,
+                "startTime": "2020-06-16T18:23:04.429807+02:00",
+                "arrivalTime": "2020-06-16T19:29:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 21436,
+                "start": "Edinburgh",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T19:44:04.429807+02:00",
+                "arrivalTime": "2020-06-16T20:50:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 5376,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Barcelona",
+                "delay": 0.0,
+                "startTime": "2020-06-16T21:05:04.429807+02:00",
+                "arrivalTime": "2020-06-16T22:01:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 21489,
+                "start": "Barcelona",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T22:16:04.429807+02:00",
+                "arrivalTime": "2020-06-16T23:12:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 5429,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Palma de Mallorca",
+                "delay": 0.0,
+                "startTime": "2020-06-16T23:27:04.429807+02:00",
+                "arrivalTime": "2020-06-17T00:33:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 21542,
+                "start": "Palma de Mallorca",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-17T00:48:04.429807+02:00",
+                "arrivalTime": "2020-06-17T01:54:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "plane": "Dash-8-200",
+        "status": "Wartend",
+        "hasConflict": false,
+        "flights": [
+            {
+                "id": 1929,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Ajaccio",
+                "delay": 0.0,
+                "startTime": "2020-06-16T06:04:04.429807+02:00",
+                "arrivalTime": "2020-06-16T06:49:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 17623,
+                "start": "Ajaccio",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T07:04:04.429807+02:00",
+                "arrivalTime": "2020-06-16T07:49:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 1982,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Brindisi",
+                "delay": 0.0,
+                "startTime": "2020-06-16T08:05:04.429807+02:00",
+                "arrivalTime": "2020-06-16T09:16:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 17676,
+                "start": "Brindisi",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T09:31:04.429807+02:00",
+                "arrivalTime": "2020-06-16T10:42:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 2035,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Thessaloniki",
+                "delay": 0.0,
+                "startTime": "2020-06-16T10:57:04.429807+02:00",
+                "arrivalTime": "2020-06-16T12:25:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 17729,
+                "start": "Thessaloniki",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T12:40:04.429807+02:00",
+                "arrivalTime": "2020-06-16T14:08:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 2088,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Warschau",
+                "delay": 0.0,
+                "startTime": "2020-06-16T14:24:04.429807+02:00",
+                "arrivalTime": "2020-06-16T15:22:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 17782,
+                "start": "Warschau",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T15:37:04.429807+02:00",
+                "arrivalTime": "2020-06-16T16:35:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 2141,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Split",
+                "delay": 0.0,
+                "startTime": "2020-06-16T16:51:04.429807+02:00",
+                "arrivalTime": "2020-06-16T17:42:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 17835,
+                "start": "Split",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T17:57:04.429807+02:00",
+                "arrivalTime": "2020-06-16T18:48:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 2194,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Bristol",
+                "delay": 0.0,
+                "startTime": "2020-06-16T19:03:04.429807+02:00",
+                "arrivalTime": "2020-06-16T19:51:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 17940,
+                "start": "Bristol",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T20:06:04.429807+02:00",
+                "arrivalTime": "2020-06-16T20:54:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 2247,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Berlin-Tegel",
+                "delay": 0.0,
+                "startTime": "2020-06-16T21:09:04.429807+02:00",
+                "arrivalTime": "2020-06-16T21:42:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 17993,
+                "start": "Berlin-Tegel",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T21:57:04.429807+02:00",
+                "arrivalTime": "2020-06-16T22:30:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 2300,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Alghero",
+                "delay": 0.0,
+                "startTime": "2020-06-16T22:45:04.429807+02:00",
+                "arrivalTime": "2020-06-16T23:39:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 18046,
+                "start": "Alghero",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T23:54:04.429807+02:00",
+                "arrivalTime": "2020-06-17T00:48:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "plane": "Dash-8-400",
+        "status": "Wartend",
+        "hasConflict": false,
+        "flights": []
+    },
+    {
+        "id": 5,
+        "plane": "Dash-8-400",
+        "status": "Wartend",
+        "hasConflict": false,
+        "flights": []
+    },
+    {
+        "id": 6,
+        "plane": "Dash-8-400",
+        "status": "Wartend",
+        "hasConflict": false,
+        "flights": [
+            {
+                "id": 14182,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Amsterdam",
+                "delay": 0.0,
+                "startTime": "2020-06-16T06:04:04.429807+02:00",
+                "arrivalTime": "2020-06-16T06:31:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 31182,
+                "start": "Amsterdam",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T06:46:04.429807+02:00",
+                "arrivalTime": "2020-06-16T07:13:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 14235,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Neapel",
+                "delay": 0.0,
+                "startTime": "2020-06-16T07:28:04.429807+02:00",
+                "arrivalTime": "2020-06-16T08:27:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 31235,
+                "start": "Neapel",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T08:42:04.429807+02:00",
+                "arrivalTime": "2020-06-16T09:41:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 14288,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Constantine",
+                "delay": 0.0,
+                "startTime": "2020-06-16T09:57:04.429807+02:00",
+                "arrivalTime": "2020-06-16T11:20:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 31288,
+                "start": "Constantine",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T11:35:04.429807+02:00",
+                "arrivalTime": "2020-06-16T12:58:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 14341,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Bristol",
+                "delay": 0.0,
+                "startTime": "2020-06-16T13:13:04.429807+02:00",
+                "arrivalTime": "2020-06-16T14:01:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 31341,
+                "start": "Bristol",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T14:16:04.429807+02:00",
+                "arrivalTime": "2020-06-16T15:04:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 14394,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Nizza",
+                "delay": 0.0,
+                "startTime": "2020-06-16T15:19:04.429807+02:00",
+                "arrivalTime": "2020-06-16T16:07:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 31394,
+                "start": "Nizza",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T16:22:04.429807+02:00",
+                "arrivalTime": "2020-06-16T17:10:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 14447,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Belgrad",
+                "delay": 0.0,
+                "startTime": "2020-06-16T17:26:04.429807+02:00",
+                "arrivalTime": "2020-06-16T18:27:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 31447,
+                "start": "Belgrad",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T18:42:04.429807+02:00",
+                "arrivalTime": "2020-06-16T19:43:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 14500,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Palermo",
+                "delay": 0.0,
+                "startTime": "2020-06-16T19:58:04.429807+02:00",
+                "arrivalTime": "2020-06-16T21:12:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 31500,
+                "start": "Palermo",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T21:27:04.429807+02:00",
+                "arrivalTime": "2020-06-16T22:41:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 14553,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Toulouse",
+                "delay": 0.0,
+                "startTime": "2020-06-16T22:56:04.429807+02:00",
+                "arrivalTime": "2020-06-16T23:42:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 31553,
+                "start": "Toulouse",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T23:57:04.429807+02:00",
+                "arrivalTime": "2020-06-17T00:43:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 14606,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Bukarest",
+                "delay": 0.0,
+                "startTime": "2020-06-17T00:58:04.429807+02:00",
+                "arrivalTime": "2020-06-17T02:24:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 31606,
+                "start": "Bukarest",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-17T02:39:04.429807+02:00",
+                "arrivalTime": "2020-06-17T04:05:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            }
+        ]
+    },
+    {
+        "id": 7,
+        "plane": "Dash-8-400",
+        "status": "Wartend",
+        "hasConflict": false,
+        "flights": [
+            {
+                "id": 11158,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Krakau",
+                "delay": 0.0,
+                "startTime": "2020-06-16T06:04:04.429807+02:00",
+                "arrivalTime": "2020-06-16T06:55:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 27949,
+                "start": "Krakau",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T07:10:04.429807+02:00",
+                "arrivalTime": "2020-06-16T08:01:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 11211,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Constantine",
+                "delay": 0.0,
+                "startTime": "2020-06-16T08:16:04.429807+02:00",
+                "arrivalTime": "2020-06-16T09:39:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 28002,
+                "start": "Constantine",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T09:54:04.429807+02:00",
+                "arrivalTime": "2020-06-16T11:17:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 11264,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Debrecen",
+                "delay": 0.0,
+                "startTime": "2020-06-16T11:32:04.429807+02:00",
+                "arrivalTime": "2020-06-16T12:32:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 28055,
+                "start": "Debrecen",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T12:47:04.429807+02:00",
+                "arrivalTime": "2020-06-16T13:47:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 11317,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Wien",
+                "delay": 0.0,
+                "startTime": "2020-06-16T14:02:04.429807+02:00",
+                "arrivalTime": "2020-06-16T14:39:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 28108,
+                "start": "Wien",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T14:54:04.429807+02:00",
+                "arrivalTime": "2020-06-16T15:31:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 11370,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Ohrid",
+                "delay": 0.0,
+                "startTime": "2020-06-16T15:46:04.429807+02:00",
+                "arrivalTime": "2020-06-16T17:03:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 28161,
+                "start": "Ohrid",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T17:18:04.429807+02:00",
+                "arrivalTime": "2020-06-16T18:35:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 11423,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Rom",
+                "delay": 0.0,
+                "startTime": "2020-06-16T18:51:04.429807+02:00",
+                "arrivalTime": "2020-06-16T19:41:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 28214,
+                "start": "Rom",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T19:56:04.429807+02:00",
+                "arrivalTime": "2020-06-16T20:46:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 11476,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Bastia",
+                "delay": 0.0,
+                "startTime": "2020-06-16T21:01:04.429807+02:00",
+                "arrivalTime": "2020-06-16T21:42:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 28267,
+                "start": "Bastia",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T21:57:04.429807+02:00",
+                "arrivalTime": "2020-06-16T22:38:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 11529,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Calvi",
+                "delay": 0.0,
+                "startTime": "2020-06-16T22:54:04.429807+02:00",
+                "arrivalTime": "2020-06-16T23:35:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 28320,
+                "start": "Calvi",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T23:50:04.429807+02:00",
+                "arrivalTime": "2020-06-17T00:31:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 11582,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Catania",
+                "delay": 0.0,
+                "startTime": "2020-06-17T00:47:04.429807+02:00",
+                "arrivalTime": "2020-06-17T02:09:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 28373,
+                "start": "Catania",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-17T02:24:04.429807+02:00",
+                "arrivalTime": "2020-06-17T03:46:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            }
+        ]
+    },
+    {
+        "id": 8,
+        "plane": "Dash-8-400",
+        "status": "Wartend",
+        "hasConflict": false,
+        "flights": [
+            {
+                "id": 8134,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Korfu",
+                "delay": 0.0,
+                "startTime": "2020-06-16T06:04:04.429807+02:00",
+                "arrivalTime": "2020-06-16T07:26:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 24717,
+                "start": "Korfu",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T07:41:04.429807+02:00",
+                "arrivalTime": "2020-06-16T09:03:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 8187,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Sofia",
+                "delay": 0.0,
+                "startTime": "2020-06-16T09:19:04.429807+02:00",
+                "arrivalTime": "2020-06-16T10:40:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 24770,
+                "start": "Sofia",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T10:55:04.429807+02:00",
+                "arrivalTime": "2020-06-16T12:16:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 8240,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Brindisi",
+                "delay": 0.0,
+                "startTime": "2020-06-16T12:31:04.429807+02:00",
+                "arrivalTime": "2020-06-16T13:42:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 24823,
+                "start": "Brindisi",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T13:57:04.429807+02:00",
+                "arrivalTime": "2020-06-16T15:08:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 8293,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "London (Heathrow)",
+                "delay": 0.0,
+                "startTime": "2020-06-16T15:23:04.429807+02:00",
+                "arrivalTime": "2020-06-16T16:03:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 24876,
+                "start": "London (Heathrow)",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T16:18:04.429807+02:00",
+                "arrivalTime": "2020-06-16T16:58:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 8346,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Porto",
+                "delay": 0.0,
+                "startTime": "2020-06-16T17:14:04.429807+02:00",
+                "arrivalTime": "2020-06-16T18:46:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 24929,
+                "start": "Porto",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T19:01:04.429807+02:00",
+                "arrivalTime": "2020-06-16T20:33:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 8399,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Calvi",
+                "delay": 0.0,
+                "startTime": "2020-06-16T20:49:04.429807+02:00",
+                "arrivalTime": "2020-06-16T21:30:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 24982,
+                "start": "Calvi",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T21:45:04.429807+02:00",
+                "arrivalTime": "2020-06-16T22:26:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 8452,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Berlin-Tegel",
+                "delay": 0.0,
+                "startTime": "2020-06-16T22:42:04.429807+02:00",
+                "arrivalTime": "2020-06-16T23:15:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 25035,
+                "start": "Berlin-Tegel",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T23:30:04.429807+02:00",
+                "arrivalTime": "2020-06-17T00:03:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 8505,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Calvi",
+                "delay": 0.0,
+                "startTime": "2020-06-17T00:18:04.429807+02:00",
+                "arrivalTime": "2020-06-17T00:59:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 25088,
+                "start": "Calvi",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-17T01:14:04.429807+02:00",
+                "arrivalTime": "2020-06-17T01:55:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            }
+        ]
+    },
+    {
+        "id": 9,
+        "plane": "B737-400",
+        "status": "Wartend",
+        "hasConflict": false,
+        "flights": [
+            {
+                "id": 886,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Iraklio",
+                "delay": 0.0,
+                "startTime": "2020-06-16T06:02:04.429807+02:00",
+                "arrivalTime": "2020-06-16T08:04:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 24142,
+                "start": "Iraklio",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T08:19:04.429807+02:00",
+                "arrivalTime": "2020-06-16T10:21:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 939,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Rhodos",
+                "delay": 0.0,
+                "startTime": "2020-06-16T10:36:04.429807+02:00",
+                "arrivalTime": "2020-06-16T12:42:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 24351,
+                "start": "Rhodos",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T12:57:04.429807+02:00",
+                "arrivalTime": "2020-06-16T15:03:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            }
+        ]
+    },
+    {
+        "id": 10,
+        "plane": "B737-400",
+        "status": "Wartend",
+        "hasConflict": false,
+        "flights": [
+            {
+                "id": 156,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Marrakesch",
+                "delay": 0.0,
+                "startTime": "2020-06-16T06:00:04.429807+02:00",
+                "arrivalTime": "2020-06-16T08:19:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 18567,
+                "start": "Marrakesch",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T08:34:04.429807+02:00",
+                "arrivalTime": "2020-06-16T10:53:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 209,
+                "start": "Karlsruhe/Baden-Baden",
+                "destination": "Gran Canaria",
+                "delay": 0.0,
+                "startTime": "2020-06-16T11:09:04.429807+02:00",
+                "arrivalTime": "2020-06-16T14:11:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            },
+            {
+                "id": 18932,
+                "start": "Gran Canaria",
+                "destination": "Karlsruhe/Baden-Baden",
+                "delay": 0.0,
+                "startTime": "2020-06-16T14:26:04.429807+02:00",
+                "arrivalTime": "2020-06-16T17:28:04.429807+02:00",
+                "realStartTime": null,
+                "realLandingTime": null
+            }
+        ]
+    }
+]

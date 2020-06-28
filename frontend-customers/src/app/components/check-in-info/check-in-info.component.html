@@ -1,0 +1,20 @@
+<mat-card appHoverClass hoverClass="mat-elevation-z8">
+    <mat-card-header>
+        <mat-card-title>
+            {{passenger.name}} {{passenger.surname}}
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div>
+            <p *ngFor="let baggage of passenger.baggage; index as i">
+                {{i + 1}}. Gepäckstück ({{baggage.weight}}kg), Status: {{getBaggageState(baggage.state)}}
+            </p>
+        </div>
+        <div *ngIf="passenger.checkedIn">
+            <button mat-raised-button color="primary" (click)="onDownload()">Download PDF</button>
+        </div>
+        <div *ngIf="!passenger.checkedIn">
+            <button mat-raised-button color="primary" (click)="checkIn()">Check-In</button>
+        </div>
+    </mat-card-content>
+</mat-card>

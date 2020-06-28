@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    platform: mysql
+    url: jdbc:mysql://localhost:3306/badenair?serverTimezone=UTC
+    username: badenair_user
+    password: badenair_password
+    driverClassName: com.mysql.cj.jdbc.Driver
+    initialization-mode: always
+  jpa:
+    hibernate.ddl-auto: update
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8080/auth/realms/badenair/protocol/openid-connect/certs
+          issuer-uri: http://localhost:8080/auth/realms/badenair
+  mail:
+    host: localhost
+    port: 25
+    username:
+    password:
+server:
+  port: 8081

@@ -1,0 +1,56 @@
+<svg *ngIf="drawView" [attr.viewBox]="viewBoxConfig">
+    <!-- Table container -->
+    <rect x="0" y="0" [attr.width]="totalWidth" [attr.height]="totalHeight" fill="none" stroke="black"
+          stroke-width="1"></rect>
+    <line x1="50" y1="0" x2="50" [attr.y2]="totalHeight" stroke="black" stroke-width="0.5"/>
+    <line x1="120" y1="0" x2="120" [attr.y2]="totalHeight" stroke="black" stroke-width="0.5"/>
+    <line x1="190" y1="0" x2="190" [attr.y2]="totalHeight" stroke="black" stroke-width="0.5"/>
+    <line x1="0" y1="20" [attr.x2]="totalWidth" y2="20" stroke="black" stroke-width="0.5"/>
+
+    <!-- Table headings -->
+    <text x="10" y="13">Störung</text>
+    <text x="70" y="13">Flugzeug</text>
+    <text x="145" y="13">Status</text>
+
+    <!-- Timeline -->
+    <line *ngFor="let i of displayableHours" [attr.x1]="190 + i * 15" y1="20"
+          [attr.x2]="190 + i * hoursWidth" [attr.y2]="totalHeight"
+          stroke="grey" stroke-dasharray="3 1" stroke-width="0.5"/>
+    <text class="small" *ngFor="let i of displayableHours" [attr.x]="184 + i * hoursWidth"
+          y="18">{{getTimeToDisplay(i)}}</text>
+
+    <!-- Rows -->
+    <g *ngFor="let i = index; let schedule of schedules">
+        <line x1="0" [attr.y1]="40 + lineHeight * i" [attr.x2]="totalWidth" [attr.y2]="40 + lineHeight * i"
+              stroke="black" stroke-width="0.5"/>
+
+        <!-- Flights -->
+        <g class="flight" *ngFor="let j = index; let lengths of calculatedLengths[i]"
+           (click)="onClickFlight(schedule.flights[j], schedule.plane)">
+            <rect [attr.x]="lengths.start" [attr.y]="23 + lineHeight * i"
+                  [attr.width]="lengths.duration"
+                  height="14" stroke="#00B0FF" fill="#FFFFFF" [class.conflict] = "checkFlightForConflict(schedule.flights[j])"></rect>
+        </g>
+        <g class="flight" *ngFor="let j = index; let lengths of calculatedLengths[i]"
+           (click)="onClickFlight(schedule.flights[j], schedule.plane)">
+           <rect [attr.x]="lengths.realStart" [attr.y]="26 + lineHeight * i"
+           [attr.width]="lengths.realDuration"
+           height="8" stroke="#01579B" fill="#FFFFFF" [class.conflict] = "checkFlightForConflict(schedule.flights[j])"></rect>
+        </g>
+        <rect [attr.x]="205" [attr.y]="29 + lineHeight * i"
+            [attr.width]="getRemainingLength()"
+            height="2" fill="#01579B"></rect>
+        
+        <!-- Schedule data -->
+        <g class="conflictButton" *ngIf="schedule.hasConflict">
+            <rect x="2" [attr.y]="22 + lineHeight * i" width="45" height="15" fill="#F44336"></rect>
+            <text class="medium" x="14" [attr.y]="32 + lineHeight * i">Konflikt</text>
+        </g>
+        <g *ngIf="!schedule.hasConflict">
+            <rect x="2" [attr.y]="22 + lineHeight * i" width="45" height="15" fill="#00C853"></rect>
+            <text class="medium" x="19" [attr.y]="32 + lineHeight * i">OK</text>
+        </g>
+        <text class="medium" x="55" [attr.y]="32 + lineHeight * i">{{schedule.id + " - " + schedule.plane}}</text>
+        <text class="medium" x="125" [attr.y]="32 + lineHeight * i">{{schedule.status}}</text>
+    </g>
+</svg>

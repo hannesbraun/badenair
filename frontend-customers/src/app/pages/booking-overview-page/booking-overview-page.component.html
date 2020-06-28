@@ -1,0 +1,16 @@
+<h1>Buchungsübersicht</h1>
+<mat-card *ngIf="toFlight && passengers && toSeats; else loading">
+    <mat-card-content>
+        <app-booking-overview [toFlight]="toFlight" [returnFlight]="returnFlight" [passengers]="passengers"
+            [toSeats]="toSeats" [returnSeats]="returnSeats" [price]="price" [baggagePrice]="baggagePrice">
+        </app-booking-overview>
+    </mat-card-content>
+</mat-card>
+<div fxLayoutAlign="space-between" class="navigation-buttons">
+    <button mat-raised-button routerLink="/seat">Zurück</button>
+    <button mat-raised-button color="primary" type="submit" (click)="bookFlights()">Buchung bestätigen</button>
+</div>
+
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>

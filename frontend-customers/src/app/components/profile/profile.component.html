@@ -1,0 +1,8 @@
+<form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+    <app-profile-form [initialData]="initialData" formControlName="profile"></app-profile-form>
+    <h3>Anmeldedaten</h3>
+    <div>
+        <a mat-raised-button color="primary" [href]="accountUrl">Weitere Account Daten verwalten</a>
+    </div>
+    <button mat-raised-button type="submit" color="primary" [disabled]="profileForm.invalid">Speichern</button>
+</form>

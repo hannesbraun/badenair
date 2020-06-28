@@ -1,0 +1,12 @@
+<h1>Zeiterfassung</h1>
+
+<div class="time-tracking-container" *ngIf="loaded; else loading">
+    <button mat-raised-button class="start-button mat-primary" [disabled]="isTimerRunning" (click)="start()">Start</button>
+    <button mat-raised-button class="stop-button mat-warn" [disabled]="!isTimerRunning" (click)="stop()">Stop</button>
+    <div>Arbeitsdauer:</div>
+    <div class="elapsed-time">{{ time | date:'HH:mm:ss':'UTC' }}</div>
+</div>
+
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>

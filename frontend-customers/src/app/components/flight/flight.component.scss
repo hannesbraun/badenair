@@ -1,0 +1,68 @@
+mat-card-content {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: space-between;
+
+  @media (max-width: 992px) {
+    flex-flow: column;
+  }
+}
+
+mat-card-footer {
+  padding: 16px;
+}
+
+.duration {
+  border-top: 5px solid black;
+  padding: 0 7%;
+  position: relative;
+
+  &:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: -5px;
+    width: 20px;
+    border-top: 4px solid black;
+    transform: rotate(40deg) skewX(40deg);
+    transform-origin: right;
+  }
+
+  &:before {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: -4px;
+    width: 20px;
+    border-top: 4px solid black;
+    transform: rotate(-40deg) skewX(-40deg);
+    transform-origin: right;
+  }
+}
+
+.large {
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+.baggage-list {
+  .baggage {
+    margin-bottom: 10px;
+
+    & > b {
+      display: contents;
+    }
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+
+div {
+  display: flex;
+  flex-flow: column nowrap;
+}
+

@@ -1,0 +1,90 @@
+<div *ngIf="profileForm" [formGroup]="profileForm">
+    <h3>Persönliche Daten</h3>
+    <div>
+        <mat-form-field>
+            <input matInput placeholder="Geburtsdatum" [min]="minDateBirthDate" [max]="maxDateBirthDate"
+                [matDatepicker]="pickerBirthDate" formControlName="birthDate">
+            <mat-datepicker-toggle matSuffix [for]="pickerBirthDate"></mat-datepicker-toggle>
+            <mat-datepicker #pickerBirthDate></mat-datepicker>
+            <mat-error *ngIf="profileForm?.get('birthDate')?.errors?.required">
+                Dieses Feld muss ausgefüllt sein.
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    <h3>Anschrift</h3>
+    <div class="formContainer">
+        <mat-form-field>
+            <input matInput placeholder="Straße" formControlName="street">
+            <mat-error *ngIf="profileForm?.get('street')?.errors?.required">
+                Dieses Feld muss ausgefüllt sein.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="small">
+            <input matInput placeholder="PLZ" formControlName="zipCode">
+            <mat-error>
+                <span *ngIf="profileForm?.get('zipCode')?.errors?.required">
+                    Dieses Feld muss ausgefüllt sein.
+                </span>
+                <span *ngIf="profileForm?.get('zipCode')?.errors?.pattern">
+                    Dieses Feld muss eine gültige PLZ enthalten.
+                </span>
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="large">
+            <input matInput placeholder="Wohnort" formControlName="placeOfResidence">
+            <mat-error *ngIf="profileForm?.get('placeOfResidence')?.errors?.required">
+                Dieses Feld muss ausgefüllt sein.
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    <h3>Zahlungsinformationen (MasterCard/Visa)</h3>
+    <div class="formContainer">
+        <mat-form-field>
+            <input matInput placeholder="Karteninhaber" formControlName="cardOwner">
+            <mat-error *ngIf="profileForm?.get('cardOwner')?.errors?.required">
+                Dieses Feld muss ausgefüllt sein.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="large">
+            <input matInput placeholder="Kartennummer" formControlName="cardNumber">
+            <mat-error>
+                <span *ngIf="profileForm?.get('cardNumber')?.errors?.required">
+                    Dieses Feld muss ausgefüllt sein.
+                </span>
+                <span *ngIf="profileForm?.get('cardNumber')?.errors?.pattern && !profileForm?.get('cardNumber')?.errors?.required">
+                    Dieses Feld muss eine 16-stellige Kartennummer enthalten.
+                </span>
+                <span *ngIf="profileForm?.get('cardNumber')?.errors?.checkDigit && !profileForm?.get('cardNumber')?.errors?.pattern && !profileForm?.get('cardNumber')?.errors?.required">
+                    Dieses Feld muss eine gültige Kartennummer enthalten.
+                </span>
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="small">
+            <input matInput placeholder="Prüfziffer" formControlName="check">
+            <mat-error>
+                <span *ngIf="profileForm?.get('check')?.errors?.required">
+                    Dieses Feld muss ausgefüllt sein.
+                </span>
+                <span *ngIf="profileForm?.get('check')?.errors?.pattern">
+                    Dieses Feld muss eine gültige Prüfziffer enthalten.
+                </span>
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput placeholder="Auslaufdatum" [min]="minDateInvalidationDate"
+                [matDatepicker]="pickerInvalidationDate" formControlName="invalidationDate">
+            <mat-datepicker-toggle matSuffix [for]="pickerInvalidationDate"></mat-datepicker-toggle>
+            <mat-datepicker #pickerInvalidationDate></mat-datepicker>
+            <mat-error *ngIf="profileForm?.get('street')?.errors?.required">
+                Dieses Feld muss ausgefüllt sein.
+            </mat-error>
+        </mat-form-field>
+    </div>
+</div>

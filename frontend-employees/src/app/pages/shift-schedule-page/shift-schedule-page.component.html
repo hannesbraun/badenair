@@ -1,0 +1,27 @@
+<h1>Schichtplan</h1>
+
+<mat-table [dataSource]="shiftScheduleData" *ngIf="shiftScheduleData; else loading" class="mat-elevation-z8">
+    <ng-container matColumnDef="shiftDate">
+        <mat-header-cell *matHeaderCellDef> Datum</mat-header-cell>
+        <mat-cell *matCellDef="let shiftScheduleDto">
+            {{shiftScheduleDto.startTime | date:'dd.MM.yyyy'}}
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="start">
+        <mat-header-cell *matHeaderCellDef> Schichtbeginn</mat-header-cell>
+        <mat-cell *matCellDef="let shiftScheduleDto"> {{shiftScheduleDto.startTime | date:'HH:mm'}} Uhr</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="end">
+        <mat-header-cell *matHeaderCellDef> Schichtende</mat-header-cell>
+        <mat-cell *matCellDef="let shiftScheduleDto">{{shiftScheduleDto.endTime | date:'HH:mm'}} Uhr</mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
+
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>

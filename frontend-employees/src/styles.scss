@@ -1,0 +1,27 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.container {
+  margin: auto;
+  max-width: 1024px;
+  padding: 10px;
+}
+
+.error-message {
+  background-color: red;
+  color: white;
+  font-weight: bold;
+
+  .mat-simple-snackbar-action {
+    color: white;
+  }
+}

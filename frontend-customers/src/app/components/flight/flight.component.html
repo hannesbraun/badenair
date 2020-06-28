@@ -1,0 +1,32 @@
+<mat-card appHoverClass hoverClass="mat-elevation-z8">
+    <mat-card-content>
+        <app-flight-info [time]="flight.startTime" [timezone]="flight.startTimezone" [location]="flight.start"></app-flight-info>
+        <p class="duration">{{getDuration()}}</p>
+        <app-flight-info [time]="flight.arrivalTime" [timezone]="flight.destinationTimezone" [location]="flight.destination"></app-flight-info>
+        <ng-container *ngIf="!persons">
+            <p class="large">Personen: {{numberOfPassengers}}</p>
+            <div>
+                <p class="large">Preis: {{price | currency:'EUR'}}</p>
+                <button mat-raised-button color="primary" mat-button (click)="onBooking()">Buchen</button>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="persons">
+            <div>
+                <h3>Personen:</h3>
+                <div *ngFor="let person of persons">{{ person.name }}</div>
+            </div>
+            <div>
+                <p class="large">Preis: {{price | currency:'EUR'}}</p>
+                <button mat-button mat-raised-button class="mat-primary" [routerLink]="['/checkin', flight.id]">Check-In
+                </button>
+            </div>
+        </ng-container>
+    </mat-card-content>
+    <mat-card-footer >
+        <div class="baggage-list">
+            <div class="baggage" *ngFor="let baggage of baggages">
+                <b>Gepäckstück {{ baggage.id }}: </b>{{ getBaggageState(baggage.state) }}
+            </div>
+        </div>
+    </mat-card-footer>
+</mat-card>

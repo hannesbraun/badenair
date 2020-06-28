@@ -1,0 +1,35 @@
+<form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
+    <app-profile-form formControlName="profile"></app-profile-form>
+    <h3>Anmeldedaten</h3>
+    <div>
+        <mat-form-field>
+            <input type="email" matInput placeholder="E-Mail" formControlName="email">
+            <mat-error>
+                <span *ngIf="signUpForm?.get('email')?.errors?.required">
+                    Dieses Feld muss ausgefüllt sein.
+                </span>
+                <span *ngIf="signUpForm?.get('email')?.errors?.email">
+                    Dieses Feld muss eine gültige E-Mail Adresse enthalten.
+                </span>
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input type="password" matInput placeholder="Passwort" formControlName="password">
+            <mat-error *ngIf="signUpForm?.get('password')?.errors?.required">
+                Dieses Feld muss ausgefüllt sein.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input type="password" matInput placeholder="Passwort bestätigen" formControlName="passwordConfirm">
+            <mat-error *ngIf="signUpForm?.get('passwordConfirm')?.errors?.required">
+                Dieses Feld muss ausgefüllt sein.
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <mat-error *ngIf="signUpForm?.errors?.password">
+        Die Passwörter müssen übereinstimmen.
+    </mat-error>
+    <button mat-raised-button type="submit" color="primary" [disabled]="signUpForm.invalid">Registrieren</button>
+</form>
