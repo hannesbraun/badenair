@@ -61,8 +61,6 @@ export class FlightOverviewComponent implements OnInit {
     }
 
     updateFlightPlan = () => {
-        let needToUpdateConflicts = false;
-
         this.flightService.getPlaneSchedules()
             .subscribe(schedules => {
                 this.schedules = schedules;
@@ -79,12 +77,6 @@ export class FlightOverviewComponent implements OnInit {
                             };
                         });
                     });
-
-                this.schedules.forEach((schedule: PlaneScheduleDto) => {
-                    if (schedule.hasConflict) {
-                        needToUpdateConflicts = true;
-                    }
-                });
 
 
                 this.conflictService.getConflicts()
