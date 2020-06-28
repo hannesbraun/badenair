@@ -3,12 +3,12 @@ package de.hso.badenair.service.flight;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import de.hso.badenair.service.email.MailNotificationService;
+import de.hso.badenair.service.email.MailNotificationThread;
+import de.hso.badenair.service.keycloakapi.KeycloakApiService;
 import org.springframework.stereotype.Service;
 
 import de.hso.badenair.controller.dto.flight.FlightDto;
@@ -28,6 +28,10 @@ import lombok.RequiredArgsConstructor;
 public class FlightService {
 
 	private final FlightRepository flightRepository;
+
+	private final MailNotificationService mailNotificationService;
+
+	private final KeycloakApiService keycloakApiService;
 
 	private final FlightCrewMemberRepository flightCrewMemberRepository;
 
@@ -72,7 +76,17 @@ public class FlightService {
 			OffsetDateTime currentFlightDateTime = DateFusioner.fusionStartDate(flight.get().getStartDate(),
 					flight.get().getScheduledFlight().getStartTime(), null);
 			OffsetDateTime nextWorkingDay = calculateNextWorkingDay(currentFlightDateTime);
-			flightCascade.cascadeDelay(currentFlightDateTime, nextWorkingDay, flight.get(), dto.getDelay());
+
+			Set<Long> flightIdSet = new HashSet<>();
+
+			flightCascade.cascadeDelay(currentFlightDateTime, nextWorkingDay, flight.get(), dto.getDelay(),flightIdSet);
+
+            System.out.println(flightIdSet.toString());
+			//send Mail to customers
+            MailNotificationThread thread = new MailNotificationThread(flightIdSet, flightRepository, mailNotificationService, keycloakApiService);
+
+            thread.start();
+
 		} else {
 			return null;
 		}
