@@ -49,18 +49,14 @@ public class FlightCascade {
 							.fusionArrivalDate(currentDayFlights.get(i - 1).getStartDate(),
 									currentDayFlights.get(i - 1).getScheduledFlight().getStartTime(),
 									currentDayFlights.get(i - 1).getScheduledFlight().getDurationInHours(), null)
-							.plusMinutes((long) currentDayFlights.get(i - 1).getDelay()).toInstant();
+							.toInstant();
 				} else {
-					i1 = DateFusioner
-							.fusionArrivalDate(alreadyDelayedFlight.getStartDate(),
-									alreadyDelayedFlight.getScheduledFlight().getStartTime(),
-									alreadyDelayedFlight.getScheduledFlight().getDurationInHours(), null)
-							.plusMinutes((long) alreadyDelayedFlight.getDelay()).toInstant();
+					i1 = DateFusioner.fusionArrivalDate(alreadyDelayedFlight.getStartDate(),
+							alreadyDelayedFlight.getScheduledFlight().getStartTime(),
+							alreadyDelayedFlight.getScheduledFlight().getDurationInHours(), null).toInstant();
 				}
-				Instant i2 = DateFusioner
-						.fusionStartDate(currentDayFlights.get(i).getStartDate(),
-								currentDayFlights.get(i).getScheduledFlight().getStartTime(), null)
-						.plusMinutes((long) currentDayFlights.get(i).getDelay()).toInstant();
+				Instant i2 = DateFusioner.fusionStartDate(currentDayFlights.get(i).getStartDate(),
+						currentDayFlights.get(i).getScheduledFlight().getStartTime(), null).toInstant();
 				double bufferMinutes = Duration.between(i1, i2).abs().getSeconds() / 60.0;
 				if ((leftoverDelayForPlane - bufferMinutes) > 0) {
 					leftoverDelayForPlane -= bufferMinutes;
@@ -74,7 +70,8 @@ public class FlightCascade {
 							leftoverDelayForPlane)) {
 						return false;
 					}
-
+				} else {
+					break;
 				}
 			}
 		}
@@ -107,18 +104,18 @@ public class FlightCascade {
 						i1 = DateFusioner.fusionArrivalDate(currentDayPilotFlights.get(i - 1).getStartDate(),
 								currentDayPilotFlights.get(i - 1).getScheduledFlight().getStartTime(),
 								currentDayPilotFlights.get(i - 1).getScheduledFlight().getDurationInHours(), null)
-								.plusMinutes((long) currentDayPilotFlights.get(i - 1).getDelay()).toInstant();
+								.toInstant();
 					} else {
 						i1 = DateFusioner
 								.fusionArrivalDate(alreadyDelayedFlight.getStartDate(),
 										alreadyDelayedFlight.getScheduledFlight().getStartTime(),
 										alreadyDelayedFlight.getScheduledFlight().getDurationInHours(), null)
-								.plusMinutes((long) alreadyDelayedFlight.getDelay()).toInstant();
+								.toInstant();
 					}
 					Instant i2 = DateFusioner
 							.fusionStartDate(currentDayPilotFlights.get(i).getStartDate(),
 									currentDayPilotFlights.get(i).getScheduledFlight().getStartTime(), null)
-							.plusMinutes((long) currentDayPilotFlights.get(i).getDelay()).toInstant();
+							.toInstant();
 
 					double bufferMinutes = Duration.between(i1, i2).abs().getSeconds() / 60.0;
 					if ((leftoverDelayForPilot - bufferMinutes) > 0) {
@@ -134,11 +131,13 @@ public class FlightCascade {
 							return false;
 						}
 
+					} else {
+						break;
 					}
 				}
 			}
 		}
-		System.out.println("test");
+
 		return true;
 	}
 
