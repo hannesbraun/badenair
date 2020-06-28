@@ -1,4 +1,4 @@
-<svg [attr.viewBox]="viewBoxConfig">
+<svg *ngIf="drawView" [attr.viewBox]="viewBoxConfig">
     <!-- Table container -->
     <rect x="0" y="0" [attr.width]="totalWidth" [attr.height]="totalHeight" fill="none" stroke="black"
           stroke-width="1"></rect>
@@ -27,16 +27,22 @@
         <!-- Flights -->
         <g class="flight" *ngFor="let j = index; let lengths of calculatedLengths[i]"
            (click)="onClickFlight(schedule.flights[j], schedule.plane)">
-            <rect [attr.x]="lengths.start" [attr.y]="26 + lineHeight * i"
+            <rect [attr.x]="lengths.start" [attr.y]="23 + lineHeight * i"
                   [attr.width]="lengths.duration"
-                  height="8" fill="#00B0FF"></rect>
-            <rect [attr.x]="lengths.start" [attr.y]="26 + lineHeight * i"
-                  [attr.width]="lengths.remaining"
-                  height="8" fill="#01579B"></rect>
+                  height="14" stroke="#00B0FF" fill="#FFFFFF" [class.conflict] = "checkFlightForConflict(schedule.flights[j])"></rect>
         </g>
-
+        <g class="flight" *ngFor="let j = index; let lengths of calculatedLengths[i]"
+           (click)="onClickFlight(schedule.flights[j], schedule.plane)">
+           <rect [attr.x]="lengths.realStart" [attr.y]="26 + lineHeight * i"
+           [attr.width]="lengths.realDuration"
+           height="8" stroke="#01579B" fill="#FFFFFF" [class.conflict] = "checkFlightForConflict(schedule.flights[j])"></rect>
+        </g>
+        <rect [attr.x]="205" [attr.y]="29 + lineHeight * i"
+            [attr.width]="getRemainingLength()"
+            height="2" fill="#01579B"></rect>
+        
         <!-- Schedule data -->
-        <g class="conflictButton" *ngIf="schedule.hasConflict" (click)="onClickConflict(schedule.id)">
+        <g class="conflictButton" *ngIf="schedule.hasConflict">
             <rect x="2" [attr.y]="22 + lineHeight * i" width="45" height="15" fill="#F44336"></rect>
             <text class="medium" x="14" [attr.y]="32 + lineHeight * i">Konflikt</text>
         </g>
@@ -44,7 +50,7 @@
             <rect x="2" [attr.y]="22 + lineHeight * i" width="45" height="15" fill="#00C853"></rect>
             <text class="medium" x="19" [attr.y]="32 + lineHeight * i">OK</text>
         </g>
-        <text class="medium" x="55" [attr.y]="32 + lineHeight * i">{{schedule.plane}}</text>
+        <text class="medium" x="55" [attr.y]="32 + lineHeight * i">{{schedule.id + " - " + schedule.plane}}</text>
         <text class="medium" x="125" [attr.y]="32 + lineHeight * i">{{schedule.status}}</text>
     </g>
 </svg>

@@ -2,10 +2,13 @@ export interface FlightDto {
     id: number;
     start: string;
     destination: string;
+    delay: number;
     startTime: Date;
     startTimezone: string;
     detinationTimezone: string;
     arrivalTime: Date;
+    realStartTime: Date;
+    realLandingTime: Date;
 }
 
 export enum UserType {
@@ -29,10 +32,22 @@ export interface PlaneScheduleDto {
 }
 
 export interface ScheduleConflictDto {
-    flight: FlightDto;
-    scheduleId: number;
-    cause: string;
-    possibleSolutions: ScheduleConfigSolution[];
+    flightID: number;
+    flightDelayed: boolean;
+    notEnoughPersonel: boolean;
+    planeNotAvailable: boolean;
+    planeNotAvailableFixable: boolean;
+    reservePlanes: PlaneDto[];
+}
+
+export interface ReservePlaneSolutionDto{
+    flightID: number;
+    reservePlaneID: number;
+}
+
+export interface PlaneDto {
+    id: number;
+    type: string;
 }
 
 export enum ScheduleConfigSolution {

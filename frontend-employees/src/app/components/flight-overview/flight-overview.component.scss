@@ -20,3 +20,9 @@ text.medium {
 .conflictButton:hover {
   cursor: pointer;
 }
+
+.conflict {
+  stroke: red;
+  position: static;
+  z-index: 999999;
+}

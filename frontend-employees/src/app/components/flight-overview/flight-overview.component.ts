@@ -1,34 +1,34 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ChangeDetectorRef} from '@angular/core';
 import {
     calculateDurationLength,
     calculateHeight,
     calculateRemainingLength,
     calculateStart,
+    calculateRealStart,
+    calculateRealDurationLength,
     displayableHours,
     getViewBoxConfig,
     hourWidth,
     lineHeight,
     totalWidth
 } from '../../services/util/SVGUtil';
-import {FlightDto, PlaneScheduleDto, ScheduleConflictDto} from '../../services/dtos/Dtos';
+import {FlightDto, PlaneScheduleDto, ScheduleConflictDto, ScheduleConfigSolution, ReservePlaneSolutionDto} from '../../services/dtos/Dtos';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {
     FlightInfoDialogComponent,
     FlightInfoDialogInput
 } from './dialogs/flight-info-dialog/flight-info-dialog.component';
-import {
-    ScheduleConflictDialogComponent,
-    ScheduleConflictDialogInput
-} from './dialogs/schedule-conflict-dialog/schedule-conflict-dialog.component';
-import {ScheduleConflictService} from '../../services/conflicts/schedule-conflict-service.service';
 import {FlightService} from '../../services/flights/flight.service';
 import {timer} from 'rxjs';
+import { ConflictService } from 'src/app/services/flights/conflict.service';
 import {InfoService} from '../../services/info/info.service';
+import { ScheduleConflictDialogOutput } from './dialogs/schedule-conflict-dialog/schedule-conflict-dialog.component';
 
 interface LengthData {
     start: number;
     duration: number;
-    remaining: number;
+    realStart: number;
+    realDuration: number;
 }
 
 @Component({
@@ -44,10 +44,13 @@ export class FlightOverviewComponent implements OnInit {
 
     calculatedLengths: LengthData[][] = [];
 
+    drawView: boolean = true;
+
     constructor(private dialog: MatDialog,
-                private scheduleConflictServiceService: ScheduleConflictService,
+                private conflictService: ConflictService,
                 private flightService: FlightService,
-                private infoService: InfoService) {
+                private infoService: InfoService,
+                private changeDetectorRef: ChangeDetectorRef) {
     }
 
     ngOnInit() {
@@ -58,8 +61,6 @@ export class FlightOverviewComponent implements OnInit {
     }
 
     updateFlightPlan = () => {
-        let needToUpdateConflicts = false;
-
         this.flightService.getPlaneSchedules()
             .subscribe(schedules => {
                 this.schedules = schedules;
@@ -71,31 +72,27 @@ export class FlightOverviewComponent implements OnInit {
                             return {
                                 start: calculateStart(flight),
                                 duration: calculateDurationLength(flight),
-                                remaining: calculateRemainingLength(flight)
+                                realStart: calculateRealStart(flight),
+                                realDuration: calculateRealDurationLength(flight)
                             };
                         });
                     });
 
-                this.schedules.forEach((schedule: PlaneScheduleDto) => {
-                    if (schedule.hasConflict) {
-                        needToUpdateConflicts = true;
-                    }
-                });
 
-
-                if (needToUpdateConflicts) {
-                    this.scheduleConflictServiceService.getConflicts()
-                        .subscribe(conflicts => {
-                            this.conflicts = conflicts;
-                        });
-                }
+                this.conflictService.getConflicts()
+                    .subscribe(conflicts => {
+                        this.conflicts = conflicts;
+                    });
+                
             }, error => this.infoService.showErrorMessage('Der Flugplan konnte nicht abgerufen werden'));
 
-        this.flightService.getPlaneSchedules();
+        this.changeDetectorRef.detectChanges();
+        this.redrawView();
     }
 
     getTimeToDisplay(i: number): string {
         let hours = new Date().getHours() + i - 1;
+        hours = 5 + i;
 
         if (hours > 23) {
             hours -= 24;
@@ -111,21 +108,65 @@ export class FlightOverviewComponent implements OnInit {
     }
 
     onClickFlight(flight: FlightDto, plane: string) {
+        const conflictDto = this.conflicts.find(value => (flight.id === value.flightID));
         const config: MatDialogConfig = {
             data: {
                 plane,
-                flight
+                flight,
+                conflict: conflictDto
             } as FlightInfoDialogInput
         };
-        this.dialog.open(FlightInfoDialogComponent, config);
+        this.dialog.open(FlightInfoDialogComponent, config).afterClosed().subscribe((value: ScheduleConflictDialogOutput) => {
+            if (value){
+                if (value.selectedOption == ScheduleConfigSolution.USE_BACKUP_PLANE){
+                    if (!value.reservePlane)
+                        return;
+
+                    let data: ReservePlaneSolutionDto={
+                        flightID: flight.id,
+                        reservePlaneID: value.reservePlane
+                    }
+                    this.conflictService.useReservePlane(data).subscribe();
+                }
+
+                else if (value.selectedOption == ScheduleConfigSolution.CANCEL_FLIGHT){
+                    this.conflictService.cancelFlight(flight.id).subscribe();
+                }
+
+                else if (value.selectedOption == ScheduleConfigSolution.DO_NOTHING){
+                    this.conflictService.ignoreDelay(flight.id).subscribe();
+                }
+                this.updateFlightPlan();
+            }
+        });
     }
 
-    onClickConflict(id: number) {
-        const conflictDto = this.conflicts.find(value => (id === value.scheduleId));
+    checkFlightForConflict(flight: FlightDto) {
+        if (this.conflicts.find(value => (flight.id === value.flightID)))
+            return true;
+        return false;
+    }
 
+    getRemainingLength() : number{
+        return Math.floor(calculateRemainingLength());
+    }
+
+    /*
+    onClickConflict(id: number) {
+        const conflictDto = this.conflicts.find(value => (id === value.flightID));
+        var flightDto;
+
+        for (var i = 0; i < this.schedules.length; i++){
+            for (var j = 0; j < this.schedules[i].flights.length; j++){
+                if (this.schedules[i].flights[j].id === id)
+                    flightDto = this.schedules[i].flights[j];
+            }
+        }
+        
         const config: MatDialogConfig = {
             data: {
-                conflict: conflictDto
+                conflict: conflictDto,
+                flight: flightDto
             } as ScheduleConflictDialogInput
         };
         this.dialog.open(ScheduleConflictDialogComponent, config).afterClosed().subscribe(output => {
@@ -135,6 +176,7 @@ export class FlightOverviewComponent implements OnInit {
             }
         });
     }
+    */
 
     get displayableHours(): number[] {
         return displayableHours;
@@ -158,5 +200,10 @@ export class FlightOverviewComponent implements OnInit {
 
     get viewBoxConfig(): string {
         return getViewBoxConfig(this.totalHeight);
+    }
+
+    redrawView() {
+        this.drawView = false;
+        this.drawView = true;
     }
 }
