@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import de.hso.badenair.controller.dto.flight.FlightDto;
 import de.hso.badenair.controller.dto.flight.TrackingDto;
-import de.hso.badenair.controller.flight.FlightCascade;
 import de.hso.badenair.domain.flight.Flight;
 import de.hso.badenair.domain.flight.FlightAction;
 import de.hso.badenair.domain.flight.FlightCrewMember;

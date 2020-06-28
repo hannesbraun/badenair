@@ -1,4 +1,4 @@
-package de.hso.badenair.controller.flight;
+package de.hso.badenair.service.flight;
 
 import java.time.Duration;
 import java.time.Instant;
