@@ -6,9 +6,7 @@ import java.time.ZoneOffset;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import de.hso.badenair.service.email.MailNotificationService;
-import de.hso.badenair.service.email.MailNotificationThread;
-import de.hso.badenair.service.keycloakapi.KeycloakApiService;
+import de.hso.badenair.service.email.FlightChangeNotificationService;
 import org.springframework.stereotype.Service;
 
 import de.hso.badenair.controller.dto.flight.FlightDto;
@@ -29,13 +27,11 @@ public class FlightService {
 
 	private final FlightRepository flightRepository;
 
-	private final MailNotificationService mailNotificationService;
-
-	private final KeycloakApiService keycloakApiService;
-
 	private final FlightCrewMemberRepository flightCrewMemberRepository;
 
 	private final FlightCascade flightCascade;
+
+	private final FlightChangeNotificationService flightChangeNotificationService;
 
 	public OffsetDateTime updateFlightTracking(Long flightId, TrackingDto dto) {
 		Optional<Flight> flight = flightRepository.findById(flightId);
@@ -81,11 +77,8 @@ public class FlightService {
 
 			flightCascade.cascadeDelay(currentFlightDateTime, nextWorkingDay, flight.get(), dto.getDelay(),flightIdSet);
 
-            System.out.println(flightIdSet.toString());
 			//send Mail to customers
-            MailNotificationThread thread = new MailNotificationThread(flightIdSet, flightRepository, mailNotificationService, keycloakApiService);
-
-            thread.start();
+            flightChangeNotificationService.sendNotifications(flightIdSet);
 
 		} else {
 			return null;
