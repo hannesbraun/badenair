@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class FlightSearchService {
+public class  FlightSearchService {
 	private final int BOOKING_TIME_LIMIT = 45;
 	private final FlightRepository flightRepository;
 

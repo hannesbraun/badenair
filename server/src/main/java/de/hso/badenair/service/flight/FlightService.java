@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import de.hso.badenair.controller.dto.flight.FlightDto;
 import de.hso.badenair.controller.dto.flight.TrackingDto;
+import de.hso.badenair.controller.flight.FlightCascade;
 import de.hso.badenair.domain.flight.Flight;
 import de.hso.badenair.domain.flight.FlightAction;
 import de.hso.badenair.domain.flight.FlightCrewMember;
@@ -30,6 +31,8 @@ public class FlightService {
 	private final FlightRepository flightRepository;
 
 	private final FlightCrewMemberRepository flightCrewMemberRepository;
+
+	private final FlightCascade flightCascade;
 
 	public OffsetDateTime updateFlightTracking(Long flightId, TrackingDto dto) {
 		Optional<Flight> flight = flightRepository.findById(flightId);
@@ -50,8 +53,7 @@ public class FlightService {
 
 			// Add flight hours
 			flight.get().getPlane().addFlightHours(
-					Double.valueOf(Duration.between(flight.get().getActualStartTime(), currentTime).getSeconds())
-							/ 3600.0);
+					Duration.between(flight.get().getActualStartTime(), currentTime).getSeconds() / 3600.0);
 
 			// Update state
 			if (flight.get().getPlane().getFlightHours() > 2000.0) {
@@ -65,7 +67,13 @@ public class FlightService {
 		} else if (dto.getAction().equals(FlightAction.DELAY.getName())) {
 			flight.get().setState(FlightState.DELAYED);
 			flight.get().setDelay(dto.getDelay());
+
 			flightRepository.save(flight.get());
+
+			OffsetDateTime currentFlightDateTime = DateFusioner.fusionStartDate(flight.get().getStartDate(),
+					flight.get().getScheduledFlight().getStartTime(), null);
+			OffsetDateTime nextWorkingDay = calculateNextWorkingDay(currentFlightDateTime);
+			flightCascade.cascadeDelay(currentFlightDateTime, nextWorkingDay, flight.get(), dto.getDelay());
 		} else {
 			return null;
 		}
@@ -207,4 +215,15 @@ public class FlightService {
 
 		return flight.get();
 	}
+
+	private OffsetDateTime calculateNextWorkingDay(OffsetDateTime currentFlightDateTime) {
+		OffsetDateTime nextWorkingDay = currentFlightDateTime.plusDays(1).withHour(6).withMinute(0).withSecond(0)
+				.withNano(0);
+		if (currentFlightDateTime.isBefore(currentFlightDateTime.withHour(6).withMinute(0).withSecond(0).withNano(0))) {
+			nextWorkingDay = currentFlightDateTime.withHour(6).withMinute(0).withSecond(0).withNano(0);
+		}
+
+		return nextWorkingDay;
+	}
+
 }
