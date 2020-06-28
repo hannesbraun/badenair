@@ -172,8 +172,8 @@ public class BookingService {
 			bookingRepository.saveAll(bookings);
 
 			//send email to user
-            var user = keycloakApiService.getUserById(username).get();
             try {
+                var user = keycloakApiService.getUserById(username).get();
                 mailNotificationService.sendInvoiceNotification(user.getEmail(), user.getFirstName() + " " + user.getLastName(), bookings);
             } catch (Exception e) {
                 e.printStackTrace();
