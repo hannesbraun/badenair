@@ -35,10 +35,26 @@ public class FlightChangeNotificationSender {
                         //not really Arrivaltime but new Starttime
                         DateFusioner.fusionArrivalDate(flight.getStartDate(), flight.getScheduledFlight().getStartTime(), flight.getDelay(), null));
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    // e.printStackTrace();
                 }
             }
 
         }
     }
+    
+    @Transactional
+	public void sendCancel(List<String> customers, String startingAirport, String destinationAirport) {
+		// get all bookings for this flight
+		for (String customer : customers) {
+			try {
+				// send email
+				var user = this.keycloack.getUserById(customer).get();
+				mailservice.sendCancelledFlightNotification(user.getEmail(),
+						user.getFirstName() + " " + user.getLastName(), startingAirport, destinationAirport);
+			} catch (Exception e) {
+				// e.printStackTrace();
+			}
+		}
+
+	}
 }

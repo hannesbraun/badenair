@@ -11,7 +11,9 @@ import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+import de.hso.badenair.domain.booking.Booking;
 import de.hso.badenair.domain.flight.Flight;
+import de.hso.badenair.service.email.FlightChangeNotificationService;
 import de.hso.badenair.service.flight.repository.FlightRepository;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,7 @@ public class FlightPlanService {
 	private final FlightplanRepository flightplanRepository;
 	private final PlaneRepository planeRepository;
 	private final FlightRepository flightRepository;
+	private final FlightChangeNotificationService flightChangeNotificationService;
 	private ArrayList<ConflictDto> conflicts = new ArrayList<>();
 	private ArrayList<Long> conflictBlackList = new ArrayList<>();
 
@@ -120,34 +123,34 @@ public class FlightPlanService {
         OffsetDateTime startOfDay = OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.of("+1"));
         startOfDay = startOfDay.truncatedTo(ChronoUnit.DAYS);
         startOfDay = startOfDay.plusHours(6);
-        OffsetDateTime oneDayLater = startOfDay.plusHours(21);
+		OffsetDateTime oneDayLater = startOfDay.plusHours(21);
 
-        OffsetDateTime finalNow = startOfDay;
-        final ArrayList<Flight> flights = new ArrayList<>();
-        flights.addAll(flightplanRepository
-            .findByStartDateBetweenAndPlane_IdEquals(startOfDay.withHour(0).withMinute(0).withSecond(0),
-                oneDayLater.withHour(23).withMinute(59).withSecond(59), flight.getPlane().getId())
-            .stream().filter(f -> {
-                OffsetDateTime fusionedStartDate = DateFusioner.fusionStartDate(f.getStartDate(),
-                    f.getScheduledFlight().getStartTime(), null);
-                return fusionedStartDate.isAfter(finalNow) && fusionedStartDate.isBefore(oneDayLater);
-            }).collect(Collectors.toList()));
+		OffsetDateTime finalNow = startOfDay;
+		final ArrayList<Flight> flights = new ArrayList<>();
+		flights.addAll(flightplanRepository
+				.findByStartDateBetweenAndPlane_IdEquals(startOfDay.withHour(0).withMinute(0).withSecond(0),
+						oneDayLater.withHour(23).withMinute(59).withSecond(59), flight.getPlane().getId())
+				.stream().filter(f -> {
+					OffsetDateTime fusionedStartDate = DateFusioner.fusionStartDate(f.getStartDate(),
+							f.getScheduledFlight().getStartTime(), null);
+					return fusionedStartDate.isAfter(finalNow) && fusionedStartDate.isBefore(oneDayLater);
+				}).collect(Collectors.toList()));
 
-        FlightGroup flightGroup = FlightGroup.getFlightGroupForFlight(flight, flights);
+		FlightGroup flightGroup = FlightGroup.getFlightGroupForFlight(flight, flights);
 
-        Flight outgoingFlight = flightRepository.findById(flightGroup.getOutgoingFlight().getId()).get();
-        Flight incomingFlight = flightRepository.findById(flightGroup.getIncomingFlight().getId()).get();
+		Flight outgoingFlight = flightRepository.findById(flightGroup.getOutgoingFlight().getId()).get();
+		Flight incomingFlight = flightRepository.findById(flightGroup.getIncomingFlight().getId()).get();
 
-        outgoingFlight.setPlane(planeRepository.findById(reservePlaneID).get());
-        incomingFlight.setPlane(planeRepository.findById(reservePlaneID).get());
-        outgoingFlight.setDelay(0);
-        incomingFlight.setDelay(0);
+		outgoingFlight.setPlane(planeRepository.findById(reservePlaneID).get());
+		incomingFlight.setPlane(planeRepository.findById(reservePlaneID).get());
+		outgoingFlight.setDelay(0);
+		incomingFlight.setDelay(0);
 
-        OffsetDateTime now = OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.of("+1"));
+		OffsetDateTime now = OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.of("+1"));
 
-        if (outgoingFlight.getActualStartTime() == null || now.isBefore(outgoingFlight.getActualStartTime()))
-            flightRepository.save(outgoingFlight);
-        if (incomingFlight.getActualStartTime() == null || now.isBefore(incomingFlight.getActualStartTime()))
+		if (outgoingFlight.getActualStartTime() == null || now.isBefore(outgoingFlight.getActualStartTime()))
+			flightRepository.save(outgoingFlight);
+		if (incomingFlight.getActualStartTime() == null || now.isBefore(incomingFlight.getActualStartTime()))
             flightRepository.save(incomingFlight);
     }
 
@@ -158,23 +161,34 @@ public class FlightPlanService {
         OffsetDateTime startOfDay = OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.of("+1"));
         startOfDay = startOfDay.truncatedTo(ChronoUnit.DAYS);
         startOfDay = startOfDay.plusHours(6);
-        OffsetDateTime oneDayLater = startOfDay.plusHours(21);
+		OffsetDateTime oneDayLater = startOfDay.plusHours(21);
 
-        OffsetDateTime finalNow = startOfDay;
-        final ArrayList<Flight> flights = new ArrayList<>();
-        flights.addAll(flightplanRepository
-            .findByStartDateBetweenAndPlane_IdEquals(startOfDay.withHour(0).withMinute(0).withSecond(0),
-                oneDayLater.withHour(23).withMinute(59).withSecond(59), flight.getPlane().getId())
-            .stream().filter(f -> {
-                OffsetDateTime fusionedStartDate = DateFusioner.fusionStartDate(f.getStartDate(),
-                    f.getScheduledFlight().getStartTime(), null);
-                return fusionedStartDate.isAfter(finalNow) && fusionedStartDate.isBefore(oneDayLater);
-            }).collect(Collectors.toList()));
+		OffsetDateTime finalNow = startOfDay;
+		final ArrayList<Flight> flights = new ArrayList<>();
+		flights.addAll(flightplanRepository
+				.findByStartDateBetweenAndPlane_IdEquals(startOfDay.withHour(0).withMinute(0).withSecond(0),
+						oneDayLater.withHour(23).withMinute(59).withSecond(59), flight.getPlane().getId())
+				.stream().filter(f -> {
+					OffsetDateTime fusionedStartDate = DateFusioner.fusionStartDate(f.getStartDate(),
+							f.getScheduledFlight().getStartTime(), null);
+					return fusionedStartDate.isAfter(finalNow) && fusionedStartDate.isBefore(oneDayLater);
+				}).collect(Collectors.toList()));
 
-        FlightGroup flightGroup = FlightGroup.getFlightGroupForFlight(flight, flights);
+		FlightGroup flightGroup = FlightGroup.getFlightGroupForFlight(flight, flights);
 
         OffsetDateTime now = OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.of("+1"));
 
+        Flight outgoingFlight = flightRepository.findById(flightGroup.getOutgoingFlight().getId()).get();
+		flightChangeNotificationService.sendCancelNotifications(
+				outgoingFlight.getBookings().stream().map(Booking::getCustomerUserId).collect(Collectors.toList()),
+				outgoingFlight.getScheduledFlight().getStartingAirport().getName(),
+				outgoingFlight.getScheduledFlight().getDestinationAirport().getName());
+		Flight incomingFlight = flightRepository.findById(flightGroup.getIncomingFlight().getId()).get();
+		flightChangeNotificationService.sendCancelNotifications(
+				incomingFlight.getBookings().stream().map(Booking::getCustomerUserId).collect(Collectors.toList()),
+				incomingFlight.getScheduledFlight().getStartingAirport().getName(),
+				incomingFlight.getScheduledFlight().getDestinationAirport().getName());
+		
         if (flightGroup.getOutgoingFlight().getRealStartTime() == null || now.isBefore(flightGroup.getOutgoingFlight().getRealStartTime()))
             flightRepository.deleteById(flightGroup.getOutgoingFlight().getId());
         if (flightGroup.getIncomingFlight().getRealStartTime() == null || now.isBefore(flightGroup.getIncomingFlight().getRealStartTime()))

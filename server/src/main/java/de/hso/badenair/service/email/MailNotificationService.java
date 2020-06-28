@@ -32,13 +32,11 @@ public class MailNotificationService {
         mailService.sendMail(recipient, "BadenAir Info", messageContent);
     }
 
-    public void sendCancelledFlightNotification(String recipient, String name, ScheduledFlight scheduledFlight, OffsetDateTime actualStartTime) throws IOException {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-
+    public void sendCancelledFlightNotification(String recipient, String name, String startingAirport, String destinationAirport) throws IOException {
         Map<String, String> values = Map.of(
             "name", name,
-            "startingAirport", scheduledFlight.getStartingAirport().getName(),
-            "destinationAirport", scheduledFlight.getDestinationAirport().getName()
+            "startingAirport", startingAirport,
+            "destinationAirport", destinationAirport
         );
 
         final String messageContent = TemplateProcessingUtil.processNoFlightTemplate(values);
