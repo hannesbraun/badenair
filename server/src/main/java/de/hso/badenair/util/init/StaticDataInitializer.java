@@ -291,6 +291,8 @@ public class StaticDataInitializer {
 									.plane(plane).startDate(startDate).actualStartTime(DateFusioner
 											.fusionStartDate(startDate, scheduledFlight.getStartTime(), null))
 									.delay(0.0).build());
+							plane.setState(PlaneState.ON_FLIGHT);
+							planeRepository.save(plane);
 						} else {
 							// Flight is already finished
 							flights.add(Flight.builder().scheduledFlight(scheduledFlight).state(FlightState.OK)
