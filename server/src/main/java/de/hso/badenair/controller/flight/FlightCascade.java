@@ -57,7 +57,7 @@ public class FlightCascade {
 				}
 				Instant i2 = DateFusioner.fusionStartDate(currentDayFlights.get(i).getStartDate(),
 						currentDayFlights.get(i).getScheduledFlight().getStartTime(), null).toInstant();
-				double bufferMinutes = Duration.between(i1, i2).getSeconds() / 60;
+				double bufferMinutes = Duration.between(i1, i2).abs().getSeconds() / 60.0;
 				if ((leftoverDelayForPlane - bufferMinutes) > 0) {
 					leftoverDelayForPlane -= bufferMinutes;
 
@@ -70,7 +70,8 @@ public class FlightCascade {
 							leftoverDelayForPlane)) {
 						return false;
 					}
-
+				} else {
+					break;
 				}
 			}
 		}
@@ -116,7 +117,7 @@ public class FlightCascade {
 									currentDayPilotFlights.get(i).getScheduledFlight().getStartTime(), null)
 							.toInstant();
 
-					double bufferMinutes = Duration.between(i1, i2).getSeconds() / 60;
+					double bufferMinutes = Duration.between(i1, i2).abs().getSeconds() / 60.0;
 					if ((leftoverDelayForPilot - bufferMinutes) > 0) {
 						leftoverDelayForPilot -= bufferMinutes;
 
@@ -130,11 +131,13 @@ public class FlightCascade {
 							return false;
 						}
 
+					} else {
+						break;
 					}
 				}
 			}
 		}
-		System.out.println("test");
+
 		return true;
 	}
 
