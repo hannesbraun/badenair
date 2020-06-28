@@ -1,14 +1,16 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {ScheduleConfigSolution, ScheduleConflictDto} from '../../../../services/dtos/Dtos';
+import {ScheduleConfigSolution, ScheduleConflictDto, FlightDto} from '../../../../services/dtos/Dtos';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 export interface ScheduleConflictDialogInput {
     conflict: ScheduleConflictDto;
+    flight: FlightDto;
 }
 
 export interface ScheduleConflictDialogOutput {
     selectedOption: ScheduleConfigSolution;
+    reservePlane?: number;
 }
 
 @Component({

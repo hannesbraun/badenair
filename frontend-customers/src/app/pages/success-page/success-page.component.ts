@@ -29,8 +29,9 @@ export class SuccessPageComponent implements OnInit {
                 if (state.selectedReturnFlight) {
                     this.flights.push(state.selectedReturnFlight);
                 }
-                this.bookingStateService.resetState();
             });
+            
+            this.bookingStateService.resetState();
     }
 
     getDuration(flight: FlightDto): string {
