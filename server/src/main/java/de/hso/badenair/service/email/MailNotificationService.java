@@ -32,6 +32,20 @@ public class MailNotificationService {
         mailService.sendMail(recipient, "BadenAir Info", messageContent);
     }
 
+    public void sendCancelledFlightNotification(String recipient, String name, ScheduledFlight scheduledFlight, OffsetDateTime actualStartTime) throws IOException {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+
+        Map<String, String> values = Map.of(
+            "name", name,
+            "startingAirport", scheduledFlight.getStartingAirport().getName(),
+            "destinationAirport", scheduledFlight.getDestinationAirport().getName()
+        );
+
+        final String messageContent = TemplateProcessingUtil.processNoFlightTemplate(values);
+
+        mailService.sendMail(recipient, "BadenAir Info", messageContent);
+    }
+    
     public void sendInvoiceNotification(String recipient, String name, List<Booking> bookings) throws IOException {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         OffsetDateTime today = OffsetDateTime.now();
