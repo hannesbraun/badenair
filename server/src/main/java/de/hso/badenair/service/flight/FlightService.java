@@ -140,10 +140,7 @@ public class FlightService {
 								flight.getScheduledFlight().getStartTime(),
 								flight.getScheduledFlight().getDurationInHours(), null),
 						"UTC+1", "UTC+1", 0.0);
-			} else if (DateFusioner
-					.fusionStartDate(flight.getStartDate(), flight.getScheduledFlight().getStartTime(), null)
-					.isAfter(OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.of("+1")))
-					&& flight.getActualStartTime() == null) {
+			} else if (flight.getActualStartTime() == null && flight.getActualLandingTime() == null) {
 				// Flight is in the future
 				return new FlightDto(flight.getId(), flight.getScheduledFlight().getStartingAirport().getName(),
 						flight.getScheduledFlight().getDestinationAirport().getName(),
