@@ -30,8 +30,8 @@ public class FlightController {
 	private final FlightService flightService;
 
 	@PatchMapping("/tracking/{id}")
-	public ResponseEntity<OffsetDateTime> updateFlightTracking(Principal user, @PathVariable Long id, @RequestBody TrackingDto dto) {
-		OffsetDateTime updateSuccess = flightService.updateFlightTracking(user.getName(), id, dto);
+	public ResponseEntity<OffsetDateTime> updateFlightTracking(@PathVariable Long id, @RequestBody TrackingDto dto) {
+		OffsetDateTime updateSuccess = flightService.updateFlightTracking(id, dto);
 
 		if (updateSuccess != null) {
 			updateSuccess = updateSuccess

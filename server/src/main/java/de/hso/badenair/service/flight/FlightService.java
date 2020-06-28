@@ -265,9 +265,6 @@ public class FlightService {
             Instant i1;
             //cascade delay on all flights on this plane for the current workday
             for (int i = 0; i < currentDayFlights.size(); i++){
-                if (leftoverDelayForPilot <= currentDayFlights.get(i).getDelay()){
-                    break;
-                }
                 if(i-1 >=0){
                     i1= DateFusioner.fusionArrivalDate(currentDayFlights.get(i-1).getStartDate(),
                         currentDayFlights.get(i-1).getScheduledFlight().getStartTime(),
@@ -299,19 +296,14 @@ public class FlightService {
                 }
             }
             flightRepository.saveAll(currentDayFlights);
-        } else {
-            return true;
         }
 
         if (leftoverDelayForPilot > 60) {
             List<FlightCrewMember> flightCrew = flightCrewMemberRepository.findByFlight(alreadyDelayedFlight);
             FlightCrewMember pilot = null;
             List<Flight> currentDayPilotFlights;
-            for (FlightCrewMember member : flightCrew) {
-                if (keycloakApiService.isPilot(member.getEmployeeUserId())) {
-                    pilot = member;
-                    break;
-                }
+            if (flightCrew.size() > 0){
+                pilot = flightCrew.get(0);
             }
 
             if (pilot != null) {
@@ -328,9 +320,6 @@ public class FlightService {
 
                 Instant i1;
                 for (int i = 0; i < currentDayPilotFlights.size(); i++) {
-                    if (leftoverDelayForPilot <= currentDayPilotFlights.get(i).getDelay()){
-                        break;
-                    }
                     if(i-1 >=0){
                         i1= DateFusioner.fusionArrivalDate(currentDayPilotFlights.get(i-1).getStartDate(),
                             currentDayPilotFlights.get(i-1).getScheduledFlight().getStartTime(),
