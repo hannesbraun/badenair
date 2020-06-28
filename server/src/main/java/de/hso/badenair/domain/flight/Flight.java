@@ -68,6 +68,9 @@ public class Flight extends BaseEntity {
 	@OneToMany(mappedBy = "flight", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Booking> bookings;
 
+    @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<FlightCrewMember> flightCrewMembers;
+
 	public OffsetDateTime getStartDate() {
 		if (startDate == null) {
 			return null;
