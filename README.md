@@ -1,5 +1,22 @@
 # BadenAir Flight Management-System
 
+This was a demo project developed at the university of applied sciences in Offenburg.
+
+## Should I use this?
+
+No. Definitely no. This project is archived for a reason... This software may still contain various bugs and it's highly customized to some needs you probably don't have or want.
+
+## Authors
+
+* Niklas Studer
+* Hannes Braun
+* Jan Stürzel
+* Jonas Kienzle
+* Julia Merettig
+* Friedrich Schmidt
+* Janes Heuberger
+* Denis Block
+
 ## Local development setup
 
 ### Setup Keycloak
