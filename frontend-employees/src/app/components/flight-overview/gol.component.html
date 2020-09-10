@@ -1,0 +1,15 @@
+<button (click)="toggleRunning()">Start/Stop</button>
+
+<svg *ngIf="drawView" [attr.viewBox]="viewBoxConfig" class="black">
+
+    <!-- Rows -->
+    <g *ngFor="let i = index; let row of gameBoard">
+
+        <!-- Flights -->
+        <g class="flight" *ngFor="let j = index; let cell of row">
+            <rect [attr.x]="5 + i * 7" [attr.y]="5 + j * 7"
+                  [attr.width]="5"
+                  height="5" stroke="#00FF00" fill="#000000" [class.alive] = "cell" (click)="toggleLifeState(i, j)"></rect>
+        </g>
+    </g>
+</svg>

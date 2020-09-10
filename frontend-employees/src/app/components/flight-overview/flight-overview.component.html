@@ -44,7 +44,7 @@
         <!-- Schedule data -->
         <g class="conflictButton" *ngIf="schedule.hasConflict">
             <rect x="2" [attr.y]="22 + lineHeight * i" width="45" height="15" fill="#F44336"></rect>
-            <text class="medium" x="14" [attr.y]="32 + lineHeight * i">Konflikt</text>
+            <text class="medium" x="14" [attr.y]="32 + lineHeight * i" routerLink="/gol">Konflikt</text>
         </g>
         <g *ngIf="!schedule.hasConflict">
             <rect x="2" [attr.y]="22 + lineHeight * i" width="45" height="15" fill="#00C853"></rect>

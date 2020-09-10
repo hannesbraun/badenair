@@ -25,6 +25,7 @@ import {environment} from '../environments/environment';
 import {LandingPageComponent} from './pages/landing-page/landing-page.component';
 import {VacationPlanningPageComponent} from './pages/vacation-planning-page/vacation-planning-page.component';
 import {DateInterceptor} from './services/util/date.interceptor';
+import { GolComponent } from './components/flight-overview/gol.component';
 
 @NgModule({
     declarations: [
@@ -43,7 +44,8 @@ import {DateInterceptor} from './services/util/date.interceptor';
         VacationPlanningComponent,
         ShiftSchedulePageComponent,
         LandingPageComponent,
-        VacationPlanningPageComponent
+        VacationPlanningPageComponent,
+        GolComponent
     ],
     imports: [
         BrowserAnimationsModule,

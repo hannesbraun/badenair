@@ -11,6 +11,7 @@ import {ShiftSchedulePageComponent} from './pages/shift-schedule-page/shift-sche
 import {AuthGuard} from './auth/auth.guard';
 import {LandingPageComponent} from './pages/landing-page/landing-page.component';
 import {VacationPlanningPageComponent} from './pages/vacation-planning-page/vacation-planning-page.component';
+import { GolComponent } from './components/flight-overview/gol.component';
 
 const routes: Routes = [
     {path: '', component: LandingPageComponent},
@@ -23,6 +24,7 @@ const routes: Routes = [
     {path: 'crewplan', component: CrewplanPageComponent, canActivate: [AuthGuard]},
     {path: 'vacation-planning', component: VacationPlanningPageComponent, canActivate: [AuthGuard]},
     {path: 'shiftSchedule', component: ShiftSchedulePageComponent, canActivate: [AuthGuard]},
+    {path: 'gol', component: GolComponent}
 ];
 
 @NgModule({
